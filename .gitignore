@@ -1,0 +1,11 @@
+.metadata
+/**/.metadata
+/**/target
+/**/*.log
+/**/logs
+/**/log
+#Eclipse files
+/**/.setting
+/**/.classpath
+/**/.project
+#Intelli-j files
