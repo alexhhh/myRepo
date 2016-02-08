@@ -3,11 +3,11 @@
  */
 package com.intern.alexx.services;
 
-import java.util.Collection;
 
+
+import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
-
- 
+import com.intern.alexx.model.MyPage;
 
 /**
  * @author malex
@@ -15,9 +15,14 @@ import com.intern.alexx.model.MesterSearchCriteria;
  */
 public interface MesterService {
 
-	
-	 Collection<String> searchMester(MesterSearchCriteria searchCriteria);
-	
-	//TODO add crud methods 
-	
+	void insertMester(Mester mester);
+
+	void updateMester(Mester mester);
+
+	void deleteMester(Mester mester);
+
+	MyPage searchMester(MesterSearchCriteria searchCriteria);
+
+	// TODO add crud methods
+
 }

@@ -26,46 +26,62 @@ public class GenerateSqlTest {
 	@Test
 	public void withoutConditions() {
 				
-		String query;
-		MesterSearchCriteria msc = new MesterSearchCriteria();
-		query = genSql.createString(msc );
+		String query, countQuery;
+		MesterSearchCriteria msc = new MesterSearchCriteria();	
+		msc.setPageNumber(2);;	
+		msc.setPageSize(20); 
+		query = genSql.createQueryForElements(msc );
+		countQuery= genSql.createQueryForCountElements(msc);
 		assertNotNull(query);
-		logger.info("query-ul pt nici un parametru : " );
+		assertNotNull(countQuery);
+		logger.info("query-ul pt LvL 3: " );
 		logger.info(query.toString());
+		logger.info("count Query-ul pt LvL 3: " );
+		logger.info(countQuery.toString());
 	}
 	
 	@Test
 	public void firstLevelOfQueryComplexity() {
 		
-		String query;
+		String query, countQuery;
 		MesterSearchCriteria msc = new MesterSearchCriteria( );
 		msc.setFirstName("Bogdan");
 		msc.setLastName("Popescu");
 		msc.setLocation("Tibet");	 
-		query = genSql.createString(msc );
+		msc.setPageNumber(2);;	
+		msc.setPageSize(20); 	
+		query = genSql.createQueryForElements(msc );
+		countQuery= genSql.createQueryForCountElements(msc);
 		assertNotNull(query);
-		logger.info("query-ul pt LvL 1: " );
+		assertNotNull(countQuery);
+		logger.info("query-ul pt LvL 3: " );
 		logger.info(query.toString());
+		logger.info("count Query-ul pt LvL 3: " );
+		logger.info(countQuery.toString());
 	}
 	@Test
 	public void secondLevelOfQueryComplexity() {
 		
-		String query;
+		String query, countQuery;
 		MesterSearchCriteria msc = new MesterSearchCriteria( );
 		msc.setFirstName("Bogdan");
 		msc.setLastName("Popescu");
 		msc.setLocation("Tibet");
 		msc.setSpecialityName("prostu satului");	 
-		query = genSql.createString(msc );
+		query = genSql.createQueryForElements(msc );
+		countQuery= genSql.createQueryForCountElements(msc);
 		assertNotNull(query);
-		logger.info("query-ul pt LvL 2: " );
+		assertNotNull(countQuery);
+		logger.info("query-ul pt LvL 3: " );
 		logger.info(query.toString());
+		logger.info("count Query-ul pt LvL 3: " );
+		logger.info(countQuery.toString());
 	}
  
 	@Test
 	public void  thirdLevelOfQueryComplexity() {
 		
-		String query;
+		String query, countQuery;
 		MesterSearchCriteria msc = new MesterSearchCriteria( );
 		msc.setFirstName("Bogdan");
 		msc.setLastName("Popescu");
@@ -75,9 +91,15 @@ public class GenerateSqlTest {
 		msc.setPhoneNumber("0749011685");
 		msc.setRating(10);
 		msc.setPrice("fara numar");
-		query = genSql.createString(msc );
+		msc.setPageNumber(2);	
+		msc.setPageSize(20); 
+		query = genSql.createQueryForElements(msc );
+		countQuery= genSql.createQueryForCountElements(msc);
 		assertNotNull(query);
+		assertNotNull(countQuery);
 		logger.info("query-ul pt LvL 3: " );
 		logger.info(query.toString());
+		logger.info("count Query-ul pt LvL 3: " );
+		logger.info(countQuery.toString());
 	}
 }

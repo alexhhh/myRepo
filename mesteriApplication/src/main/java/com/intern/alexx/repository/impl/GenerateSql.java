@@ -1,6 +1,5 @@
 package com.intern.alexx.repository.impl;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,20 +7,43 @@ import org.springframework.stereotype.Component;
 
 import com.intern.alexx.model.MesterSearchCriteria;
 
-
 @Component
 public class GenerateSql {
 
-	private String sql=null;
+	private String sql;
+	private StringBuilder query;
 
-	public String createString(MesterSearchCriteria searchCriteria) {
+	public String createQueryForElements(MesterSearchCriteria searchCriteria) {
+		sql = null;
+		query = new StringBuilder("SELECT ");
+		String limit;
+		StringBuilder from = createString(searchCriteria);
+		if ((searchCriteria.getPageSize() != null) && (searchCriteria.getPageNumber() != null)) {
+			limit = " LIMIT " + (searchCriteria.getPageSize() * searchCriteria.getPageNumber()) + " , "
+					+ (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " ;";
+		} else {
+			limit = " ; ";
+		}
+		sql = query.append("mester.* ").append(from).append(limit).toString();
 
-		StringBuilder query = new StringBuilder("SELECT mester.*  ");
-		String from = "FROM mester AS m ", on, where, theOn=""  ;
-		StringBuilder join = new StringBuilder(" ");
-		List<String> onList = new LinkedList<String>();
-		List<String> whereList = new LinkedList<String>(); 
-		 
+		return sql;
+	}
+
+	public String createQueryForCountElements(MesterSearchCriteria searchCriteria) {
+		sql = null;
+		StringBuilder query = new StringBuilder("SELECT ");
+		StringBuilder from = createString(searchCriteria);
+		sql = query.append("COUNT(*) ").append(from).append(" ;").toString();
+		return sql;
+	}
+
+	public StringBuilder createString(MesterSearchCriteria searchCriteria) {
+
+		String join, where;
+
+		StringBuilder from = new StringBuilder("FROM mester as m ");
+		List<String> joinList = new LinkedList<String>();
+		List<String> whereList = new LinkedList<String>();
 
 		if (searchCriteria.getFirstName() != null) {
 			whereList.add(" m.first_name= ? ");
@@ -34,15 +56,14 @@ public class GenerateSql {
 		}
 
 		if (searchCriteria.getSpecialityName() != null) {
-			// query.append(", speciality.speciality_name ");			
-			join.append("JOIN mester_has_speciality as mhs JOIN speciality as s  ");
-			onList.add(" (m.id = mhs.id_mester) AND (s.id = mhs.id_speciality) ");
+			// query.append(", speciality.speciality_name ");
+			joinList.add("JOIN mester_has_speciality as mhs JOIN speciality as s "
+					+ "ON m.id = mhs.id_mester AND s.id = mhs.id_speciality ");
 			whereList.add(" s.speciality_name= ? ");
 		}
 
 		if ((searchCriteria.getEmail() != null) || (searchCriteria.getPhoneNumber() != null)) {
-			join.append("JOIN contact AS c  ");
-			onList.add(" m.id=c.id_mester ");
+			joinList.add("JOIN contact AS c ON m.id=c.id_mester ");
 
 			if (searchCriteria.getEmail() != null) {
 				// query.append(", contact.email ");
@@ -57,8 +78,7 @@ public class GenerateSql {
 		}
 
 		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {
-			join.append("JOIN review_mester AS rm  ");
-			onList.add(" m.id=rm.id_mester ");
+			joinList.add("JOIN review_mester AS rm ON m.id=rm.id_mester ");
 
 			if (searchCriteria.getRating() != null) {
 				// query.append(", review_mester.rating ");
@@ -72,21 +92,14 @@ public class GenerateSql {
 
 		}
 
+		where = String.join(" AND ", whereList);
+		join = String.join(" ", joinList);
 
-		
-			where = String.join(" AND ", whereList);
-			
-			if(onList.size() !=0){
-				theOn=" ON ";
-			}
-			on = String.join(" AND ", onList);
-		
-		if(whereList.size()!=0){		
-		sql = query.append(from).append(join).append(theOn).append(on).append(" WHERE ").append(where).append(" ;").toString();
+		if (whereList.size() != 0) {
+			return from = from.append(join).append(" WHERE ").append(where);
+		} else {
+			return from;
 		}
-		else sql=query.append(from).append(" ;").toString();
-		
-		return sql;
 
 	}
 

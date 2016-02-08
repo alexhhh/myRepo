@@ -12,8 +12,9 @@ public class MesterSearchCriteria {
 	private String phoneNumber;
 	private Integer rating;
 	private String price;
-
- 
+	private Integer pageSize;
+	private Integer pageNumber;
+	
 	/**
 	 * @return the firstName
 	 */
@@ -134,16 +135,21 @@ public class MesterSearchCriteria {
 		this.price = price;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "MesterSearchCriteria [fisrtName=" + firstName + "lastName=" + lastName + ", location=" + location
-				+ ", speciality=" + specialityName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", rating="
-				+ rating + ", price=" + price + "]";
+	public Integer getPageSize() {
+		return pageSize;
 	}
 
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getPageNumber() {
+		return pageNumber;
+	}
+
+	public void setPageNumber(Integer pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+
+ 
 }

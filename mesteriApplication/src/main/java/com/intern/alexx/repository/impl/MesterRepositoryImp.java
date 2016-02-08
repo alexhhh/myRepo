@@ -17,7 +17,9 @@ import java.util.List;
 
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
+import com.intern.alexx.model.MyPage;
 import com.intern.alexx.repository.MesterRepository;
+
 
 @Component
 public class MesterRepositoryImp implements MesterRepository {
@@ -58,7 +60,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public void update(Mester mester) {
-		// TODO Areview
+		
 		String sql = "UPDATE  MESTER FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
 
 		Connection conn = null;
@@ -142,139 +144,87 @@ public class MesterRepositoryImp implements MesterRepository {
 		return mester;
 	}
 
-	 
-	public List<Mester> getByLocation(Mester mester) {
-
-		Mester newMester = null;
-		String sql = "SELECT * FROM mester WHERE location = ?";
-		Connection conn = null;
-		List<Mester> mesteri = new ArrayList<Mester>();
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, mester.getLocation());
-
-			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				newMester = new Mester();
-				newMester.setId(resultSet.getInt("id"));
-				newMester.setFirstName(resultSet.getString("first_name"));
-				newMester.setLastName(resultSet.getString("last_name"));
-				newMester.setDescription(resultSet.getString("description"));
-				newMester.setLocation(resultSet.getString("location"));
-				mesteri.add(newMester);
-			}
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-
-		return mesteri;
-	}
-
-	public List<Mester> findAll() {
-		String sql = "SELECT * FROM mester";
-		Mester mester = null;
-		List<Mester> mesteri = new ArrayList<Mester>();
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				mester = new Mester();
-				mester.setId(resultSet.getInt("id"));
-				mester.setFirstName(resultSet.getString("first_name"));
-				mester.setLastName(resultSet.getString("last_name"));
-				mester.setDescription(resultSet.getString("description"));
-				mester.setLocation(resultSet.getString("location"));
-				mesteri.add(mester);
-			}
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-
-			}
-		}
-		return mesteri;
-	}
+	
 
 	 
-	public List<Mester> search(MesterSearchCriteria searchCriteria) {
+	public MyPage search(MesterSearchCriteria searchCriteria) {
 
-		String sql = generateSql.createString(searchCriteria);
-		Mester mester = null;
-		List<Mester> mesteri = new ArrayList<Mester>();
+		String sql1 = generateSql.createQueryForCountElements(searchCriteria);
+		String sql2 = generateSql.createQueryForElements(searchCriteria);
+		MyPage page = null;
+		Mester mester=null;
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-
+			PreparedStatement ps = conn.prepareStatement(sql1);
+			PreparedStatement ps2 = conn.prepareStatement(sql2);
 		
 			int nrParm=1;
 				if (searchCriteria.getFirstName() != null) {
 					 ps.setString(nrParm, searchCriteria.getFirstName());
+					 ps2.setString(nrParm, searchCriteria.getFirstName());
 					 nrParm++;
 					 }
 				if (searchCriteria.getLastName() != null) {
 					 ps.setString(nrParm, searchCriteria.getLastName());
+					 ps2.setString(nrParm, searchCriteria.getLastName());
 					 nrParm++;
 					 }
 				if (searchCriteria.getLocation() != null) {
 					 ps.setString(nrParm, searchCriteria.getLocation());
+					 ps2.setString(nrParm, searchCriteria.getLocation());
 					 nrParm++;
 					 }
 				if (searchCriteria.getSpecialityName() != null) {
 					 ps.setString(nrParm, searchCriteria.getSpecialityName());
+					 ps2.setString(nrParm, searchCriteria.getSpecialityName());
 					 nrParm++;
 					 }
 				if (searchCriteria.getEmail() != null) {
 					 ps.setString(nrParm, searchCriteria.getEmail());
+					 ps2.setString(nrParm, searchCriteria.getEmail());
 					 nrParm++;
 					 }
 				if (searchCriteria.getPhoneNumber() != null) {
 					 ps.setString(nrParm, searchCriteria.getPhoneNumber());
+					 ps2.setString(nrParm, searchCriteria.getPhoneNumber());
 					 nrParm++;
 					 }
 				if (searchCriteria.getRating() != null) {
 					 ps.setInt(nrParm, searchCriteria.getRating());
+					 ps2.setInt(nrParm, searchCriteria.getRating());
 					 nrParm++;
 					  }
 				if (searchCriteria.getPrice() != null) {
 					 ps.setString(nrParm, searchCriteria.getPrice());
+					 ps2.setString(nrParm, searchCriteria.getPrice());
 					 nrParm++;
 					 
 				}
-				 if (searchCriteria.getFirstName() != null) {
-					 ps.setString(nrParm, searchCriteria.getFirstName());	 
-				 }
-				 
- 
+				
+				if(searchCriteria.getPageNumber() != null) {
+				page.setPageNumber(searchCriteria.getPageNumber());
+				}
+				if(searchCriteria.getPageSize() != null) {
+				page.setPageSize(searchCriteria.getPageSize());
+				}
 			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				mester = new Mester();
-				mester.setId(resultSet.getInt("id"));
-				mester.setFirstName(resultSet.getString("first_name"));
-				mester.setLastName(resultSet.getString("last_name"));
-				mester.setDescription(resultSet.getString("description"));
-				mester.setLocation(resultSet.getString("location"));
-				mesteri.add(mester);
-			}
+		
+			page.setTotalRezults(resultSet.getInt(1));
 			ps.close();
+			
+			ResultSet resultSet2 = ps2.executeQuery();
+			if (resultSet2.next()) {
+				mester = new Mester();
+				mester.setId(resultSet2.getInt("id"));
+				mester.setFirstName(resultSet2.getString("first_name"));
+				mester.setLastName(resultSet2.getString("last_name"));
+				mester.setDescription(resultSet2.getString("description"));
+				mester.setLocation(resultSet2.getString("location"));
+				page.getContentPage().add(mester);
+			}
+			page.getContentPage();
+			ps2.close();
 		} catch (
 
 		SQLException e)
@@ -292,7 +242,7 @@ public class MesterRepositoryImp implements MesterRepository {
 
 			}
 		}
-		return mesteri;
+		return page;
 	}
 
 }
