@@ -9,23 +9,13 @@ package com.intern.alexx.model;
  */
 public class Contact extends BaseModel {
 
+	 
 	private String telNr;
 	private String email;
 	private String site;
 	private String profile;
 
-	public Contact() {
-	}
-
-	public Contact(int idContact, String telNr, String email, String site, String profile) {
-
-		super(idContact);
-		this.telNr = telNr;
-		this.email = email;
-		this.site = site;
-		this.profile = profile;
-	}
-
+	 
 	/**
 	 * @return the telNr
 	 */
@@ -86,6 +76,7 @@ public class Contact extends BaseModel {
 		this.profile = profile;
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 

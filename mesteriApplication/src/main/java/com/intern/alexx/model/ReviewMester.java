@@ -8,7 +8,9 @@ package com.intern.alexx.model;
  *
  */
 public class ReviewMester extends BaseModel {
-
+	
+	private int idMester;
+	private int idClient;
 	private String price;
 	private int rating;
 	private String feedback;
@@ -68,6 +70,23 @@ public class ReviewMester extends BaseModel {
 		this.feedback = feedback;
 	}
 
+	public int getIdMester() {
+		return idMester;
+	}
+
+	public void setIdMester(int idMester) {
+		this.idMester = idMester;
+	}
+
+	public int getIdClient() {
+		return idClient;
+	}
+
+	public void setIdClient(int idClient) {
+		this.idClient = idClient;
+	}
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 

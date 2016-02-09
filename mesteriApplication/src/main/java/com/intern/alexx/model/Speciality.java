@@ -16,6 +16,7 @@ public class Speciality extends BaseModel{
 	public Speciality (){}
 	
 	public Speciality (int idSpeciality, String specialityName){
+		super(idSpeciality);
 		this.specialityName=specialityName;
 	}
  

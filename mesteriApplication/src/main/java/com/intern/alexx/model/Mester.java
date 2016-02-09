@@ -3,6 +3,8 @@
  */
 package com.intern.alexx.model;
 
+import java.util.List;
+
 /**
  * @author malex
  *
@@ -14,8 +16,8 @@ public class Mester extends BaseModel {
 	private String location;
 	private String description;
 	private Contact contact;
-	private Speciality speciality;
-	private ReviewMester reviewMester;
+	private List<Speciality> speciality;
+	private List<ReviewMester> reviewMester;
 
 	public Mester() {
 
@@ -105,33 +107,20 @@ public class Mester extends BaseModel {
 		this.contact = contact;
 	}
 
-	/**
-	 * @return the speciality
-	 */
-	public Speciality getSpeciality() {
+ 
+	public List<Speciality> getSpeciality() {
 		return speciality;
 	}
 
-	/**
-	 * @param speciality
-	 *            the speciality to set
-	 */
-	public void setSpeciality(Speciality speciality) {
+	public void setSpeciality(List<Speciality> speciality) {
 		this.speciality = speciality;
 	}
 
-	/**
-	 * @return the reviewMester
-	 */
-	public ReviewMester getReviewMester() {
+	public List<ReviewMester> getReviewMester() {
 		return reviewMester;
 	}
 
-	/**
-	 * @param reviewMester
-	 *            the reviewMester to set
-	 */
-	public void setReviewMester(ReviewMester reviewMester) {
+	public void setReviewMester(List<ReviewMester> reviewMester) {
 		this.reviewMester = reviewMester;
 	}
 

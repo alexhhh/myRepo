@@ -19,12 +19,12 @@ public class GenerateSql {
 		String limit;
 		StringBuilder from = createString(searchCriteria);
 		if ((searchCriteria.getPageSize() != null) && (searchCriteria.getPageNumber() != null)) {
-			limit = " LIMIT " + (searchCriteria.getPageSize() * searchCriteria.getPageNumber()) + " , "
-					+ (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " ;";
+			limit = " LIMIT " + (searchCriteria.getPageSize()  * (searchCriteria.getPageNumber() - 1)) + " , "
+					+ (searchCriteria.getPageSize()) + " ;";
 		} else {
 			limit = " ; ";
 		}
-		sql = query.append("mester.* ").append(from).append(limit).toString();
+		sql = query.append(" * ").append(from).append(limit).toString();
 
 		return sql;
 	}
@@ -33,7 +33,7 @@ public class GenerateSql {
 		sql = null;
 		StringBuilder query = new StringBuilder("SELECT ");
 		StringBuilder from = createString(searchCriteria);
-		sql = query.append("COUNT(*) ").append(from).append(" ;").toString();
+		sql = query.append("COUNT(*) AS total ").append(from).append(" ;").toString();
 		return sql;
 	}
 
