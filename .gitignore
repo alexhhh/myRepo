@@ -1,5 +1,9 @@
 .metadata
 /**/.metadata
+.settings
+/**/.settings
+.recommenders
+/**/.recommenders
 /**/target
 /**/*.log
 /**/logs
