@@ -29,15 +29,12 @@ public class MesterRepositoryImp implements MesterRepository {
 	@Autowired
 	private GenerateSql generateSql;
 
-	private Connection conn = null;
-	private Integer pageNumber = null, pageSize = null;
-
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
 	public void insert(Mester mester) {
-		conn=null;
+		Connection conn = null;
 		String sql = "INSERT INTO MESTER (FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?)";
 
 		try {
@@ -59,7 +56,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public void update(Mester mester) {
-		conn=null;
+		Connection conn = null;
 		String sql = "UPDATE  mester SET FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
 		try {
 			conn = dataSource.getConnection();
@@ -67,7 +64,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.setInt(5, mester.getId());
 			addMesterIntoDB(mester, ps);
 			ps.executeUpdate();
-			
+
 			ps.close();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -82,7 +79,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public void delete(Mester mester) {
-		conn=null;
+		Connection conn = null;
 		String sql = "DELETE FROM MESTER  WHERE id = ? ";
 		try {
 			conn = dataSource.getConnection();
@@ -104,7 +101,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public Mester getById(Mester mester) {
-		conn=null;
+		Connection conn = null;
 		String sql = "SELECT * FROM mester WHERE id = ?";
 
 		try {
@@ -131,10 +128,20 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public MyPage<Mester> search(MesterSearchCriteria searchCriteria) {
-		MyPage<Mester> page = new MyPage<Mester>();		
+		MyPage<Mester> page = new MyPage<Mester>();
 		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
-		page.setPageNumber(pageNumber);
-		page.setPageSize(pageSize);
+
+		if (searchCriteria.getPageNumber() != null) {
+			page.setPageNumber(searchCriteria.getPageNumber());
+		} else {
+			page.setPageNumber(1);
+		}
+		if (searchCriteria.getPageSize() != null) {
+			page.setPageSize(searchCriteria.getPageSize());
+		} else {
+			page.setPageSize(20);
+		}
+
 		page.setContentPage(executeSqlSelectStatement(searchCriteria));
 		return page;
 	}
@@ -173,13 +180,6 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.setString(nrParm, searchCriteria.getPrice());
 			nrParm++;
 		}
-
-		if (searchCriteria.getPageNumber() != null) {
-			pageNumber = searchCriteria.getPageNumber();
-		}
-		if (searchCriteria.getPageSize() != null) {
-			pageSize = searchCriteria.getPageSize();
-		}
 	}
 
 	public Mester getMesterFromDB(ResultSet resultSet) throws SQLException {
@@ -199,22 +199,22 @@ public class MesterRepositoryImp implements MesterRepository {
 		ps.setString(2, mester.getLastName());
 		ps.setString(3, mester.getDescription());
 		ps.setString(4, mester.getLocation());
-
 	}
 
 	public int executeSqlCountStatement(MesterSearchCriteria searchCriteria) {
-		conn=null;
+		Connection conn = null;
 		String sql = generateSql.createQueryForCountElements(searchCriteria);
-		int totalElements= 0 ;
+		int totalElements = 0;
 		try {
 			conn = dataSource.getConnection();
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			System.out.println(sql);
 			verifyParam(ps, searchCriteria);
+
 			ResultSet resultSet = ps.executeQuery();
 			if (resultSet.next()) {
-			totalElements = resultSet.getInt("total");				 
+				totalElements = resultSet.getInt("total");
 			}
 			ps.close();
 
@@ -226,7 +226,6 @@ public class MesterRepositoryImp implements MesterRepository {
 					conn.close();
 				} catch (SQLException e) {
 				}
-
 			}
 		}
 		return totalElements;
@@ -235,7 +234,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	public List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) {
 		String sql = generateSql.createQueryForElements(searchCriteria);
 		List<Mester> mesteri = new ArrayList<Mester>();
-		conn=null;
+		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 
