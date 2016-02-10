@@ -21,8 +21,8 @@ public interface MesterService {
 
 	void deleteMester(Mester mester);
 
-	MyPage searchMester(MesterSearchCriteria searchCriteria);
+	MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria);
 
-	// TODO add crud methods
+	 
 
 }

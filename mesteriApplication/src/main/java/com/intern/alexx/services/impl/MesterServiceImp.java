@@ -12,19 +12,15 @@ import com.intern.alexx.model.MyPage;
 import com.intern.alexx.repository.MesterRepository;
 import com.intern.alexx.services.MesterService;
 
-/**
- * @author malex
- * 
- *
- */
+
 @Component
 public class MesterServiceImp implements MesterService {
 
 	@Autowired
 	private MesterRepository mesterRepository;
 
-	public MyPage searchMester(MesterSearchCriteria searchCriteria) {
-		MyPage myPage = new MyPage();
+	public MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria) {
+		MyPage<Mester> myPage = new MyPage<Mester>();
 		myPage = mesterRepository.search(searchCriteria);
 		return myPage;
 	}

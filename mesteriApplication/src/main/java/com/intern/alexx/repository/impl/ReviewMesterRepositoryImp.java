@@ -23,14 +23,13 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
 	@Autowired
 	private DataSource dataSource;
-
-	private Connection conn;
+ 
 
 	public void insert(ReviewMester reviewMester) {
 
 		String sql = "INSERT INTO review_mester (id_mester, id_client, rating, price, feedback) "
 				+ "VALUES (?,?,?,?,?)";
-		conn = null;
+		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -51,7 +50,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
 	public void update(ReviewMester reviewMester) {
 		String sql = "UPDATE review_mester SET id_mester=?, id_client=?, rating=?, price=?, feedback=? WHERE id=?";
-		conn = null;
+		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -74,7 +73,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
 	public void delete(ReviewMester reviewMester) {
 		String sql = "DELETE FROM review_mester  WHERE id = ? ";
-		conn = null;
+		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -95,7 +94,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	}
 
 	public ReviewMester getById(ReviewMester reviewMester) {
-		conn=null;
+		Connection conn=null;
 		String sql = "SELECT * FROM review_mester WHERE id = ?";
 		try {
 			conn = dataSource.getConnection();
@@ -126,7 +125,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		String sql = "SELECT COUNT(*) AS total FROM review_mester ; ";
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
 		int totalElements = -1, pageNr = 1, pageSize = 10;
-
+		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 
@@ -194,7 +193,5 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		ps.setString(5, reviewMester.getFeedback());
 		return reviewMester;
 	}
-
-	
-
+	 
 }
