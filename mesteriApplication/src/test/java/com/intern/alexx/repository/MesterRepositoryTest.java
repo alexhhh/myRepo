@@ -2,10 +2,7 @@ package com.intern.alexx.repository;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
+ 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
-import com.intern.alexx.model.Speciality;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/appContext.xml")
@@ -34,65 +31,64 @@ public class MesterRepositoryTest {
 //
 //		Mester mester = createMester();
 //		mesterRepository.insert(mester);
-//		
+//
 //		Mester dbMester = mesterRepository.getById(mester);
 //		assertNotNull(dbMester);
 //		assertEquals(mester.getLocation(), dbMester.getLocation());
 //
 //	}
-	
+//
 //	@Test
-//	public void canDeleteMesterFromDB(){
+//	public void canDeleteMesterFromDB() {
 //		Mester mester = new Mester();
+//		mester.setId(30);
 //		Mester dbMester = mesterRepository.getById(mester);
 //		assertNotNull(dbMester);
-//		mesterRepository.delete(mester);
-//	 
+//		mesterRepository.delete(dbMester);
+//
 //	}
-//	
-//	
+//
 //	@Test
-//	public void canUpdateMesterFromDb(){
+//	public void canUpdateMesterFromDb() {
 //		// review
-//		Mester mester = new Mester();
+//		Mester mester = createMester();
 //		Mester dbMester = mesterRepository.getById(mester);
 //		assertNotNull(dbMester);
 //		mesterRepository.update(mester);
 //		assertEquals(mester.getLocation(), dbMester.getLocation());
 //	}
-	
-	 
-	
-	@Test
-	public void searchAfterLocation(){
-		logger.info("Ajunge pana aici");
-		MesterSearchCriteria msc =createMSC();
-		MyPage page = mesterRepository.search(msc);
-		
-		assertNotNull(page);
-		logger.info(page.getPageSize().toString());
-		 logger.info("Page-ul returnat e: " );
-		 logger.info(page.toString());
-	}
-	
-	
-	private Mester createMester() {
+//
+//	@Test
+//	public void searchAfterLocation() {
+//		logger.info("Ajunge pana aici");
+//		MesterSearchCriteria msc = createMSC();
+//		MyPage<Mester> page = mesterRepository.search(msc);
+//
+//		assertNotNull(page);
+//		logger.info(page.getPageSize().toString());
+//		logger.info("Page-ul returnat e: ");
+//		logger.info(page.toString());
+//	}
+//
+//	private Mester createMester() {
+//
+//		Mester mester = new Mester();
+//		mester.setId(29);
+//		mester.setFirstName("Bill");
+//		mester.setLastName("Nye");
+//		mester.setLocation("Los Angeles");
+//		mester.setDescription("Bill Nye the Science Guy");
+//		return mester;
+//	}
+//
+//	private MesterSearchCriteria createMSC() {
+//
+//		MesterSearchCriteria msc = new MesterSearchCriteria();
+//
+//		msc.setLocation("Los Angeles");
+//		msc.setPageNumber(1);
+//		msc.setPageSize(2);
+//		return msc;
+//	}
 
-		Mester mester = new Mester();	 
-		mester.setFirstName("Michio");
-		mester.setLastName("Kaku");
-		mester.setLocation("New York");		 
-		return mester;
-	} 
-	
-	private MesterSearchCriteria createMSC() {
-
-		MesterSearchCriteria msc = new MesterSearchCriteria();
-		 
-		msc.setLocation("Tibet");
-		msc.setPageNumber(3);
-		msc.setPageSize(2);
-		return msc;
-	} 
-	
 }

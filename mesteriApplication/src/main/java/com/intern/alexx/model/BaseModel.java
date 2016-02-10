@@ -1,6 +1,6 @@
 package com.intern.alexx.model;
 
-public  class BaseModel {
+public abstract class BaseModel {
 
 	private int id;
 	

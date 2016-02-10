@@ -18,5 +18,5 @@ public interface MesterRepository {
 	  void delete(Mester mester);
 	  Mester getById(Mester mester);
 	  
-	 MyPage search(MesterSearchCriteria searchCriteria);
+	 MyPage<Mester> search(MesterSearchCriteria searchCriteria);
 }

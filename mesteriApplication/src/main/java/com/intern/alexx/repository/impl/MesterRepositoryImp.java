@@ -60,16 +60,14 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	public void update(Mester mester) {
 		conn=null;
-		String sql = "UPDATE  MESTER FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
+		String sql = "UPDATE  mester SET FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
 		try {
 			conn = dataSource.getConnection();
-			// review
-
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(5, mester.getId());
 			addMesterIntoDB(mester, ps);
-			ps.executeQuery();
-
+			ps.executeUpdate();
+			
 			ps.close();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -81,7 +79,6 @@ public class MesterRepositoryImp implements MesterRepository {
 				}
 			}
 		}
-
 	}
 
 	public void delete(Mester mester) {
@@ -91,7 +88,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			conn = dataSource.getConnection();
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, mester.getId());
-			ps.executeQuery();
+			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -133,17 +130,12 @@ public class MesterRepositoryImp implements MesterRepository {
 		return mester;
 	}
 
-	public MyPage search(MesterSearchCriteria searchCriteria) {
-
-		String sql1 = generateSql.createQueryForCountElements(searchCriteria);
-		String sql2 = generateSql.createQueryForElements(searchCriteria);
-		MyPage page = new MyPage();
-		
-		page.setTotalRezults(executeSqlCountStatement(sql1, searchCriteria));
+	public MyPage<Mester> search(MesterSearchCriteria searchCriteria) {
+		MyPage<Mester> page = new MyPage<Mester>();		
+		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
 		page.setPageNumber(pageNumber);
 		page.setPageSize(pageSize);
-		page.setContentPage(executeSqlSelectStatement(sql2, searchCriteria));
-		
+		page.setContentPage(executeSqlSelectStatement(searchCriteria));
 		return page;
 	}
 
@@ -210,9 +202,10 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	}
 
-	public int executeSqlCountStatement(String sql, MesterSearchCriteria searchCriteria) {
+	public int executeSqlCountStatement(MesterSearchCriteria searchCriteria) {
 		conn=null;
-		int totalElements ;
+		String sql = generateSql.createQueryForCountElements(searchCriteria);
+		int totalElements= 0 ;
 		try {
 			conn = dataSource.getConnection();
 
@@ -220,7 +213,9 @@ public class MesterRepositoryImp implements MesterRepository {
 			System.out.println(sql);
 			verifyParam(ps, searchCriteria);
 			ResultSet resultSet = ps.executeQuery();
-			totalElements = resultSet.getInt("total");
+			if (resultSet.next()) {
+			totalElements = resultSet.getInt("total");				 
+			}
 			ps.close();
 
 		} catch (SQLException e) {
@@ -237,20 +232,21 @@ public class MesterRepositoryImp implements MesterRepository {
 		return totalElements;
 	}
 
-	public List<Mester> executeSqlSelectStatement(String sql, MesterSearchCriteria searchCriteria) {
+	public List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) {
+		String sql = generateSql.createQueryForElements(searchCriteria);
 		List<Mester> mesteri = new ArrayList<Mester>();
 		conn=null;
 		try {
 			conn = dataSource.getConnection();
 
-			PreparedStatement ps2 = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 			System.out.println(sql);
-			verifyParam(ps2, searchCriteria);
-			ResultSet resultSet2 = ps2.executeQuery();
-			if (resultSet2.next()) {
-				mesteri.add(getMesterFromDB(resultSet2));
+			verifyParam(ps, searchCriteria);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				mesteri.add(getMesterFromDB(resultSet));
 			}
-			ps2.close();
+			ps.close();
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

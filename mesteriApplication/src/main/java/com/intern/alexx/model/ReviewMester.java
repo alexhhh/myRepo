@@ -18,8 +18,10 @@ public class ReviewMester extends BaseModel {
 	public ReviewMester() {
 	}
 
-	public ReviewMester(int idReviewMester, String price, int rating, String feedback) {
+	public ReviewMester(int idReviewMester, int idMester, int idClient, String price, int rating, String feedback) {
 		super(idReviewMester);
+		this.idMester=idMester;
+		this.idClient=idClient;
 		this.feedback = feedback;
 		this.rating = rating;
 		this.price = price;
