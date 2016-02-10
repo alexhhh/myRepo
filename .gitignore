@@ -4,6 +4,7 @@
 /**/.settings
 .recommenders
 /**/.recommenders
+.recommenders/*
 /**/target
 /**/*.log
 /**/logs
