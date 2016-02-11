@@ -1,8 +1,8 @@
 .metadata
 /**/.metadata
 .settings
-/**/.settings
-.recommenders
+/**/.settings/*
+.recommenders/*
 /**/.recommenders
 .recommenders/*
 /**/target
