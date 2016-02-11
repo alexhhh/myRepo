@@ -27,8 +27,13 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 
 	public MyPage<ReviewMester> getReviewMasterPage(MesterSearchCriteria searchCriteria) {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAll(searchCriteria);
+		myPage = reviewMesterRepository.getAllReviewMesterPage(searchCriteria);
 		return myPage;
+	}
+
+	public ReviewMester getById(ReviewMester reviewMester) {
+		reviewMesterRepository.getById(reviewMester);
+		return reviewMester;
 	}
 
 }

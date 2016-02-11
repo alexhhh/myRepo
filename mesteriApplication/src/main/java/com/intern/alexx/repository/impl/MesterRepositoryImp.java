@@ -3,7 +3,6 @@
  */
 package com.intern.alexx.repository.impl;
 
-import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -23,78 +24,75 @@ import com.intern.alexx.repository.MesterRepository;
 @Component
 public class MesterRepositoryImp implements MesterRepository {
 
+ 
 	@Autowired
-	private DataSource dataSource;
+	private RepositoryConnectionUtil connectionUtil;
 
 	@Autowired
 	private GenerateSql generateSql;
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+ 
 
 	public void insert(Mester mester) {
 		Connection conn = null;
+		PreparedStatement ps = null;
 		String sql = "INSERT INTO MESTER (FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?)";
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			addMesterIntoDB(mester, ps);
 			ps.executeUpdate();
-			ps.close();
+
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	public void update(Mester mester) {
 		Connection conn = null;
+		PreparedStatement ps = null;
 		String sql = "UPDATE  mester SET FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
+
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(5, mester.getId());
 			addMesterIntoDB(mester, ps);
 			ps.executeUpdate();
 
-			ps.close();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 
 	public void delete(Mester mester) {
 		Connection conn = null;
+		PreparedStatement ps = null;
 		String sql = "DELETE FROM MESTER  WHERE id = ? ";
+
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(1, mester.getId());
 			ps.executeUpdate();
-			ps.close();
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -102,32 +100,33 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	public Mester getById(Mester mester) {
 		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet resultSet = null;
 		String sql = "SELECT * FROM mester WHERE id = ?";
 
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(1, mester.getId());
-			ResultSet resultSet = ps.executeQuery();
+			resultSet = ps.executeQuery();
+
 			if (resultSet.next()) {
 				getMesterFromDB(resultSet);
 			}
-			ps.close();
+
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
 		return mester;
 	}
 
-	public MyPage<Mester> search(MesterSearchCriteria searchCriteria) {
+	public MyPage<Mester> setupTheSearchMesterPage(MesterSearchCriteria searchCriteria) {
 		MyPage<Mester> page = new MyPage<Mester>();
 		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
 
@@ -146,7 +145,84 @@ public class MesterRepositoryImp implements MesterRepository {
 		return page;
 	}
 
-	public void verifyParam(PreparedStatement ps, MesterSearchCriteria searchCriteria) throws SQLException {
+	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet resultSet = null;
+
+		String sql = generateSql.createQueryForCountElements(searchCriteria);
+		int totalElements = 0;
+		try {
+
+			ps = connectionUtil.prepareConnection(conn, sql);
+			verifyParam(ps, searchCriteria);
+			resultSet = ps.executeQuery();
+
+			if (resultSet.next()) {
+				totalElements = resultSet.getInt("total");
+			}
+
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			try {
+				connectionUtil.closeConnection(conn, ps, resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return totalElements;
+	}
+
+	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) {
+		String sql = generateSql.createQueryForElements(searchCriteria);
+		List<Mester> mesteri = new ArrayList<Mester>();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet resultSet = null;
+		try {
+			ps = connectionUtil.prepareConnection(conn, sql);
+			verifyParam(ps, searchCriteria);
+			resultSet = ps.executeQuery();
+			
+			while (resultSet.next()) {
+				mesteri.add(getMesterFromDB(resultSet));
+			}
+
+
+		} catch (SQLException e) {
+			throw new RepositoryException(e);
+		} finally {
+			try {
+				connectionUtil.closeConnection(conn, ps, resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return mesteri;
+	}
+
+
+
+	private Mester getMesterFromDB(ResultSet resultSet) throws SQLException {
+		Mester mester = new Mester();
+		mester.setId(resultSet.getInt("id"));
+		mester.setFirstName(resultSet.getString("first_name"));
+		mester.setLastName(resultSet.getString("last_name"));
+		mester.setDescription(resultSet.getString("description"));
+		mester.setLocation(resultSet.getString("location"));
+		return mester;
+	}
+
+	private void addMesterIntoDB(Mester mester, PreparedStatement ps) throws SQLException {
+		ps.setString(1, mester.getFirstName());
+		ps.setString(2, mester.getLastName());
+		ps.setString(3, mester.getDescription());
+		ps.setString(4, mester.getLocation());
+	}
+
+	private void verifyParam(PreparedStatement ps, MesterSearchCriteria searchCriteria) throws SQLException {
 		int nrParm = 1;
 		if (searchCriteria.getFirstName() != null) {
 			ps.setString(nrParm, searchCriteria.getFirstName());
@@ -180,84 +256,6 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.setString(nrParm, searchCriteria.getPrice());
 			nrParm++;
 		}
-	}
-
-	public Mester getMesterFromDB(ResultSet resultSet) throws SQLException {
-
-		Mester mester = new Mester();
-		mester.setId(resultSet.getInt("id"));
-		mester.setFirstName(resultSet.getString("first_name"));
-		mester.setLastName(resultSet.getString("last_name"));
-		mester.setDescription(resultSet.getString("description"));
-		mester.setLocation(resultSet.getString("location"));
-		return mester;
-	}
-
-	public void addMesterIntoDB(Mester mester, PreparedStatement ps) throws SQLException {
-
-		ps.setString(1, mester.getFirstName());
-		ps.setString(2, mester.getLastName());
-		ps.setString(3, mester.getDescription());
-		ps.setString(4, mester.getLocation());
-	}
-
-	public int executeSqlCountStatement(MesterSearchCriteria searchCriteria) {
-		Connection conn = null;
-		String sql = generateSql.createQueryForCountElements(searchCriteria);
-		int totalElements = 0;
-		try {
-			conn = dataSource.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-			System.out.println(sql);
-			verifyParam(ps, searchCriteria);
-
-			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				totalElements = resultSet.getInt("total");
-			}
-			ps.close();
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-		return totalElements;
-	}
-
-	public List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) {
-		String sql = generateSql.createQueryForElements(searchCriteria);
-		List<Mester> mesteri = new ArrayList<Mester>();
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-			System.out.println(sql);
-			verifyParam(ps, searchCriteria);
-			ResultSet resultSet = ps.executeQuery();
-			while (resultSet.next()) {
-				mesteri.add(getMesterFromDB(resultSet));
-			}
-			ps.close();
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-		return mesteri;
 	}
 
 }

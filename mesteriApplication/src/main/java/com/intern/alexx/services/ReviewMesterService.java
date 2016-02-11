@@ -6,11 +6,13 @@ import com.intern.alexx.model.ReviewMester;
 
 public interface ReviewMesterService {
 
-	void insertReviewMester(ReviewMester mester);
+	void insertReviewMester(ReviewMester reviewMester);
 
-	void updateReviewMester(ReviewMester mester);
+	void updateReviewMester(ReviewMester reviewMester);
 
-	void deleteReviewMester(ReviewMester mester);
+	void deleteReviewMester(ReviewMester reviewMester);
+	
+	public ReviewMester getById(ReviewMester reviewMester);
 
 	public MyPage<ReviewMester> getReviewMasterPage(MesterSearchCriteria searchCriteria);
 }

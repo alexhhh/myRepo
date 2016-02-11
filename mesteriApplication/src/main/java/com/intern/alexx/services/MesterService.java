@@ -1,8 +1,4 @@
-/**
- * 
- */
 package com.intern.alexx.services;
-
 
 
 import com.intern.alexx.model.Mester;
@@ -20,9 +16,9 @@ public interface MesterService {
 	void updateMester(Mester mester);
 
 	void deleteMester(Mester mester);
+	
+	public Mester getById(Mester mester);
 
-	MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria);
-
-	 
+	MyPage<Mester> searchMesterPage(MesterSearchCriteria searchCriteria);
 
 }

@@ -19,7 +19,7 @@ public interface ReviewMesterRepository {
 	  void update(ReviewMester reviewMester);
 	  void delete(ReviewMester reviewMester);
 	  ReviewMester getById(ReviewMester reviewMester);
-	  MyPage<ReviewMester> getAll(MesterSearchCriteria searchCriteria);
+	  MyPage<ReviewMester> getAllReviewMesterPage(MesterSearchCriteria searchCriteria);
 
 }
  

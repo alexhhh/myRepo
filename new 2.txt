@@ -1,0 +1,9 @@
+1. 			remove from GIT
+2. DONE     Ce face metoda ? Poate gasesti un nume mai bun.... setupStatementParameters
+3. DONE		nu e metoda din interfata, deci trebuie sa fie privata
+4. DONE     FARA sysout ... foloseste Logger
+5.	1/2	 	partea aceasta poate fi extrasa intr-o metoda: close(connection) . Accelasi lucru si pt statement.....
+6.	1/2		statement nu se inchide tot timpul ( e.g. daca se arucna o exceptie). Trebuie inchis in finally
+7.	1/2		RuntimeException este prea generala ... o varianta mai buna este sa ai o clasa specifica pt erorile din DB ... care sa extinda din RE (ex RepositoryException extends RuntimeException)
+8. DONE		cele 3 linii se pot restrange la una: return masterRepository.search()
+9. DONE		fara "dead code"

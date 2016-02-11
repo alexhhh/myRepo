@@ -7,11 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -22,28 +19,26 @@ import com.intern.alexx.repository.ReviewMesterRepository;
 public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
 	@Autowired
-	private DataSource dataSource;
- 
+	private RepositoryConnectionUtil connectionUtil;
 
 	public void insert(ReviewMester reviewMester) {
 
 		String sql = "INSERT INTO review_mester (id_mester, id_client, rating, price, feedback) "
 				+ "VALUES (?,?,?,?,?)";
 		Connection conn = null;
+		PreparedStatement ps = null;
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			setReviewMesterIntoDB(reviewMester, ps);
 			ps.executeUpdate();
-			ps.close();
+
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -51,21 +46,20 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	public void update(ReviewMester reviewMester) {
 		String sql = "UPDATE review_mester SET id_mester=?, id_client=?, rating=?, price=?, feedback=? WHERE id=?";
 		Connection conn = null;
+		PreparedStatement ps = null;
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			setReviewMesterIntoDB(reviewMester, ps);
 			ps.setInt(6, reviewMester.getId());
 			ps.executeUpdate();
-			ps.close();
+
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -74,104 +68,102 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	public void delete(ReviewMester reviewMester) {
 		String sql = "DELETE FROM review_mester  WHERE id = ? ";
 		Connection conn = null;
+		PreparedStatement ps = null;
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(1, reviewMester.getId());
 			ps.executeUpdate();
-			ps.close();
+
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
 	}
 
 	public ReviewMester getById(ReviewMester reviewMester) {
-		Connection conn=null;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet resultSet = null;
 		String sql = "SELECT * FROM review_mester WHERE id = ?";
 		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
+			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(1, reviewMester.getId());
-			ResultSet resultSet = ps.executeQuery();
+			resultSet = ps.executeQuery();
 			if (resultSet.next()) {
 				getReviewFromDB(resultSet);
 			}
 			ps.close();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
 		return reviewMester;
 	}
-	
-	public MyPage<ReviewMester> getAll(MesterSearchCriteria searchCriteria) {
-		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
-		String sql2 = "SELECT * FROM review_mester AS rm LIMIT ";
+
+	public MyPage<ReviewMester> getAllReviewMesterPage(MesterSearchCriteria searchCriteria) {
+		Connection conn = null;
+		PreparedStatement ps = null, ps2=null;
+		ResultSet resultSet=null , resultSet2=null;
 		String sql = "SELECT COUNT(*) AS total FROM review_mester ; ";
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-		int totalElements = -1, pageNr = 1, pageSize = 10;
-		Connection conn = null;
+		
+		if (searchCriteria.getPageNumber() != null) {
+			page.setPageNumber(searchCriteria.getPageNumber());
+		} else{page.setPageNumber(1);}
+		if (searchCriteria.getPageSize() != null) {
+			page.setPageSize(searchCriteria.getPageSize());
+		} else {page.setPageSize(10);}
+		
+		String sql2 = "SELECT * FROM review_mester AS rm LIMIT "+ (page.getPageSize() * (page.getPageNumber() - 1)) + " , " + page.getPageSize() + " ;";
 		try {
-			conn = dataSource.getConnection();
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-			System.out.println(sql);
-			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				totalElements = resultSet.getInt("total");
-				System.out.println(totalElements);
-			}
-			ps.close();
-			page.setTotalRezults(totalElements);
-
-			if (searchCriteria.getPageNumber() != null) {
-				pageNr = searchCriteria.getPageNumber();
-			}
-			if (searchCriteria.getPageSize() != null) {
-				pageSize = searchCriteria.getPageSize();
-			}
-
-			sql2 = sql2 + (pageSize * (pageNr - 1)) + " , " + pageSize + " ;";
-			page.setPageNumber(pageNr);
-			page.setPageSize(pageSize);
-			
-			
-			PreparedStatement ps2 = conn.prepareStatement(sql2);
-			System.out.println(sql2);
-			ResultSet resultSet2 = ps2.executeQuery();
-			while (resultSet2.next()) {
-				reviews.add(getReviewFromDB(resultSet2));
-			}
-			page.setContentPage(reviews);
+			page.setTotalRezults(executeCountStatement(conn, ps, sql, resultSet));
+			page.setContentPage(executeElementsStatement(conn, ps2,sql2,resultSet2));
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RepositoryException(e);
 		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
+			try {
+				connectionUtil.closeConnection(conn, ps, resultSet);
+				connectionUtil.closeConnection(conn, ps2, resultSet2);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		return page;
 	}
 
+	private int executeCountStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet) throws SQLException{
+		int totalElements= -1;
+		ps = connectionUtil.prepareConnection(conn, sql);
+		resultSet = ps.executeQuery();
+		if (resultSet.next()) {
+			 totalElements = resultSet.getInt("total");
+		}
+		return totalElements;
+	}
+	private  List<ReviewMester>  executeElementsStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet) throws SQLException{
+		ps = connectionUtil.prepareConnection(conn, sql);
+		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
+		resultSet = ps.executeQuery();
+		while (resultSet.next()) {
+			reviews.add(getReviewFromDB(resultSet));
+		}
+		return reviews;
+	}
+	
+	
 	private ReviewMester getReviewFromDB(ResultSet resultSet) throws SQLException {
 
 		ReviewMester review = new ReviewMester();
@@ -184,7 +176,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return review;
 	}
 
-	public ReviewMester setReviewMesterIntoDB(ReviewMester reviewMester, PreparedStatement ps) throws SQLException {
+	private ReviewMester setReviewMesterIntoDB(ReviewMester reviewMester, PreparedStatement ps) throws SQLException {
 
 		ps.setInt(1, reviewMester.getIdMester());
 		ps.setInt(2, reviewMester.getIdClient());
@@ -193,5 +185,5 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		ps.setString(5, reviewMester.getFeedback());
 		return reviewMester;
 	}
-	 
+
 }

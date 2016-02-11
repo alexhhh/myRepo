@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.intern.alexx.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +16,8 @@ public class MesterServiceImp implements MesterService {
 	@Autowired
 	private MesterRepository mesterRepository;
 
-	public MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria) {
-		MyPage<Mester> myPage = new MyPage<Mester>();
-		myPage = mesterRepository.search(searchCriteria);
-		return myPage;
+	public MyPage<Mester> searchMesterPage(MesterSearchCriteria searchCriteria) {	 
+		return mesterRepository.setupTheSearchMesterPage(searchCriteria);
 	}
 
 	public void insertMester(Mester mester) {
@@ -37,6 +32,11 @@ public class MesterServiceImp implements MesterService {
 	public void deleteMester(Mester mester) {
 		mesterRepository.delete(mester);
 
+	}
+
+	public Mester getById(Mester mester) {
+		mesterRepository.getById(mester);
+		return mester;
 	}
 
 }
