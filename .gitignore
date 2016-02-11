@@ -3,7 +3,7 @@
 .settings
 /**/.settings/*
 .recommenders/*
-/**/.recommenders
+/**/.recommenders/*
 .recommenders/*
 /**/target
 /**/*.log
