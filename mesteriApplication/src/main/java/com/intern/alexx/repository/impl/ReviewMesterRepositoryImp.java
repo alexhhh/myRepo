@@ -33,12 +33,13 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at insert review  ", e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close insert review  ", e);
 			}
 		}
 	}
@@ -54,15 +55,15 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at update review  ", e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close update review  ", e);
 			}
 		}
-
 	}
 
 	public void delete(ReviewMester reviewMester) {
@@ -75,15 +76,15 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at delete review  ", e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close delete review ", e);
 			}
 		}
-
 	}
 
 	public ReviewMester getById(ReviewMester reviewMester) {
@@ -100,60 +101,72 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 			}
 			ps.close();
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at get review by Id  ", e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, resultSet);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close getByID  ", e);
 			}
 		}
-
 		return reviewMester;
 	}
 
 	public MyPage<ReviewMester> getAllReviewMesterPage(MesterSearchCriteria searchCriteria) {
 		Connection conn = null;
-		PreparedStatement ps = null, ps2=null;
-		ResultSet resultSet=null , resultSet2=null;
+		PreparedStatement ps = null, ps2 = null;
+		ResultSet resultSet = null, resultSet2 = null;
 		String sql = "SELECT COUNT(*) AS total FROM review_mester ; ";
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-		
+
 		if (searchCriteria.getPageNumber() != null) {
 			page.setPageNumber(searchCriteria.getPageNumber());
-		} else{page.setPageNumber(1);}
+		} else {
+			page.setPageNumber(1);
+		}
 		if (searchCriteria.getPageSize() != null) {
 			page.setPageSize(searchCriteria.getPageSize());
-		} else {page.setPageSize(10);}
-		
-		String sql2 = "SELECT * FROM review_mester AS rm LIMIT "+ (page.getPageSize() * (page.getPageNumber() - 1)) + " , " + page.getPageSize() + " ;";
+		} else {
+			page.setPageSize(10);
+		}
+
+		String sql2 = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
+				+ " , " + page.getPageSize() + " ;";
 		try {
 			page.setTotalRezults(executeCountStatement(conn, ps, sql, resultSet));
-			page.setContentPage(executeElementsStatement(conn, ps2,sql2,resultSet2));
+			page.setContentPage(executeElementsStatement(conn, ps2, sql2, resultSet2));
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at get all reviews  ", e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, resultSet);
-				connectionUtil.closeConnection(conn, ps2, resultSet2);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(resultSet2);
+				connectionUtil.closeable(ps2);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close getAllReview   ", e);
 			}
 		}
 		return page;
 	}
 
-	private int executeCountStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet) throws SQLException{
-		int totalElements= -1;
+	private int executeCountStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet)
+			throws SQLException {
+		int totalElements = -1;
 		ps = connectionUtil.prepareConnection(conn, sql);
 		resultSet = ps.executeQuery();
 		if (resultSet.next()) {
-			 totalElements = resultSet.getInt("total");
+			totalElements = resultSet.getInt("total");
 		}
 		return totalElements;
 	}
-	private  List<ReviewMester>  executeElementsStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet) throws SQLException{
+
+	private List<ReviewMester> executeElementsStatement(Connection conn, PreparedStatement ps, String sql,
+			ResultSet resultSet) throws SQLException {
 		ps = connectionUtil.prepareConnection(conn, sql);
 		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
 		resultSet = ps.executeQuery();
@@ -162,8 +175,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		}
 		return reviews;
 	}
-	
-	
+
 	private ReviewMester getReviewFromDB(ResultSet resultSet) throws SQLException {
 
 		ReviewMester review = new ReviewMester();

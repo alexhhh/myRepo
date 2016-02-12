@@ -1,11 +1,10 @@
 package com.intern.alexx.repository;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,6 +13,7 @@ import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/appContext.xml")
 public class MesterRepositoryTest {
@@ -21,20 +21,19 @@ public class MesterRepositoryTest {
 	@Autowired
 	private MesterRepository mesterRepository;
 
-	private static final Logger logger = LoggerFactory.getLogger(GenerateSqlTest.class);
-
-	@Test
-	public void canInsertMesterIntoDB() {
+ 
+	@Test 
+	public void testInsertMester_WhenSuccesfull_ThenReturnCreatedMester() {
+		// when ->  given -> then
 		Mester mester = createMester();
 		mesterRepository.insert(mester);
 		Mester dbMester = mesterRepository.getById(mester);
 		assertNotNull(dbMester);
 		assertEquals(mester.getLocation(), dbMester.getLocation());
-
 	}
 
 	@Test
-	public void canUpdateMesterFromDb() {
+	public void testUpdate_WhenSuccesfull_ThenUpdateMester() {
 		Mester mester = createMester();
 		Mester dbMester = mesterRepository.getById(mester);
 		assertNotNull(dbMester);
@@ -43,28 +42,24 @@ public class MesterRepositoryTest {
 	}
 
 	@Test
-	public void canDeleteMesterFromDB() {
+	public void testDelete_WhenSuccesfull_ThenDeleteMester() {
 		Mester mester = createMester();
 		Mester dbMester = mesterRepository.getById(mester);
 		assertNotNull(dbMester);
-		mesterRepository.delete(dbMester);
-
+		mesterRepository.update(mester);
+		assertEquals(mester.getLocation(), dbMester.getLocation());
 	}
 
 	@Test
-	public void searchAfterLocation() {
-		logger.info("Ajunge pana aici");
+	public void testFindMester_WhenCalled_ThenMesterPageisReturned() {
 		MesterSearchCriteria msc = createMSC();
 		MyPage<Mester> page = mesterRepository.setupTheSearchMesterPage(msc);
 		assertNotNull(page);
-		logger.info(page.getPageSize().toString());
-		logger.info("Page-ul returnat e: ");
-		logger.info(page.toString());
 	}
 
 	private Mester createMester() {
 		Mester mester = new Mester();
-		mester.setId(55);
+		mester.setId(100);
 		mester.setFirstName("Bill");
 		mester.setLastName("Nye");
 		mester.setLocation("Los Angeles");
@@ -79,5 +74,5 @@ public class MesterRepositoryTest {
 		msc.setPageSize(2);
 		return msc;
 	}
-
+ 
 }

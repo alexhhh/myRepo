@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,32 +19,28 @@ public class ReviewMesterRepositoryTest {
 	@Autowired
 	private ReviewMesterRepository reviewMesterRepository;
 
-	private static final Logger logger = LoggerFactory.getLogger(GenerateSqlTest.class);
-
+ 
 	@Test
-	public void canInsertReviewInDB() {
+	public void testInsertReview_WhenSuccesfull_ThenReturnCreatedReview() {
 		ReviewMester review = createReviewMester();
 		reviewMesterRepository.insert(review);
 		ReviewMester dbReview = reviewMesterRepository.getById(review);
 		assertNotNull(dbReview);
 		assertEquals(review.getIdMester(), dbReview.getIdMester());
-		logger.info("Review-ul returnat e: ");
-		logger.info(review.toString());
+
 	}
 
 	@Test
-	public void canUpdateReviewFromDB() {
+	public void testUpdate_WhenSuccesfull_ThenUpdateReview() {
 		ReviewMester review = createReviewMester();
 		ReviewMester dbReview = reviewMesterRepository.getById(review);
 		assertNotNull(dbReview);
 		reviewMesterRepository.update(review);
 		assertEquals(review.getIdMester(), dbReview.getIdMester());
-		logger.info("Review-ul returnat e: ");
-		logger.info(dbReview.toString());
 	}
 
 	@Test
-	public void canDeleteReviewFromDB() {
+	public void testDelete_WhenSuccesfull_ThenDeleteReview() {
 		ReviewMester review = createReviewMester();
 		ReviewMester dbReview = reviewMesterRepository.getById(review);
 		assertNotNull(dbReview);
@@ -55,14 +49,10 @@ public class ReviewMesterRepositoryTest {
 	}
 
 	@Test
-	public void returnAllReviews() {
-		logger.info("Return all reviews .ok pana aici.");
+	public void testeGetAllReviews_WhenCalled_ThenReturnPageWithReviews() {
 		MesterSearchCriteria msc = createMSC();
 		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewMesterPage(msc);
 		assertNotNull(page);
-		logger.info(page.getPageSize().toString());
-		logger.info("Page-ul returnat e: ");
-		logger.info(page.toString());
 	}
 
 	private ReviewMester createReviewMester() {

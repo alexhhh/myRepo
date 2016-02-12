@@ -17,14 +17,13 @@ public class RepositoryConnectionUtil {
 
 	@Autowired
 	private DataSource dataSource;
-	
-	
+
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MesterRepositoryImp.class);
-	
+
 	public PreparedStatement prepareConnection(Connection conn, String sql) throws SQLException {
 
 		conn = dataSource.getConnection();
@@ -32,34 +31,16 @@ public class RepositoryConnectionUtil {
 		return ps;
 	}
 
-	public void closeConnection(Connection conn, PreparedStatement ps, ResultSet rs) throws SQLException {
+	public void closeable(AutoCloseable ac) throws Exception {
 
-		if (rs != null) {
+		if (ac != null) {
 			try {
-				rs.close();
-				rs = null;
+				ac.close();
+				ac = null;
 			} catch (SQLException e) {
 				logger.error(e.getMessage(), e.fillInStackTrace());
 			}
 		}
-
-		if (ps != null) {
-			try {
-				ps.close();
-				ps = null;
-			} catch (SQLException e) {
-				logger.error(e.getMessage(), e.fillInStackTrace());
-			}
-		}
-
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				logger.error(e.getMessage(), e.fillInStackTrace());
-			}
-		}
-
 	}
-	
+
 }

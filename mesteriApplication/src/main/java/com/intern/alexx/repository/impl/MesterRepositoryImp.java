@@ -44,12 +44,13 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at insert mester  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {	 
+				throw new RepositoryException("SQLException at close insert mester  " , e);
 			}
 		}
 	}
@@ -66,12 +67,13 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at insert update  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close update mester  " , e);
 			}
 		}
 	}
@@ -87,12 +89,13 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("SQL Exception at delete mester  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, null);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close delete mester  " , e);
 			}
 		}
 
@@ -114,12 +117,14 @@ public class MesterRepositoryImp implements MesterRepository {
 			}
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at get mester by Id  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, resultSet);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {		 
+				throw new RepositoryException("SQLException at close getMesterByID  " , e);
 			}
 		}
 
@@ -140,7 +145,6 @@ public class MesterRepositoryImp implements MesterRepository {
 		} else {
 			page.setPageSize(20);
 		}
-
 		page.setContentPage(executeSqlSelectStatement(searchCriteria));
 		return page;
 	}
@@ -163,12 +167,14 @@ public class MesterRepositoryImp implements MesterRepository {
 			}
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at count mesteri  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, resultSet);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {		 
+				throw new RepositoryException("SQLException at close execute count statement " , e);
 			}
 		}
 
@@ -192,18 +198,18 @@ public class MesterRepositoryImp implements MesterRepository {
 
 
 		} catch (SQLException e) {
-			throw new RepositoryException(e);
+			throw new RepositoryException("SQL Exception at get search mesteri  " , e);
 		} finally {
 			try {
-				connectionUtil.closeConnection(conn, ps, resultSet);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {		 
+				throw new RepositoryException("SQLException at close exec select statement " , e);
 			}
 		}
 		return mesteri;
 	}
-
-
 
 	private Mester getMesterFromDB(ResultSet resultSet) throws SQLException {
 		Mester mester = new Mester();
