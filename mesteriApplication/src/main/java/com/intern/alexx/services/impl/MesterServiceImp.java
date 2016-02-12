@@ -39,4 +39,9 @@ public class MesterServiceImp implements MesterService {
 		return mester;
 	}
 
+	public void insertFullMesterDetalis() {
+		 
+		
+	}
+
 }

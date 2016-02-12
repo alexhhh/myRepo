@@ -20,5 +20,7 @@ public interface MesterService {
 	public Mester getById(Mester mester);
 
 	MyPage<Mester> searchMesterPage(MesterSearchCriteria searchCriteria);
+	
+	void insertFullMesterDetalis();
 
 }
