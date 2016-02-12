@@ -9,13 +9,21 @@ package com.intern.alexx.model;
  */
 public class Contact extends BaseModel {
 
-	 
+	private Integer IdMester;
 	private String telNr;
 	private String email;
 	private String site;
-	private String profile;
+	private String socialPlatform;
 
 	 
+	public Integer getIdMester() {
+		return IdMester;
+	}
+
+	public void setIdMester(Integer idMester) {
+		IdMester = idMester;
+	}
+
 	/**
 	 * @return the telNr
 	 */
@@ -61,31 +69,20 @@ public class Contact extends BaseModel {
 		this.site = site;
 	}
 
-	/**
-	 * @return the profile
-	 */
-	public String getProfile() {
-		return profile;
+	public String getSocialPlatform() {
+		return socialPlatform;
 	}
 
-	/**
-	 * @param profile
-	 *            the profile to set
-	 */
-	public void setProfile(String profile) {
-		this.profile = profile;
+	public void setSocialPlatform(String socialPlatform) {
+		this.socialPlatform = socialPlatform;
 	}
 
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "ContactImp [ idContact=" + getId() + "telNr=" + telNr + ", email=" + email + ", site=" + site
-				+ ", profile=" + profile + "]";
+		return "Contact [IdMester=" + IdMester + ", telNr=" + telNr + ", email=" + email + ", site=" + site
+				+ ", socialPlatform=" + socialPlatform + "]";
 	}
+
+	 
 
 }

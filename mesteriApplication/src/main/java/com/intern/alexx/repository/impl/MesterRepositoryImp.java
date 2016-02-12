@@ -67,7 +67,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at insert update  " , e);
+			throw new RepositoryException("SQL Exception at update mester  " , e);
 		} finally {
 			try {
 				connectionUtil.closeable(ps);
@@ -98,7 +98,6 @@ public class MesterRepositoryImp implements MesterRepository {
 				throw new RepositoryException("SQLException at close delete mester  " , e);
 			}
 		}
-
 	}
 
 	public Mester getById(Mester mester) {
