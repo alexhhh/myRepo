@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mysql.jdbc.Statement;
+
 @Component
 public class RepositoryConnectionUtil {
 
@@ -26,7 +28,8 @@ public class RepositoryConnectionUtil {
 	public PreparedStatement prepareConnection(Connection conn, String sql) throws SQLException {
 
 		conn = dataSource.getConnection();
-		PreparedStatement ps = conn.prepareStatement(sql);
+		conn.setAutoCommit(false);
+		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		return ps;
 	}
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.intern.alexx.model.Speciality;
 import com.intern.alexx.repository.SpecialityRepository;
+import com.mysql.jdbc.Statement;
 
 @Component
 public class SpecialtyRepositoryImp implements SpecialityRepository {
@@ -27,7 +28,7 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 		try {
 			ps = connectionUtil.prepareConnection(conn, sql);
-			addContactIntoDB(speciality, ps);
+			addSpecialityIntoDB(speciality, ps);
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
@@ -51,7 +52,7 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		try {
 			ps = connectionUtil.prepareConnection(conn, sql);
 			ps.setInt(2, speciality.getId());
-			addContactIntoDB(speciality, ps);
+			addSpecialityIntoDB(speciality, ps);
 			ps.executeUpdate();
 
 		} catch (SQLException e) {
@@ -148,11 +149,9 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		}
 		return specialities;
 	}
-
 	
-	private void addContactIntoDB(Speciality speciality, PreparedStatement ps) throws SQLException {
-		ps.setInt(1, speciality.getId());
-		ps.setString(2, speciality.getSpecialityName());
+	public void addSpecialityIntoDB(Speciality speciality, PreparedStatement ps) throws SQLException {
+		ps.setString(1, speciality.getSpecialityName());
 	}
 
 	private Speciality getSpecialtyFromDB(ResultSet resultSet) throws SQLException {
@@ -162,5 +161,24 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		return speciality;
 	}
 
-
+	public Integer transactionalGetSpecialityID(Speciality speciality,Connection conn, PreparedStatement ps, ResultSet rs) throws SQLException{
+		Integer specKey=null;
+		String sql = "SELECT speciality.id FROM speciality WHERE speciality_name = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, speciality.getSpecialityName());
+		rs = ps.executeQuery();
+		if (rs.next()) {
+		specKey = rs.getInt("id");
+		}
+		else {
+			sql = "INSERT INTO speciality (SPECIALITY_NAME) VALUES (?)";
+			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, speciality.getSpecialityName());
+			ps.executeUpdate();
+			rs = ps.getGeneratedKeys();
+			rs.next();
+			specKey = rs.getInt(1);			 
+		}
+		return specKey;
+	}
 }

@@ -2,7 +2,6 @@ package com.intern.alexx.repository;
 
 
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -10,10 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = "/appContext.xml")
 public class ContractRepositoryTest {
 
-	
-	@Autowired
-	private ContactRepository contactRepository;
-	
- 
+//	
+//	@Autowired
+//	private ContactRepository contactRepository;
+//	
+// 
 	
 }

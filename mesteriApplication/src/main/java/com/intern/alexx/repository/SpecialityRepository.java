@@ -3,6 +3,10 @@
  */
 package com.intern.alexx.repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.intern.alexx.model.Speciality;
@@ -22,4 +26,6 @@ public interface SpecialityRepository {
 	Speciality getById(Speciality speciality);
 	
 	List<Speciality> getAllSpecialties();
+	
+	Integer transactionalGetSpecialityID(Speciality speciality,Connection conn, PreparedStatement ps, ResultSet rs) throws SQLException;
 }

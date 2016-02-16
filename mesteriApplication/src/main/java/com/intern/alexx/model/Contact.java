@@ -3,6 +3,7 @@
  */
 package com.intern.alexx.model;
 
+
 /**
  * @author malex
  *
@@ -83,6 +84,6 @@ public class Contact extends BaseModel {
 				+ ", socialPlatform=" + socialPlatform + "]";
 	}
 
-	 
+ 
 
 }

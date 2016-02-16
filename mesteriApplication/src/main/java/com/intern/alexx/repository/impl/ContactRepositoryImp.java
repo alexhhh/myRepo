@@ -119,7 +119,7 @@ public class ContactRepositoryImp implements ContactRepository {
 		return contact;
 	}
 
-	private void addContactIntoDB(Contact contact, PreparedStatement ps) throws SQLException {
+	public void addContactIntoDB(Contact contact, PreparedStatement ps) throws SQLException {
 		ps.setInt(1, contact.getIdMester());
 		ps.setString(2, contact.getTelNr());
 		ps.setString(3, contact.getEmail());
@@ -137,6 +137,35 @@ public class ContactRepositoryImp implements ContactRepository {
 		contact.setSite(resultSet.getString("site"));
 		contact.setSocialPlatform(resultSet.getString("social_platform"));
 		return contact;
+	}
+
+	public void transactionalInsertContract(Integer mesterKey, Contact contact, Connection conn, PreparedStatement ps)
+			throws SQLException {
+		String sql = " INSERT INTO contact (ID_MESTER, NUMAR_TELEFON, EMAIL, SITE, SOCIAL_PLATFORM) VALUES (?,?,?,?,?)";
+		ps = conn.prepareStatement(sql);
+		contact.setIdMester(mesterKey);
+		addContactIntoDB(contact, ps);
+		ps.executeUpdate();
+	}
+
+	public void transactionalUpdateContract(Integer mesterKey, Contact contact, Connection conn, PreparedStatement ps)
+			throws SQLException {
+		String sql = " UPDATE contact SET NUMAR_TELEFON=?, EMAIL=?, SITE=?, SOCIAL_PLATFORM=? WHERE id_mester=? ";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(5, mesterKey);
+		ps.setString(1, contact.getTelNr());
+		ps.setString(2, contact.getEmail());
+		ps.setString(3, contact.getSite());
+		ps.setString(4, contact.getSocialPlatform());
+		ps.executeUpdate();
+	}
+
+	public void transactionalDeleteContract(Integer mesterKey, Connection conn, PreparedStatement ps)
+			throws SQLException {
+		String sql = "DELETE FROM contact  WHERE id_mester = ?";
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, mesterKey);
+		ps.executeUpdate();
 	}
 
 }
