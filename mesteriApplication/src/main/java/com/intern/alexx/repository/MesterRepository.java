@@ -25,7 +25,7 @@ public interface MesterRepository {
 
 	MyPage<Mester> setupTheSearchMesterPage(MesterSearchCriteria searchCriteria);
 
-	void insertFullMester(Mester mester, Contact contact, Speciality speciality);
+	void insertFullMester(Mester mester, Contact contact, Speciality list);
 
 	void updateFullMester(Mester mester, Contact contact, Speciality speciality);
 	

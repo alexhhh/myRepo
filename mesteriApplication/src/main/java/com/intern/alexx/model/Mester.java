@@ -16,7 +16,7 @@ public class Mester extends BaseModel {
 	private String location;
 	private String description;
 	private Contact contact;
-	private List<Speciality> speciality;
+	private Speciality speciality;
 	private List<ReviewMester> reviewMester;
 
 	public Mester() {
@@ -108,11 +108,11 @@ public class Mester extends BaseModel {
 	}
 
  
-	public List<Speciality> getSpeciality() {
+	public Speciality getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality(List<Speciality> speciality) {
+	public void setSpeciality( Speciality speciality) {
 		this.speciality = speciality;
 	}
 
