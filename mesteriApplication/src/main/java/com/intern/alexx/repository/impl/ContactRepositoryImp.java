@@ -17,7 +17,6 @@ public class ContactRepositoryImp implements ContactRepository {
 	@Autowired
 	private RepositoryConnectionUtil connectionUtil;
 
-	@Override
 	public void insert(Contact contact) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -42,7 +41,6 @@ public class ContactRepositoryImp implements ContactRepository {
 
 	}
 
-	@Override
 	public void update(Contact contact) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -67,7 +65,6 @@ public class ContactRepositoryImp implements ContactRepository {
 
 	}
 
-	@Override
 	public void delete(Contact contact) {
 		Connection conn = null;
 		PreparedStatement ps = null;

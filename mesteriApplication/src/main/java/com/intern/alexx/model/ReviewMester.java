@@ -3,10 +3,14 @@
  */
 package com.intern.alexx.model;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * @author malex
  *
  */
+
+@ApiModel
 public class ReviewMester extends BaseModel {
 	
 	private int idMester;

@@ -7,20 +7,13 @@
 							http://www.springframework.org/schema/context
 							http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 							
-	<context:component-scan base-package="com.intern.alexx" />						
-	<context:property-placeholder location="classpath:config.properties" />
-	 
+	<context:component-scan base-package="com.intern.alexx" />	
 	
+  <context:property-placeholder location="classpath:swagger.properties"/>	
 	
+	<bean class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+	<bean class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+	<bean class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
 
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="${dataSource.db_url}" />
-		<property name="username" value="${dataSource.pass}" />
-		<property name="password" value="${dataSource.user}" />
-	</bean>
-
- 
 
 </beans>

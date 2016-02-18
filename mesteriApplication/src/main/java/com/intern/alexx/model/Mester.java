@@ -5,10 +5,14 @@ package com.intern.alexx.model;
 
 import java.util.List;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * @author malex
  *
  */
+
+@ApiModel
 public class Mester extends BaseModel {
 
 	private String firstName;

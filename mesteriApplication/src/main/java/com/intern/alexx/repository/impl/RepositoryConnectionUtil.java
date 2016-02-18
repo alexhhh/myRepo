@@ -28,7 +28,7 @@ public class RepositoryConnectionUtil {
 	public PreparedStatement prepareConnection(Connection conn, String sql) throws SQLException {
 
 		conn = dataSource.getConnection();
-		conn.setAutoCommit(false);
+		 
 		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		return ps;
 	}

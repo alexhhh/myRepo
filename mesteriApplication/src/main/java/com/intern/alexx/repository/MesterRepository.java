@@ -3,11 +3,9 @@
  */
 package com.intern.alexx.repository;
 
-import com.intern.alexx.model.Contact;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
-import com.intern.alexx.model.Speciality;
 
 /**
  * @author malex
@@ -25,9 +23,9 @@ public interface MesterRepository {
 
 	MyPage<Mester> setupTheSearchMesterPage(MesterSearchCriteria searchCriteria);
 
-	void insertFullMester(Mester mester, Contact contact, Speciality list);
+	void insertFullMester(Mester mester);
 
-	void updateFullMester(Mester mester, Contact contact, Speciality speciality);
-	
+	void updateFullMester(Mester mester);
+
 	void deleteFullMester(Mester mester);
 }

@@ -20,7 +20,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 	@Autowired
 	private RepositoryConnectionUtil connectionUtil;
 
-	@Override
 	public void insert(Speciality speciality) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -43,7 +42,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		}
 	}
 
-	@Override
 	public void update(Speciality speciality) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -67,7 +65,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		}
 	}
 
-	@Override
 	public void delete(Speciality speciality) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -91,7 +88,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 	}
 	
-	@Override
 	public Speciality getById(Speciality speciality) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -121,7 +117,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		return speciality;
 	}
 
-	@Override
 	public List<Speciality> getAllSpecialties() {
 		List<Speciality> specialities = new ArrayList<Speciality>();
 		String sql = " SELECT specialty.specialty_name FROM specialty";

@@ -60,9 +60,7 @@ public class MesterRepositoryTest {
 	@Test
 	public void insertFullMester_WhenSuccesfull_ThenReturnFullMester() {
 		Mester mester = createMester();
-		Contact contact = createContract();
-		Speciality speciality = createSpeciality();
-		mesterRepository.insertFullMester(mester, contact, speciality);
+		mesterRepository.insertFullMester(mester);
 		Mester dbMester = mesterRepository.getById(mester);
 		assertNotNull(dbMester);
 	}
@@ -70,11 +68,9 @@ public class MesterRepositoryTest {
 	@Test
 	public void testUpdateFullMester_WhenSuccesfull_ThenUpdateMester() {
 		Mester mester = createMester();
-		Contact contact = createContract();
-		Speciality speciality = createSpeciality();
 		Mester dbMester = mesterRepository.getById(mester);
 		assertNotNull(dbMester);
-		mesterRepository.updateFullMester(dbMester, contact, speciality);
+		mesterRepository.updateFullMester(dbMester);
 		
 	}
 	
@@ -89,11 +85,15 @@ public class MesterRepositoryTest {
 
 	private Mester createMester() {
 		Mester mester = new Mester();
+		Contact contact = createContract();
+		Speciality speciality = createSpeciality();
 		mester.setId(101);
 		mester.setFirstName("Ion");
 		mester.setLastName("Ionescu");
 		mester.setLocation("Miami");
 		mester.setDescription(" ");
+		mester.setContact(contact);
+		mester.setSpeciality(speciality);
 		return mester;
 	}
 

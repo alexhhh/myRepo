@@ -170,11 +170,12 @@ public class MesterRepositoryImp implements MesterRepository {
 		return page;
 	}
 
-	public void insertFullMester(Mester mester, Contact contact, Speciality speciality) {
+	public void insertFullMester(Mester mester) {
 		Connection conn = null;
 		PreparedStatement ps = null;
-		ResultSet rs = null, rs2 = null, rs3 = null;
-
+		ResultSet rs = null, rs2 = null;
+		Contact contact=mester.getContact();
+		Speciality speciality=mester.getSpeciality();
 		try {
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -184,7 +185,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			logger.info("@INSERT+++ get mester key :" + mesterKey + " +++");
 			contactRepo.transactionalInsertContract(mesterKey, contact, conn, ps);
 			logger.info("@INSERT+++ get contact " + contact.toString() + "  +++");
-			Integer specKey = specRepo.transactionalGetSpecialityID(speciality, conn, ps, rs3);
+			Integer specKey = specRepo.transactionalGetSpecialityID(speciality, conn, ps, rs2);
 			logger.info("@INSERT+++ insert spec key: " + specKey + " +++");
 			transactionalInsertIntoMesterHasSpeciality(specKey, specKey, conn, ps);
 
@@ -201,7 +202,6 @@ public class MesterRepositoryImp implements MesterRepository {
 			try {
 				connectionUtil.closeable(rs);
 				connectionUtil.closeable(rs2);
-				connectionUtil.closeable(rs3);
 				connectionUtil.closeable(ps);
 				connectionUtil.closeable(conn);
 			} catch (Exception e) {
@@ -210,11 +210,12 @@ public class MesterRepositoryImp implements MesterRepository {
 		}
 	}
 
-	public void updateFullMester(Mester mester, Contact contact, Speciality speciality) {
+	public void updateFullMester(Mester mester) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null, rs2 = null;
-
+		Contact contact=mester.getContact();
+		Speciality speciality=mester.getSpeciality();
 		try {
 			conn = dataSource.getConnection();
 			conn.setAutoCommit(false);

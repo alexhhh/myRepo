@@ -16,11 +16,11 @@ public class MesterServiceImp implements MesterService {
 	private MesterRepository mesterRepository;
 
 	public void insertMester(Mester mester) {
-		mesterRepository.insertFullMester(mester, mester.getContact(), mester.getSpeciality());
+		mesterRepository.insertFullMester(mester);
 	}
 
 	public void updateMester(Mester mester) {
-		mesterRepository.updateFullMester(mester, mester.getContact(), mester.getSpeciality());
+		mesterRepository.updateFullMester(mester);
 	}
 
 	public void deleteMester(Mester mester) {

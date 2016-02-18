@@ -13,6 +13,8 @@ public interface ReviewMesterService {
 	void deleteReviewMester(ReviewMester reviewMester);
 	
 	public ReviewMester getById(ReviewMester reviewMester);
+	
+	public MyPage<ReviewMester> getReviewMasterPage(Integer idMester, MesterSearchCriteria searchCriteria);
 
-	public MyPage<ReviewMester> getReviewMasterPage(MesterSearchCriteria searchCriteria);
+	public MyPage<ReviewMester> getReviewAllMasterPage(MesterSearchCriteria searchCriteria);
 }

@@ -24,5 +24,7 @@ public interface ReviewMesterRepository {
 	ReviewMester getById(ReviewMester reviewMester);
 
 	MyPage<ReviewMester> getAllReviewMesterPage(MesterSearchCriteria searchCriteria);
+	
+	MyPage<ReviewMester> getAllReviewForMester(Integer idMester, MesterSearchCriteria searchCriteria);
 
 }

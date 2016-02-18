@@ -135,8 +135,9 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		String sql2 = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
 				+ " , " + page.getPageSize() + " ;";
 		try {
-			page.setTotalRezults(executeCountStatement(conn, ps, sql, resultSet));
-			page.setContentPage(executeElementsStatement(conn, ps2, sql2, resultSet2));
+			Integer id=null;
+			page.setTotalRezults(executeCountStatement(id,conn, ps, sql, resultSet));
+			page.setContentPage(executeElementsStatement(id,conn, ps2, sql2, resultSet2));
 
 		} catch (SQLException e) {
 			throw new RepositoryException("SQL Exception at get all reviews  ", e);
@@ -154,10 +155,52 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return page;
 	}
 
-	private int executeCountStatement(Connection conn, PreparedStatement ps, String sql, ResultSet resultSet)
+	public MyPage<ReviewMester> getAllReviewForMester(Integer idMester, MesterSearchCriteria searchCriteria) {
+		Connection conn = null;
+		PreparedStatement ps = null, ps2 = null;
+		ResultSet resultSet = null, resultSet2 = null;
+		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_mester = ? ; ";
+		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
+
+		if (searchCriteria.getPageNumber() != null) {
+			page.setPageNumber(searchCriteria.getPageNumber());
+		} else {
+			page.setPageNumber(1);
+		}
+		if (searchCriteria.getPageSize() != null) {
+			page.setPageSize(searchCriteria.getPageSize());
+		} else {
+			page.setPageSize(10);
+		}
+ 
+		String sql2 = "SELECT * FROM review_mester  WHERE id_mester = ? AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
+				+ " , " + page.getPageSize() + " ;";
+		try {
+			page.setTotalRezults(executeCountStatement(idMester,conn, ps, sql, resultSet));
+			page.setContentPage(executeElementsStatement(idMester,conn, ps2, sql2, resultSet2));
+
+		} catch (SQLException e) {
+			throw new RepositoryException("SQL Exception at get all mester reviews  ", e);
+		} finally {
+			try {
+				connectionUtil.closeable(resultSet);
+				connectionUtil.closeable(ps);
+				connectionUtil.closeable(resultSet2);
+				connectionUtil.closeable(ps2);
+				connectionUtil.closeable(conn);
+			} catch (Exception e) {
+				throw new RepositoryException("SQLException at close getAllReviewFromMester   ", e);
+			}
+		}
+		return page;
+	}
+	
+	
+	private int executeCountStatement(Integer idMester,Connection conn, PreparedStatement ps, String sql, ResultSet resultSet)
 			throws SQLException {
 		int totalElements = -1;
 		ps = connectionUtil.prepareConnection(conn, sql);
+		if (idMester!=null){ ps.setInt(1,idMester);}
 		resultSet = ps.executeQuery();
 		if (resultSet.next()) {
 			totalElements = resultSet.getInt("total");
@@ -165,10 +208,11 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return totalElements;
 	}
 
-	private List<ReviewMester> executeElementsStatement(Connection conn, PreparedStatement ps, String sql,
+	private List<ReviewMester> executeElementsStatement(Integer idMester,Connection conn, PreparedStatement ps, String sql,
 			ResultSet resultSet) throws SQLException {
 		ps = connectionUtil.prepareConnection(conn, sql);
 		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
+		if (idMester!=null){ ps.setInt(1,idMester);}
 		resultSet = ps.executeQuery();
 		while (resultSet.next()) {
 			reviews.add(getReviewFromDB(resultSet));
