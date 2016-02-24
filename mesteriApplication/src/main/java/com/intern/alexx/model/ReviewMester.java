@@ -13,8 +13,8 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel
 public class ReviewMester extends BaseModel {
 	
-	private int idMester;
-	private int idClient;
+	private String idMester;
+	private String idClient;
 	private String price;
 	private int rating;
 	private String feedback;
@@ -22,7 +22,7 @@ public class ReviewMester extends BaseModel {
 	public ReviewMester() {
 	}
 
-	public ReviewMester(int idReviewMester, int idMester, int idClient, String price, int rating, String feedback) {
+	public ReviewMester(String idReviewMester, String idMester, String idClient, String price, int rating, String feedback) {
 		super(idReviewMester);
 		this.idMester=idMester;
 		this.idClient=idClient;
@@ -76,19 +76,19 @@ public class ReviewMester extends BaseModel {
 		this.feedback = feedback;
 	}
 
-	public int getIdMester() {
+	public String getIdMester() {
 		return idMester;
 	}
 
-	public void setIdMester(int idMester) {
+	public void setIdMester(String idMester) {
 		this.idMester = idMester;
 	}
 
-	public int getIdClient() {
+	public String getIdClient() {
 		return idClient;
 	}
 
-	public void setIdClient(int idClient) {
+	public void setIdClient(String idClient) {
 		this.idClient = idClient;
 	}
 

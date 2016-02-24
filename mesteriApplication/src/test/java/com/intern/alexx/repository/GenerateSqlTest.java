@@ -14,7 +14,7 @@ import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.repository.impl.GenerateSql;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "/appContext.xml")
+@ContextConfiguration(locations = "/beans.xml")
 public class GenerateSqlTest {
 
 	@Autowired

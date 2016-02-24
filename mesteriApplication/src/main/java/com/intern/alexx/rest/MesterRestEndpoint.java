@@ -1,5 +1,7 @@
 package com.intern.alexx.rest;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,64 +41,61 @@ public class MesterRestEndpoint {
 	 private UriInfo uriInfo;
 	
 	@GET
-	@Path("{id}")
+	@Path("/{idMester}")
 	@ApiOperation(value = "Return mester", notes = "Return one mester", response = Mester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = Mester.class),
 			@ApiResponse(code = 404, message = "Mester not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getById(@PathParam("id")Integer id) {
-		Mester mester = new Mester();
-			mester.setId(id);
-			mesterService.getById(mester);
-			int status = mester == null ? 404 :200;
+	public Response getById(@PathParam("idMester")String idMester) {
+		 Mester mester = mesterService.getById(idMester);
+			int status = mester == null ? 404 : 200;
 		return Response.ok(status).entity(mester).build();
 	}
 
-	@GET
-	@ApiOperation(value = "Return a page", notes = "Return a mester page", response = Mester.class)
+	@POST
+	@Path("/search")
+	@ApiOperation(value = "Return a page", notes = "Return a mester page", response = MyPage.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Mester page was successfully retrieved.", response = Mester.class),
+			@ApiResponse(code = 200, message = "Mester page was successfully retrieved.", response = MyPage.class),
 			@ApiResponse(code = 404, message = "The page was not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response search(MesterSearchCriteria searchCriteria) {
-		MyPage<Mester> newMester = mesterService.searchMesterPage(searchCriteria);
+	public Response search(MesterSearchCriteria searchCriteria) throws SQLException {
+		MyPage<Mester> newMester = mesterService.searchMester(searchCriteria);
 		return Response.ok(Status.OK).entity(newMester).build();
 	}
 	
 	@POST
-	@ApiOperation(value = "Saves a new mester", notes = "Saves full a mester.")
+	@ApiOperation(value = "Add mester", notes = "Saves full a mester.")
 	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Meseter was successfuly saved "),
+			@ApiResponse(code = 201, message = "Meseter was successfuly created "),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response insert(Mester mester) {
 		mesterService.insertMester(mester);
-		return Response.ok(Status.OK).entity(mester).build();
+		return Response.ok(Status.CREATED).entity(mester).build();
 	}
 
 	@PUT
-	@Path("{id}")
-	@ApiOperation(value = "Update a mester", notes = "Update a full mester", response = Mester.class)
+	@Path("/{idMester}")
+	@ApiOperation(value = "Update mester", notes = "Update a full mester", response = Mester.class)
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Update mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response update(@PathParam("id")Integer id,Mester mester) {
+	public Response update(@PathParam("idMester")String idMester,Mester mester) {
 		  mester = new Mester();
-		mester.setId(id);
+		mester.setId(idMester);
 		mesterService.updateMester(mester);
 		return Response.ok(Status.OK).entity(mester).build();
 	}
 	
 	@DELETE
-	@Path("{id}")
-	@ApiOperation(value = "Removes mester given id", notes = "Remove a full mester", response = Mester.class)
+	@Path("/{idMester}")
+	@ApiOperation(value = "Remove mester", notes = "Remove a full mester", response = Mester.class)
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Delete mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response delete(@PathParam("id")Integer id) {
-		Mester mester = new Mester();
-		mester.setId(id);
-		mesterService.deleteMester(mester);
+	public Response delete(@PathParam("idMester")String idMester) {		 
+		mesterService.deleteMester(idMester);
 		return Response.accepted().build();
 	}
 }

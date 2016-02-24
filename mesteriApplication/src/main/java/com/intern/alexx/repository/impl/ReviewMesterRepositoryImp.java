@@ -1,15 +1,17 @@
 package com.intern.alexx.repository.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+ 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
+ 
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
@@ -18,228 +20,134 @@ import com.intern.alexx.repository.ReviewMesterRepository;
 @Component
 public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
+ 
 	@Autowired
-	private RepositoryConnectionUtil connectionUtil;
+	private JdbcTemplate template;
 
+	public void setJdbcTemplate(JdbcTemplate template) {
+		this.template = template;
+	}
+	
 	public void insert(ReviewMester reviewMester) {
-
-		String sql = "INSERT INTO review_mester (id_mester, id_client, rating, price, feedback) "
-				+ "VALUES (?,?,?,?,?)";
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			ps = connectionUtil.prepareConnection(conn, sql);
-			setReviewMesterIntoDB(reviewMester, ps);
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at insert review  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close insert review  ", e);
-			}
-		}
+		String sql = "INSERT INTO review_mester (id, id_mester, id_client, rating, price, feedback) "
+				+ "VALUES (?,?,?,?,?,?)";
+		template.update(sql,
+				new Object[] { reviewMester.getId(), reviewMester.getIdMester(), reviewMester.getIdClient(),
+						reviewMester.getRating(), reviewMester.getPrice(), reviewMester.getFeedback() });
+		// throw new RuntimeException("error");
 	}
 
 	public void update(ReviewMester reviewMester) {
 		String sql = "UPDATE review_mester SET id_mester=?, id_client=?, rating=?, price=?, feedback=? WHERE id=?";
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			ps = connectionUtil.prepareConnection(conn, sql);
-			setReviewMesterIntoDB(reviewMester, ps);
-			ps.setInt(6, reviewMester.getId());
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at update review  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close update review  ", e);
-			}
-		}
+		template.update(sql, new Object[] { reviewMester.getIdMester(), reviewMester.getIdClient(),
+				reviewMester.getRating(), reviewMester.getPrice(), reviewMester.getFeedback(), reviewMester.getId() });
 	}
 
-	public void delete(ReviewMester reviewMester) {
+	public void delete(String idReview) {
 		String sql = "DELETE FROM review_mester  WHERE id = ? ";
-		Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			ps = connectionUtil.prepareConnection(conn, sql);
-			ps.setInt(1, reviewMester.getId());
-			ps.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at delete review  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close delete review ", e);
-			}
-		}
+		template.update(sql, idReview);
 	}
 
-	public ReviewMester getById(ReviewMester reviewMester) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet resultSet = null;
+	public ReviewMester getById(String idReview) {
 		String sql = "SELECT * FROM review_mester WHERE id = ?";
-		try {
-			ps = connectionUtil.prepareConnection(conn, sql);
-			ps.setInt(1, reviewMester.getId());
-			resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				getReviewFromDB(resultSet);
+		ReviewMester review = new ReviewMester();
+		template.query(sql, new Object[] { idReview }, new RowCallbackHandler() {
+			public void processRow(ResultSet rs) throws SQLException {
+				getReviewFromDB(review, rs);
 			}
-			ps.close();
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at get review by Id  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(resultSet);
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close getByID  ", e);
-			}
-		}
-		return reviewMester;
+		});
+		return review;
 	}
 
-	public MyPage<ReviewMester> getAllReviewMesterPage(MesterSearchCriteria searchCriteria) {
-		Connection conn = null;
-		PreparedStatement ps = null, ps2 = null;
-		ResultSet resultSet = null, resultSet2 = null;
-		String sql = "SELECT COUNT(*) AS total FROM review_mester ; ";
+
+	public MyPage<ReviewMester> getAllReviewsPage(MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-
-		if (searchCriteria.getPageNumber() != null) {
-			page.setPageNumber(searchCriteria.getPageNumber());
-		} else {
-			page.setPageNumber(1);
-		}
-		if (searchCriteria.getPageSize() != null) {
-			page.setPageSize(searchCriteria.getPageSize());
-		} else {
-			page.setPageSize(10);
-		}
-
-		String sql2 = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
+		page.setPageNumber(setThisPageNumber(searchCriteria));
+		page.setPageSize(setThisPageSize(searchCriteria));
+		
+		String sql = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
 				+ " , " + page.getPageSize() + " ;";
-		try {
-			Integer id=null;
-			page.setTotalRezults(executeCountStatement(id,conn, ps, sql, resultSet));
-			page.setContentPage(executeElementsStatement(id,conn, ps2, sql2, resultSet2));
 
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at get all reviews  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(resultSet);
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(resultSet2);
-				connectionUtil.closeable(ps2);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close getAllReview   ", e);
-			}
-		}
+		page.setTotalRezults(executeCountStatementForAllReviews());
+		page.setContentPage(executeElementsStatementForAllReviews(sql));
 		return page;
 	}
-
-	public MyPage<ReviewMester> getAllReviewForMester(Integer idMester, MesterSearchCriteria searchCriteria) {
-		Connection conn = null;
-		PreparedStatement ps = null, ps2 = null;
-		ResultSet resultSet = null, resultSet2 = null;
-		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_mester = ? ; ";
-		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-
-		if (searchCriteria.getPageNumber() != null) {
-			page.setPageNumber(searchCriteria.getPageNumber());
-		} else {
-			page.setPageNumber(1);
-		}
-		if (searchCriteria.getPageSize() != null) {
-			page.setPageSize(searchCriteria.getPageSize());
-		} else {
-			page.setPageSize(10);
-		}
  
-		String sql2 = "SELECT * FROM review_mester  WHERE id_mester = ? AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
-				+ " , " + page.getPageSize() + " ;";
-		try {
-			page.setTotalRezults(executeCountStatement(idMester,conn, ps, sql, resultSet));
-			page.setContentPage(executeElementsStatement(idMester,conn, ps2, sql2, resultSet2));
-
-		} catch (SQLException e) {
-			throw new RepositoryException("SQL Exception at get all mester reviews  ", e);
-		} finally {
-			try {
-				connectionUtil.closeable(resultSet);
-				connectionUtil.closeable(ps);
-				connectionUtil.closeable(resultSet2);
-				connectionUtil.closeable(ps2);
-				connectionUtil.closeable(conn);
-			} catch (Exception e) {
-				throw new RepositoryException("SQLException at close getAllReviewFromMester   ", e);
-			}
-		}
-		return page;
-	}
-	
-	
-	private int executeCountStatement(Integer idMester,Connection conn, PreparedStatement ps, String sql, ResultSet resultSet)
-			throws SQLException {
-		int totalElements = -1;
-		ps = connectionUtil.prepareConnection(conn, sql);
-		if (idMester!=null){ ps.setInt(1,idMester);}
-		resultSet = ps.executeQuery();
-		if (resultSet.next()) {
-			totalElements = resultSet.getInt("total");
-		}
+	private int executeCountStatementForAllReviews() throws SQLException {
+		String sql = "SELECT COUNT(*) AS total FROM review_mester;";
+		Integer totalElements = template.queryForObject(sql, Integer.class);
 		return totalElements;
 	}
 
-	private List<ReviewMester> executeElementsStatement(Integer idMester,Connection conn, PreparedStatement ps, String sql,
-			ResultSet resultSet) throws SQLException {
-		ps = connectionUtil.prepareConnection(conn, sql);
-		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
-		if (idMester!=null){ ps.setInt(1,idMester);}
-		resultSet = ps.executeQuery();
-		while (resultSet.next()) {
-			reviews.add(getReviewFromDB(resultSet));
-		}
+	private List<ReviewMester> executeElementsStatementForAllReviews(String sql) {
+		RowMapper<ReviewMester> rm =BeanPropertyRowMapper.newInstance(ReviewMester.class);
+		List<ReviewMester> reviews = template.query(sql, rm);
+		return reviews;
+	}
+	
+	public MyPage<ReviewMester> getAllReviewForMester(String idMester, MesterSearchCriteria searchCriteria)
+			throws SQLException {
+		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
+		page.setPageNumber(setThisPageNumber(searchCriteria));
+		page.setPageSize(setThisPageSize(searchCriteria));
+		String sql = "SELECT * FROM review_mester AS rm  WHERE id_mester = ? LIMIT "
+				+ (page.getPageSize() * (page.getPageNumber() - 1)) + " , " + page.getPageSize() + " ;";
+		page.setTotalRezults(executeCountStatement(idMester));
+		page.setContentPage(executeElementsStatement(idMester, sql));
+		return page;
+	}
+
+	private int executeCountStatement(String idMester) throws SQLException {
+		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_mester=? ;";
+		Integer totalElements = template.queryForObject(sql, Integer.class, idMester);
+		return totalElements;
+	}
+
+	private List<ReviewMester> executeElementsStatement(String idMester, String sql) throws SQLException {
+		RowMapper<ReviewMester> rm =BeanPropertyRowMapper.newInstance(ReviewMester.class);
+		List<ReviewMester> reviews = template.query(sql, new Object[] {idMester}, rm);
 		return reviews;
 	}
 
-	private ReviewMester getReviewFromDB(ResultSet resultSet) throws SQLException {
 
-		ReviewMester review = new ReviewMester();
-		review.setId(resultSet.getInt("id"));
-		review.setIdMester(resultSet.getInt("id_mester"));
-		review.setIdClient(resultSet.getInt("id_client"));
+
+	private int setThisPageNumber(MesterSearchCriteria searchCriteria){
+		int pageNumeber = 1;
+		if (searchCriteria.getPageNumber() != 0) {
+			pageNumeber =searchCriteria.getPageNumber();
+		}  
+		return pageNumeber;
+	}
+	
+	private int setThisPageSize(MesterSearchCriteria searchCriteria){
+		int	pageSize = 10;
+		if (searchCriteria.getPageSize() != 0) {
+			pageSize =searchCriteria.getPageSize();
+			}  
+		return pageSize;
+	}
+	
+	private ReviewMester getReviewFromDB(ReviewMester review, ResultSet resultSet) throws SQLException {
+		
+		review.setId(resultSet.getString("id"));
+		review.setIdMester(resultSet.getString("id_mester"));
+		review.setIdClient(resultSet.getString("id_client"));
 		review.setRating(resultSet.getInt("rating"));
 		review.setPrice(resultSet.getString("price"));
 		review.setFeedback(resultSet.getString("feedback"));
 		return review;
 	}
+	
 
-	private ReviewMester setReviewMesterIntoDB(ReviewMester reviewMester, PreparedStatement ps) throws SQLException {
-
-		ps.setInt(1, reviewMester.getIdMester());
-		ps.setInt(2, reviewMester.getIdClient());
-		ps.setInt(3, reviewMester.getRating());
-		ps.setString(4, reviewMester.getPrice());
-		ps.setString(5, reviewMester.getFeedback());
-		return reviewMester;
-	}
+	// private ReviewMester setReviewMesterIntoDB(ReviewMester reviewMester,
+	// PreparedStatement ps) throws SQLException {
+	//
+	// ps.setString(1, reviewMester.getIdMester());
+	// ps.setString(2, reviewMester.getIdClient());
+	// ps.setInt(3, reviewMester.getRating());
+	// ps.setString(4, reviewMester.getPrice());
+	// ps.setString(5, reviewMester.getFeedback());
+	// return reviewMester;
+	// }
 
 }

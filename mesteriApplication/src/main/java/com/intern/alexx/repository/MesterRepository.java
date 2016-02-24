@@ -3,6 +3,8 @@
  */
 package com.intern.alexx.repository;
 
+import java.sql.SQLException;
+
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -17,15 +19,13 @@ public interface MesterRepository {
 
 	void update(Mester mester);
 
-	void delete(Mester mester);
+	void delete(String mesterId);
 
-	Mester getById(Mester mester);
+	Mester getById(String mesterId);
 
-	MyPage<Mester> setupTheSearchMesterPage(MesterSearchCriteria searchCriteria);
+	MyPage<Mester> prepareSearchForMester(MesterSearchCriteria searchCriteria) throws SQLException;
 
-	void insertFullMester(Mester mester);
+	void insertIntoMesterHasSpeciality(String mesterId,String specialityId);
 
-	void updateFullMester(Mester mester);
-
-	void deleteFullMester(Mester mester);
+	void deleteFromMesterHasSpeciality(String mesterId );
 }

@@ -13,18 +13,18 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel
 public class Contact extends BaseModel {
 
-	private Integer IdMester;
+	private String IdMester;
 	private String telNr;
 	private String email;
 	private String site;
 	private String socialPlatform;
 
 	 
-	public Integer getIdMester() {
+	public String getIdMester() {
 		return IdMester;
 	}
 
-	public void setIdMester(Integer idMester) {
+	public void setIdMester(String idMester) {
 		IdMester = idMester;
 	}
 

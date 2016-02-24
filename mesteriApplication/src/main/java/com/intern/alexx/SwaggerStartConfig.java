@@ -1,15 +1,15 @@
-package com.intern.alexx.configuration;
+package com.intern.alexx;
 
 import javax.ws.rs.ApplicationPath;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.context.annotation.Configuration;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+ 
 
-@Configuration
-@ApplicationPath("resources")
-public class JerseyConfiguration extends ResourceConfig {
+@ApplicationPath("/rest")
+public class SwaggerStartConfig extends ResourceConfig {
 	
-public JerseyConfiguration() {
+public SwaggerStartConfig() {
 		
 		final String restEndpointsPackge = "com.intern.alexx.rest";
 		final String jacksonPackage = "org.codehaus.jackson.jaxrs";
@@ -17,5 +17,6 @@ public JerseyConfiguration() {
 		final String swaggerJaxrsListingPackage = "com.wordnik.swagger.jaxrs.listing";
 		
 		packages(restEndpointsPackge, swaggerJaxrsJsonPackage, swaggerJaxrsListingPackage, jacksonPackage);		                
-	}
+	     register(MultiPartFeature.class);	
+}
 }

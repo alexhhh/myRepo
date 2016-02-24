@@ -24,10 +24,9 @@ public class Mester extends BaseModel {
 	private List<ReviewMester> reviewMester;
 
 	public Mester() {
-
 	}
 
-	public Mester(int idMester, String firstName, String lastName, String description, String location) {
+	public Mester(String idMester, String firstName, String lastName, String description, String location) {
 
 		super(idMester);
 		this.firstName = firstName;

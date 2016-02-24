@@ -1,5 +1,7 @@
 package com.intern.alexx.model;
 
+
+
 public class MesterSearchCriteriaBuilder {
 	
 	

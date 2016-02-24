@@ -1,7 +1,10 @@
 package com.intern.alexx.services.impl;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -15,32 +18,35 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 	@Autowired
 	private ReviewMesterRepository reviewMesterRepository;
 
+	@Transactional
 	public void insertReviewMester(ReviewMester reviewMester) {
 		reviewMesterRepository.insert(reviewMester);
 	}
-
+	
+	@Transactional
 	public void updateReviewMester(ReviewMester reviewMester) {
 		reviewMesterRepository.update(reviewMester);
 	}
-
-	public void deleteReviewMester(ReviewMester reviewMester) {
-		reviewMesterRepository.delete(reviewMester);
+	
+	@Transactional
+	public void deleteReviewMester(String idReview) {
+		reviewMesterRepository.delete(idReview);
+	}
+	
+	@Transactional
+	public ReviewMester getById(String idReview) {
+		return   reviewMesterRepository.getById(idReview);
 	}
 
-	public ReviewMester getById(ReviewMester reviewMester) {
-		reviewMesterRepository.getById(reviewMester);
-		return reviewMester;
-	}
-
-	public MyPage<ReviewMester> getReviewMasterPage(Integer idMester, MesterSearchCriteria searchCriteria) {
+	public MyPage<ReviewMester> getReviewMasterPage(String idMester, MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
 		myPage = reviewMesterRepository.getAllReviewForMester(idMester, searchCriteria);
 		return myPage;
 	}
 	
-	public MyPage<ReviewMester> getReviewAllMasterPage(MesterSearchCriteria searchCriteria) {
+	public MyPage<ReviewMester> getReviewAllMasterPage(MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewMesterPage(searchCriteria);
+		myPage = reviewMesterRepository.getAllReviewsPage(searchCriteria);
 		return myPage;
 	}
 }

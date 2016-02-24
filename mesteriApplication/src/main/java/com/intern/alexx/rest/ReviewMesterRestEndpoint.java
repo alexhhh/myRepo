@@ -1,5 +1,7 @@
 package com.intern.alexx.rest;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,39 +35,38 @@ public class ReviewMesterRestEndpoint {
 	private ReviewMesterService reviewService;
 
 	@GET
-	@Path("{id}")
+	@Path("/{idReview}")
 	@ApiOperation(value = "Get review by Id ", notes = "Get review.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review was successfully retrieved.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review was not found."),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response findByID(@PathParam("id") Integer id) {
-		ReviewMester review = new ReviewMester();
-		review.setId(id);
-		reviewService.getById(review);
+	public Response findByID(@PathParam("idReview") String idReview) {
+		ReviewMester review  = reviewService.getById(idReview);
 		int status = review == null ? 404 : 200;
 		return Response.ok(status).entity(review).build();
 	}
 
-	@GET
+	@POST
+	@Path("/pages")
 	@ApiOperation(value = "Get the review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewPage(MesterSearchCriteria searchCriteria) {
+	public Response getReviewPage(MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewAllMasterPage(searchCriteria);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
 
-	@GET
-	@Path("{id}")
+	@POST
+	@Path("/mester/{idMester}")
 	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewForMesterPage(Integer idMester, MesterSearchCriteria searchCriteria) {
+	public Response getReviewForMesterPage(@PathParam("idMester") String idMester, MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, searchCriteria);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
@@ -73,35 +74,33 @@ public class ReviewMesterRestEndpoint {
 	@POST
 	@ApiOperation(value = "Save a review", notes = "Save review", response = ReviewMester.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Review was successfuly saved.", response = ReviewMester.class),
+			@ApiResponse(code = 201, message = "Review was successfuly created.", response = ReviewMester.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
 	public Response addReview(ReviewMester review) {
 		reviewService.insertReviewMester(review);
-		return Response.ok(review).build();
+		return Response.ok(Status.CREATED).entity(review).build();
 	}
 
 	@PUT
-	@Path("{id}")
+	@Path("/{idReview}")
 	@ApiOperation(value = "Update a review", notes = "Update review", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review was successfuly updated.", response = ReviewMester.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response update(@PathParam("id") Integer id,ReviewMester review) {
+	public Response update(@PathParam("id") String id,ReviewMester review) {
 		review.setId(id);
 		reviewService.updateReviewMester(review);
 		return Response.ok(Status.OK).entity(review).build();
 	}
 
 	@DELETE
-	@Path("{id}")
+	@Path("/{idReview}")
 	@ApiOperation(value = "Delete a review", notes = "Delete review", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review was successfuly deleted.", response = ReviewMester.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response delete(@PathParam("id") Integer id) {
-		ReviewMester review = new ReviewMester();
-		review.setId(id);
-		reviewService.deleteReviewMester(review);
+	public Response delete(@PathParam("id") String id) {
+		reviewService.deleteReviewMester(id);
 		return Response.accepted().build();
 	}
 }
