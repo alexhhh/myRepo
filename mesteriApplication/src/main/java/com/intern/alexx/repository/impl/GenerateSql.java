@@ -46,20 +46,20 @@ public class GenerateSql {
 		List<String> whereList = new LinkedList<String>();
 
 		if (searchCriteria.getFirstName() != null) {
-			whereList.add(" m.first_name= ? ");
+			whereList.add(" m.first_name=:first_name ");
 		}
 		if (searchCriteria.getLastName() != null) {
-			whereList.add(" m.last_name= ? ");
+			whereList.add(" m.last_name=:last_name ");
 		}
 		if (searchCriteria.getLocation() != null) {
-			whereList.add(" m.location= ? ");
+			whereList.add(" m.location=:location ");
 		}
 
 		if (searchCriteria.getSpecialityName() != null) {
 			// query.append(", speciality.speciality_name ");
 			joinList.add("JOIN mester_has_speciality as mhs JOIN speciality as s "
 					+ "ON m.id = mhs.id_mester AND s.id = mhs.id_speciality ");
-			whereList.add(" s.speciality_name= ? ");
+			whereList.add(" s.speciality_name=:speciality_name ");
 		}
 
 		if ((searchCriteria.getEmail() != null) || (searchCriteria.getPhoneNumber() != null)) {
@@ -67,12 +67,12 @@ public class GenerateSql {
 
 			if (searchCriteria.getEmail() != null) {
 				// query.append(", contact.email ");
-				whereList.add(" c.email= ? ");
+				whereList.add(" c.email=:email ");
 			}
 
 			if (searchCriteria.getPhoneNumber() != null) {
 				// query.append(", contact.numar_telefon ");
-				whereList.add(" c.numar_telefon= ? ");
+				whereList.add(" c.numar_telefon=:numar_telefon ");
 			}
 
 		}
@@ -82,12 +82,12 @@ public class GenerateSql {
 
 			if (searchCriteria.getRating() != null) {
 				// query.append(", review_mester.rating ");
-				whereList.add(" rm.rating= ? ");
+				whereList.add(" rm.rating=:rating ");
 			}
 
 			if (searchCriteria.getPrice() != null) {
 				// query.append(", review_mester.price ");
-				whereList.add(" rm.price= ? ");
+				whereList.add(" rm.price=:price ");
 			}
 
 		}

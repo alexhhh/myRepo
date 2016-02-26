@@ -137,17 +137,5 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		review.setFeedback(resultSet.getString("feedback"));
 		return review;
 	}
-	
-
-	// private ReviewMester setReviewMesterIntoDB(ReviewMester reviewMester,
-	// PreparedStatement ps) throws SQLException {
-	//
-	// ps.setString(1, reviewMester.getIdMester());
-	// ps.setString(2, reviewMester.getIdClient());
-	// ps.setInt(3, reviewMester.getRating());
-	// ps.setString(4, reviewMester.getPrice());
-	// ps.setString(5, reviewMester.getFeedback());
-	// return reviewMester;
-	// }
-
+ 
 }

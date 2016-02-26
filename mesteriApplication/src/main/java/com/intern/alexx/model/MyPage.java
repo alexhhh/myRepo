@@ -1,6 +1,8 @@
 package com.intern.alexx.model;
 
 import java.util.List;
+ 
+ 
 
 public class MyPage<T> {
 
@@ -16,7 +18,7 @@ public class MyPage<T> {
 	}
  
 	public void setContentPage(List<T> contentPage) {
-		this.contentPage = contentPage;
+		this.contentPage =  contentPage;
 	}
 	
 	/**
@@ -69,5 +71,6 @@ public class MyPage<T> {
 		return "MyPage [contentPage=" + contentPage + ", totalRezults="
 				+ totalRezults + ", pageSize=" + pageSize + ", pageNumber=" + pageNumber + "]";
 	}
+ 
 
 }

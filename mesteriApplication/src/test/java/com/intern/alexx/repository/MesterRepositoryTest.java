@@ -94,14 +94,15 @@ public class MesterRepositoryTest {
 
 	private Speciality createSpeciality() {
 		Speciality speciality = new Speciality();
-		speciality.setSpecialityName("stress2");
+		speciality.setSpecialityName("zidar");
 		return speciality;
 
 	}
 
 	private MesterSearchCriteria createMSC() {
 		MesterSearchCriteria msc = new MesterSearchCriteria();
-		msc.setLocation("Cluj");
+		//msc.setLocation("Cluj");
+		msc.setSpecialityName("instalator");
 		msc.setPageNumber(3);
 		msc.setPageSize(2);
 		return msc;

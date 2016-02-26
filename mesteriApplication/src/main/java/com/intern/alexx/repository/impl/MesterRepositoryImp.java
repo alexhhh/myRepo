@@ -5,11 +5,16 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
@@ -21,7 +26,11 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	@Autowired
 	private JdbcTemplate template;
-
+	
+	@Autowired
+	private NamedParameterJdbcTemplate namendTemplate;
+	
+	
 	@Autowired
 	private GenerateSql generateSql;
 
@@ -29,6 +38,10 @@ public class MesterRepositoryImp implements MesterRepository {
 		this.template = template;
 	}
 
+	protected NamedParameterJdbcTemplate getNamedParamJdbcTemplate() {
+		return getNamedParamJdbcTemplate() ;
+	}
+	
 	public void insert(Mester mester) {
 		String sql = "INSERT INTO MESTER (ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?)";
 		template.update(sql, new Object[] { mester.getId(), mester.getFirstName(), mester.getLastName(),
@@ -61,28 +74,29 @@ public class MesterRepositoryImp implements MesterRepository {
 		MyPage<Mester> page = new MyPage<Mester>();
 		page.setPageNumber(setThisPageNumber(searchCriteria));
 		page.setPageSize(setThisPageSize(searchCriteria));
-
 		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
-		System.out.println("----xxx---" + page.getTotalRezults().toString());
 		page.setContentPage(executeSqlSelectStatement(searchCriteria));
-		System.out.println("----xxx---" + page.getContentPage().toString());
 		return page;
 	}
 
 	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) throws SQLException {
 		String sql = generateSql.createQueryForCountElements(searchCriteria);
-		System.out.println("----xxx---" + sql);
-		verifyParam(searchCriteria);
-		Integer totalMesteri = template.queryForObject(sql, Integer.class,
-				new Object[] { searchCriteria.getLocation() });
+		System.out.println("--- xxx---" + sql);
+		Map<String, String> paramMap = verifyParam(searchCriteria);
+		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
+		Integer totalMesteri = (Integer) namendTemplate.queryForObject(sql, paramSource, Integer.class);
 		return totalMesteri;
 	}
 
-	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) throws SQLException {
+	 
+	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria)
+			throws SQLException {
 		String sql = generateSql.createQueryForElements(searchCriteria);
+		System.out.println("--- xxx---" + sql);
 		RowMapper<Mester> rm = BeanPropertyRowMapper.newInstance(Mester.class);
-		List<Mester> mesteri = template.query(sql, new Object[] { searchCriteria.getLocation() }, rm);
-
+		Map<String, String> paramMap = verifyParam(searchCriteria);
+		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
+		List<Mester> mesteri= (List<Mester>) namendTemplate.query(sql, paramSource, rm);
 		return mesteri;
 	}
 
@@ -115,203 +129,43 @@ public class MesterRepositoryImp implements MesterRepository {
 		return pageSize;
 	}
 
-	private void verifyParam(MesterSearchCriteria searchCriteria) throws SQLException {
-
+	private Map<String, String> verifyParam(MesterSearchCriteria searchCriteria) throws SQLException {
+		Map<String, String> paramMap = new HashMap<String, String>();
 		if (searchCriteria.getFirstName() != null) {
-			searchCriteria.getFirstName();
-
+			paramMap.put("first_name", searchCriteria.getFirstName());
 		}
 		if (searchCriteria.getLastName() != null) {
-			searchCriteria.getLastName();
-
+			paramMap.put("last_name", searchCriteria.getLastName());
 		}
 		if (searchCriteria.getLocation() != null) {
-			searchCriteria.getLocation();
-
+			paramMap.put("location", searchCriteria.getLocation());
 		}
 		if (searchCriteria.getSpecialityName() != null) {
-			searchCriteria.getSpecialityName();
-
+			paramMap.put("speciality_name", searchCriteria.getSpecialityName());
 		}
 		if (searchCriteria.getEmail() != null) {
-			searchCriteria.getEmail();
-
+			paramMap.put("email", searchCriteria.getEmail());
 		}
 		if (searchCriteria.getPhoneNumber() != null) {
-			searchCriteria.getPhoneNumber();
-
+			paramMap.put("phoneNumber", searchCriteria.getPhoneNumber());
 		}
 		if (searchCriteria.getRating() != null) {
-			searchCriteria.getRating();
-
+			paramMap.put("rating", searchCriteria.getRating().toString());
 		}
 		if (searchCriteria.getPrice() != null) {
-			searchCriteria.getPrice();
-
+			paramMap.put("price", searchCriteria.getPrice());
 		}
-
+		return paramMap;
 	}
 
 	public void insertIntoMesterHasSpeciality(String mesterId, String specialityId) {
-	 String sql = "INSERT INTO mester_has_speciality (id_mester, id_speciality) VALUES (?,?)";
-	 template.update(sql, mesterId, specialityId);
-	 }
+		String sql = "INSERT INTO mester_has_speciality (id_mester, id_speciality) VALUES (?,?)";
+		template.update(sql, mesterId, specialityId);
+	}
 
-	public void deleteFromMesterHasSpeciality(String mesterId )   {
+	public void deleteFromMesterHasSpeciality(String mesterId) {
 		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ?";
 		template.update(sql, mesterId);
 	}
-
-
-	// public void insertFullMester(Mester mester) {
-	// Connection conn = null;
-	// PreparedStatement ps = null;
-	// ResultSet rs = null, rs2 = null;
-	// Contact contact = mester.getContact();
-	// Speciality speciality = mester.getSpeciality();
-	// try {
-	// conn = dataSource.getConnection();
-	// conn.setAutoCommit(false);
-	//
-	// String mesterKey = transactionalInsertMester(mester, conn, ps, rs);
-	// logger.info("@INSERT +++ get mester:" + mester.toString() + " +++");
-	// logger.info("@INSERT+++ get mester key :" + mesterKey + " +++");
-	// contactRepo.transactionalInsertContract(mesterKey, contact, conn, ps);
-	// logger.info("@INSERT+++ get contact " + contact.toString() + " +++");
-	// String specKey = specRepo.transactionalGetSpecialityID(speciality, conn,
-	// ps, rs2);
-	// logger.info("@INSERT+++ insert spec key: " + specKey + " +++");
-	// transactionalInsertIntoMesterHasSpeciality(specKey, specKey, conn, ps);
-	//
-	// conn.commit();
-	// logger.info("@INSERT+++ o trectu de commit +++");
-	// } catch (SQLException e) {
-	// try {
-	// conn.rollback();
-	// } catch (SQLException e1) {
-	// throw new RepositoryException("Error at connection rollback ", e1);
-	// }
-	// throw new RepositoryException("SQL Exception at insert full mester ", e);
-	// } finally {
-	// try {
-	// connectionUtil.closeable(rs);
-	// connectionUtil.closeable(rs2);
-	// connectionUtil.closeable(ps);
-	// connectionUtil.closeable(conn);
-	// } catch (Exception e) {
-	// throw new RepositoryException("SQLException at close insert full mester
-	// ", e);
-	// }
-	// }
-	// }
-	//
-	// public void updateFullMester(Mester mester) {
-	// Connection conn = null;
-	// PreparedStatement ps = null;
-	// ResultSet rs = null, rs2 = null;
-	// Contact contact = mester.getContact();
-	// Speciality speciality = mester.getSpeciality();
-	// try {
-	// conn = dataSource.getConnection();
-	// conn.setAutoCommit(false);
-	// String mesterKey = mester.getId();
-	//
-	// transactionalDeleteFromMesterHasSpeciality(mesterKey, conn, ps);
-	// transactionalUpdateMester(mester, conn, ps);
-	// logger.info("@UPDATE+++ get mester:" + mester.toString() + " +++");
-	// contactRepo.transactionalUpdateContract(mesterKey, contact, conn, ps);
-	// logger.info("@UPDATE+++ get contact " + contact.toString() + " +++");
-	// String specKey = specRepo.transactionalGetSpecialityID(speciality, conn,
-	// ps, rs2);
-	// transactionalInsertIntoMesterHasSpeciality(mesterKey, specKey, conn, ps);
-	//
-	// conn.commit();
-	// logger.info("@UPDATE+++ o trectu de commit +++");
-	// } catch (SQLException e) {
-	// try {
-	// conn.rollback();
-	// } catch (SQLException e1) {
-	// throw new RepositoryException("Error at connection rollback ", e1);
-	// }
-	// throw new RepositoryException("SQL Exception at update full mester ", e);
-	// } finally {
-	// try {
-	// connectionUtil.closeable(rs);
-	// connectionUtil.closeable(rs2);
-	// connectionUtil.closeable(ps);
-	// connectionUtil.closeable(conn);
-	// } catch (Exception e) {
-	// throw new RepositoryException("SQLException at close update full mester
-	// ", e);
-	// }
-	// }
-	// }
-	//
-	// public void deleteFullMester(String mesterId) {
-	// Connection conn = null;
-	// PreparedStatement ps = null;
-	//
-	// try {
-	// conn = dataSource.getConnection();
-	// conn.setAutoCommit(false);
-	// String mesterKey = mesterId;
-	//
-	// transactionalDeleteFromMesterHasSpeciality(mesterKey, conn, ps);
-	// transactionalDeleteMester(mesterKey, conn, ps);
-	// contactRepo.transactionalDeleteContract(mesterKey, conn, ps);
-	//
-	// conn.commit();
-	// logger.info("@DELETE+++ o trectu de commit +++");
-	// } catch (SQLException e) {
-	// try {
-	// conn.rollback();
-	// } catch (SQLException e1) {
-	// throw new RepositoryException("Error at connection rollback ", e1);
-	// }
-	// throw new RepositoryException("SQL Exception at delete full mester ", e);
-	// } finally {
-	// try {
-	// connectionUtil.closeable(ps);
-	// connectionUtil.closeable(conn);
-	// } catch (Exception e) {
-	// throw new RepositoryException("SQLException at close delete full mester
-	// ", e);
-	// }
-	// }
-	// }
-	//
-	// private String transactionalInsertMester(Mester mester, Connection conn,
-	// PreparedStatement ps, ResultSet rs)
-	// throws SQLException {
-	// String sql = "INSERT INTO MESTER (FIRST_NAME, LAST_NAME, DESCRIPTION,
-	// LOCATION) VALUES (?,?,?,?)";
-	// ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-	// addMesterIntoDB(mester, ps);
-	// ps.executeUpdate();
-	// rs = ps.getGeneratedKeys();
-	// rs.next();
-	// String mesterKey = rs.getString(1);
-	// return mesterKey;
-	// }
-	//
-	// private void transactionalUpdateMester(Mester mester, Connection conn,
-	// PreparedStatement ps) throws SQLException {
-	// String sql = "UPDATE mester SET FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION=
-	// ?, LOCATION= ? WHERE id = ?";
-	// ps = conn.prepareStatement(sql);
-	// addMesterIntoDB(mester, ps);
-	// ps.setString(5, mester.getId());
-	// ps.executeUpdate();
-	// }
-	//
-	// private void transactionalDeleteMester(String mesterKey, Connection conn,
-	// PreparedStatement ps)
-	// throws SQLException {
-	// String sql = "DELETE FROM MESTER WHERE id = ?";
-	// ps = conn.prepareStatement(sql);
-	// ps.setString(1, mesterKey);
-	// ps.executeUpdate();
-	// }
-	//
 
 }

@@ -25,17 +25,15 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 	 
 	public void insert(Speciality speciality) {
-		String sql = "INSERT INTO speciality (ID,NUME_SPECIALITY) " + "VALUES(?, ?)";
-		
-		//UUID id = UUID.randomUUID();
-		 
+		String sql = "INSERT INTO speciality (ID,SPECIALITY_NAME) " + "VALUES(?, ?)";
+	
 		template.update(sql, speciality.getId(), speciality.getSpecialityName());
 	}
 	
  
 	public void update(Speciality speciality) {
 	 
-		String sql = "UPDATE  speciality SET  NUME_SPECIALTY=?  WHERE id= ?";
+		String sql = "UPDATE  speciality SET  SPECIALITY_NAME=?  WHERE id= ?";
 		template.update(sql, speciality.getSpecialityName(),speciality.getId());
  
 	}
@@ -52,12 +50,23 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 	public Speciality getByName(String specialityName) {
 	 
 		Speciality sepeciality= new Speciality();
-		String sql = "SELECT * FROM speciality WHERE  NUME_SPECIALTY= ?";
+		String sql = "SELECT * FROM speciality WHERE  SPECIALITY_NAME= ?";
 		template.query(sql,   new Object[] {specialityName} , new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				getSpecialtyFromDB(sepeciality, rs);	 
 			}});
 	 return sepeciality;
+	}
+	
+	public String getSpecialityIdByName(String specialityName) {
+		Speciality sepeciality= new Speciality();
+		String sql = "SELECT id FROM speciality WHERE  SPECIALITY_NAME= ?";
+		template.query(sql,   new Object[] {specialityName} , new RowCallbackHandler() {
+			public void processRow(ResultSet rs) throws SQLException {
+				Speciality sepeciality= new Speciality();
+				sepeciality.setId(rs.getString("id"));
+			}});
+	 return sepeciality.getId();
 	}
 
 	public List<Speciality> getAllSpecialties() {
@@ -73,28 +82,9 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 	private Speciality getSpecialtyFromDB(Speciality speciality,ResultSet resultSet) throws SQLException {
 		speciality.setId(resultSet.getString("id"));
-		speciality.setSpecialityName(resultSet.getString("name_specialty"));
+		speciality.setSpecialityName(resultSet.getString("SPECIALITY_NAME"));
 		return speciality;
 	}
 
-//	public String transactionalGetSpecialityID(Speciality speciality,Connection conn, PreparedStatement ps, ResultSet rs) throws SQLException{
-//		String specKey=null;
-//		String sql = "SELECT speciality.id FROM speciality WHERE speciality_name = ?";
-//		ps = conn.prepareStatement(sql);
-//		ps.setString(1, speciality.getSpecialityName());
-//		rs = ps.executeQuery();
-//		if (rs.next()) {
-//		specKey = rs.getString("id");
-//		}
-//		else {
-//			sql = "INSERT INTO speciality (SPECIALITY_NAME) VALUES (?)";
-//			ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//			ps.setString(1, speciality.getSpecialityName());
-//			ps.executeUpdate();
-//			rs = ps.getGeneratedKeys();
-//			rs.next();
-//			specKey = rs.getString(1);			 
-//		}
-//		return specKey;
-//	}
+ 
 }
