@@ -20,7 +20,7 @@ public class ContactRepositoryImp implements ContactRepository {
 	
 	 
 	public void insert(Contact contact) {
-
+		contact.setId(GUIDGenerator.generatedID());
 		String sql = "INSERT INTO contact (ID, ID_MESTER, NUMAR_TELEFON, EMAIL, SITE, SOCIAL_PLATFORM) "
 				+ "VALUES (?,?,?,?,?,?)";
 		template.update(sql, new Object[] { contact.getId(), contact.getIdMester(), contact.getTelNr(),

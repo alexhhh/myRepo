@@ -2,8 +2,7 @@
  * 
  */
 package com.intern.alexx.model;
-
-import java.util.List;
+ 
 
 import com.wordnik.swagger.annotations.ApiModel;
 
@@ -21,7 +20,6 @@ public class Mester extends BaseModel {
 	private String description;
 	private Contact contact;
 	private Speciality speciality;
-	private List<ReviewMester> reviewMester;
 
 	public Mester() {
 	}
@@ -119,13 +117,13 @@ public class Mester extends BaseModel {
 		this.speciality = speciality;
 	}
 
-	public List<ReviewMester> getReviewMester() {
-		return reviewMester;
-	}
-
-	public void setReviewMester(List<ReviewMester> reviewMester) {
-		this.reviewMester = reviewMester;
-	}
+//	public List<ReviewMester> getReviewMester() {
+//		return reviewMester;
+//	}
+//
+//	public void setReviewMester(List<ReviewMester> reviewMester) {
+//		this.reviewMester = reviewMester;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -135,7 +133,7 @@ public class Mester extends BaseModel {
 	@Override
 	public String toString() {
 		return "Mester [idMester=" + getId() + ", fisrtName=" + firstName + ", lastName=" + lastName + ", description="
-				+ description + ", location=" + location + "]";
+				+ description + ", location=" + location + ", contact=" + contact + "]";
 	}
 
 }

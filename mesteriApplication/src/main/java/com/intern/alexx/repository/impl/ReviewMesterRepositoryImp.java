@@ -29,12 +29,12 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	}
 	
 	public void insert(ReviewMester reviewMester) {
+		reviewMester.setId(GUIDGenerator.generatedID());
 		String sql = "INSERT INTO review_mester (id, id_mester, id_client, rating, price, feedback) "
 				+ "VALUES (?,?,?,?,?,?)";
 		template.update(sql,
 				new Object[] { reviewMester.getId(), reviewMester.getIdMester(), reviewMester.getIdClient(),
 						reviewMester.getRating(), reviewMester.getPrice(), reviewMester.getFeedback() });
-		// throw new RuntimeException("error");
 	}
 
 	public void update(ReviewMester reviewMester) {

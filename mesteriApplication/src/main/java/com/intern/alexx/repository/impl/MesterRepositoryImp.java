@@ -30,7 +30,6 @@ public class MesterRepositoryImp implements MesterRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate namendTemplate;
 	
-	
 	@Autowired
 	private GenerateSql generateSql;
 
@@ -43,6 +42,7 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 	
 	public void insert(Mester mester) {
+		mester.setId(GUIDGenerator.generatedID());
 		String sql = "INSERT INTO MESTER (ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?)";
 		template.update(sql, new Object[] { mester.getId(), mester.getFirstName(), mester.getLastName(),
 				mester.getDescription(), mester.getLocation() });
