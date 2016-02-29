@@ -117,13 +117,6 @@ public class Mester extends BaseModel {
 		this.speciality = speciality;
 	}
 
-//	public List<ReviewMester> getReviewMester() {
-//		return reviewMester;
-//	}
-//
-//	public void setReviewMester(List<ReviewMester> reviewMester) {
-//		this.reviewMester = reviewMester;
-//	}
 
 	/*
 	 * (non-Javadoc)
