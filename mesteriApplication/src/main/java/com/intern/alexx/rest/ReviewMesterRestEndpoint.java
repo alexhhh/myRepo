@@ -15,8 +15,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.intern.alexx.model.MesterSearchCriteria;
+ 
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 import com.intern.alexx.services.ReviewMesterService;
@@ -29,7 +28,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 @Component
 @Path("/reviews")
 @Produces(MediaType.APPLICATION_JSON)
-public class ReviewMesterRestEndpoint {
+public class ReviewMesterRestEndpoint { 
 
 	@Autowired
 	private ReviewMesterService reviewService;
@@ -48,26 +47,26 @@ public class ReviewMesterRestEndpoint {
 	}
 
 	@POST
-	@Path("/pages")
+	@Path("/pageSize={size}pageNumber={number}")
 	@ApiOperation(value = "Get the review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewPage(MesterSearchCriteria searchCriteria) throws SQLException {
-		MyPage<ReviewMester> reviewPage = reviewService.getReviewAllMasterPage(searchCriteria);
+	public Response getReviewPage(@PathParam("size")Integer pageSize,@PathParam("number")Integer pageNumber) throws SQLException {
+		MyPage<ReviewMester> reviewPage = reviewService.getReviewAllMasterPage( pageSize, pageNumber);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
 
 	@POST
-	@Path("/mester/{idMester}")
+	@Path("/mester/{idMester}/pageSize={size}pageNumber={number}")
 	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewForMesterPage(@PathParam("idMester") String idMester, MesterSearchCriteria searchCriteria) throws SQLException {
-		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, searchCriteria);
+	public Response getReviewForMesterPage(@PathParam("idMester") String idMester,@PathParam("size")Integer pageSize,@PathParam("number")Integer pageNumber) throws SQLException {
+		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, pageSize,pageNumber );
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
 

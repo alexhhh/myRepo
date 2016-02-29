@@ -9,8 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.intern.alexx.model.MesterSearchCriteria;
+ 
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 
@@ -56,16 +55,16 @@ public class ReviewMesterRepositoryTest {
 
 	@Test
 	public void testGetAllReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException {
-		MesterSearchCriteria msc = createMSC();
-		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewsPage(msc);
+ 
+		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewsPage(4,1);
 		assertNotNull(page);
   
 	}
 	
 	@Test
 	public void testGetMesterReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException {
-		MesterSearchCriteria msc = createMSC();
-		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewForMester("10",msc);
+ 
+		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewForMester("10",4,1);
 		assertNotNull(page);
 	}
 
@@ -79,12 +78,5 @@ public class ReviewMesterRepositoryTest {
 		reviewMester.setFeedback("Awesome Update");
 		return reviewMester;
 	}
-
-	private MesterSearchCriteria createMSC() {
-		MesterSearchCriteria msc = new MesterSearchCriteria();
-		msc.setPageNumber(3);
-		msc.setPageSize(2);
-		return msc;
-	}
-
+ 
 }
