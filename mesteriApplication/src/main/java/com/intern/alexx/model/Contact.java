@@ -3,27 +3,29 @@
  */
 package com.intern.alexx.model;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * @author malex
  *
  */
+
+@ApiModel
 public class Contact extends BaseModel {
 
+	private String IdMester;
 	private String telNr;
 	private String email;
 	private String site;
-	private String profile;
+	private String socialPlatform;
 
-	public Contact() {
+	 
+	public String getIdMester() {
+		return IdMester;
 	}
 
-	public Contact(int idContact, String telNr, String email, String site, String profile) {
-
-		super(idContact);
-		this.telNr = telNr;
-		this.email = email;
-		this.site = site;
-		this.profile = profile;
+	public void setIdMester(String idMester) {
+		IdMester = idMester;
 	}
 
 	/**
@@ -71,30 +73,20 @@ public class Contact extends BaseModel {
 		this.site = site;
 	}
 
-	/**
-	 * @return the profile
-	 */
-	public String getProfile() {
-		return profile;
+	public String getSocialPlatform() {
+		return socialPlatform;
 	}
 
-	/**
-	 * @param profile
-	 *            the profile to set
-	 */
-	public void setProfile(String profile) {
-		this.profile = profile;
+	public void setSocialPlatform(String socialPlatform) {
+		this.socialPlatform = socialPlatform;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "ContactImp [ idContact=" + getId() + "telNr=" + telNr + ", email=" + email + ", site=" + site
-				+ ", profile=" + profile + "]";
+		return "Contact [IdMester=" + IdMester + ", telNr=" + telNr + ", email=" + email + ", site=" + site
+				+ ", socialPlatform=" + socialPlatform + "]";
 	}
+
+ 
 
 }

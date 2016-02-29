@@ -1,7 +1,8 @@
 package com.intern.alexx.model;
 
- 
+import com.wordnik.swagger.annotations.ApiModel;
 
+@ApiModel
 public class MesterSearchCriteria {
 
 	private String firstName;

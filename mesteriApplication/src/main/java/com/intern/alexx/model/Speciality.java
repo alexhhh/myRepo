@@ -3,10 +3,14 @@
  */
 package com.intern.alexx.model;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * @author malex
  *
  */
+
+@ApiModel
 public class Speciality extends BaseModel{
 
 	
@@ -15,7 +19,8 @@ public class Speciality extends BaseModel{
 	
 	public Speciality (){}
 	
-	public Speciality (int idSpeciality, String specialityName){
+	public Speciality (String idSpeciality, String specialityName){
+		super(idSpeciality);
 		this.specialityName=specialityName;
 	}
  

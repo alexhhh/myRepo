@@ -3,12 +3,18 @@
  */
 package com.intern.alexx.model;
 
+import com.wordnik.swagger.annotations.ApiModel;
+
 /**
  * @author malex
  *
  */
-public class ReviewMester extends BaseModel {
 
+@ApiModel
+public class ReviewMester extends BaseModel {
+	
+	private String idMester;
+	private String idClient;
 	private String price;
 	private int rating;
 	private String feedback;
@@ -16,8 +22,10 @@ public class ReviewMester extends BaseModel {
 	public ReviewMester() {
 	}
 
-	public ReviewMester(int idReviewMester, String price, int rating, String feedback) {
+	public ReviewMester(String idReviewMester, String idMester, String idClient, String price, int rating, String feedback) {
 		super(idReviewMester);
+		this.idMester=idMester;
+		this.idClient=idClient;
 		this.feedback = feedback;
 		this.rating = rating;
 		this.price = price;
@@ -68,6 +76,23 @@ public class ReviewMester extends BaseModel {
 		this.feedback = feedback;
 	}
 
+	public String getIdMester() {
+		return idMester;
+	}
+
+	public void setIdMester(String idMester) {
+		this.idMester = idMester;
+	}
+
+	public String getIdClient() {
+		return idClient;
+	}
+
+	public void setIdClient(String idClient) {
+		this.idClient = idClient;
+	}
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 

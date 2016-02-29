@@ -1,14 +1,14 @@
 package com.intern.alexx.model;
 
-public  class BaseModel {
+public abstract class BaseModel {
 
-	private int id;
+	private String id;
 	
 
 	public BaseModel() {
 	}
 	
-	public BaseModel(int id) {
+	public BaseModel(String id) {
 		this.id=id;
 	}
 	
@@ -16,7 +16,7 @@ public  class BaseModel {
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -24,7 +24,7 @@ public  class BaseModel {
 	 * @param id
 	 *   the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

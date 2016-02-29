@@ -18,7 +18,7 @@ public class Client extends BaseModel {
 	/**
 	 * @return the idClient
 	 */
-	public  Client(int idClient,String firstName,String lastName ) {
+	public  Client(String idClient,String firstName,String lastName ) {
 		 super(idClient);
 		 this.firstName=firstName;
 		 this.lastName=lastName;

@@ -1,248 +1,171 @@
-/**
- * 
- */
 package com.intern.alexx.repository.impl;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.repository.MesterRepository;
 
-
 @Component
 public class MesterRepositoryImp implements MesterRepository {
 
 	@Autowired
-	private DataSource dataSource;
-
+	private JdbcTemplate template;
+	
+	@Autowired
+	private NamedParameterJdbcTemplate namendTemplate;
+	
+	
 	@Autowired
 	private GenerateSql generateSql;
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setJdbcTemplate(JdbcTemplate template) {
+		this.template = template;
 	}
 
+	protected NamedParameterJdbcTemplate getNamedParamJdbcTemplate() {
+		return getNamedParamJdbcTemplate() ;
+	}
+	
 	public void insert(Mester mester) {
-		String sql = "INSERT INTO MESTER (FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?)";
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-
-			ps.setString(1, mester.getFirstName());
-			ps.setString(2, mester.getLastName());
-			ps.setString(3, mester.getDescription());
-			ps.setString(4, mester.getLocation());
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
+		String sql = "INSERT INTO MESTER (ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?)";
+		template.update(sql, new Object[] { mester.getId(), mester.getFirstName(), mester.getLastName(),
+				mester.getDescription(), mester.getLocation() });
 	}
 
 	public void update(Mester mester) {
-		
-		String sql = "UPDATE  MESTER FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
-
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			// review
-
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(5, mester.getId());
-			ps.setString(1, mester.getFirstName());
-			ps.setString(2, mester.getLastName());
-			ps.setString(3, mester.getDescription());
-			ps.setString(4, mester.getLocation());
-			ps.executeQuery();
-
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-
+		String sql = "UPDATE  mester SET FIRST_NAME= ?, LAST_NAME= ?, DESCRIPTION= ?, LOCATION= ?  WHERE id = ?";
+		template.update(sql, new Object[] { mester.getFirstName(), mester.getLastName(), mester.getDescription(),
+				mester.getLocation(), mester.getId() });
 	}
 
-	public void delete(Mester mester) {
+	public void delete(String mesterId) {
 		String sql = "DELETE FROM MESTER  WHERE id = ? ";
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, mester.getId());
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-
+		template.update(sql, mesterId);
 	}
 
-	public Mester getById(Mester mester) {
-		Mester newMester = null;
+	public Mester getById(String mesterId) {
+		Mester mester = new Mester();
 		String sql = "SELECT * FROM mester WHERE id = ?";
-		Connection conn = null;
-
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, mester.getId());
-			ResultSet resultSet = ps.executeQuery();
-			if (resultSet.next()) {
-				newMester = new Mester();
-				newMester.setId(resultSet.getInt("id"));
-				newMester.setFirstName(resultSet.getString("first_name"));
-				newMester.setLastName(resultSet.getString("last_name"));
-				newMester.setLocation(resultSet.getString("location"));
+		template.query(sql, new Object[] { mesterId }, new RowCallbackHandler() {
+			public void processRow(ResultSet rs) throws SQLException {
+				getMesterFromDB(mester, rs);
 			}
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-
+		});
 		return mester;
 	}
 
-	
+	public MyPage<Mester> prepareSearchForMester(MesterSearchCriteria searchCriteria) throws SQLException {
+		MyPage<Mester> page = new MyPage<Mester>();
+		page.setPageNumber(setThisPageNumber(searchCriteria));
+		page.setPageSize(setThisPageSize(searchCriteria));
+		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
+		page.setContentPage(executeSqlSelectStatement(searchCriteria));
+		return page;
+	}
+
+	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) throws SQLException {
+		String sql = generateSql.createQueryForCountElements(searchCriteria);
+		System.out.println("--- xxx---" + sql);
+		Map<String, String> paramMap = verifyParam(searchCriteria);
+		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
+		Integer totalMesteri = (Integer) namendTemplate.queryForObject(sql, paramSource, Integer.class);
+		return totalMesteri;
+	}
 
 	 
-	public MyPage search(MesterSearchCriteria searchCriteria) {
+	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria)
+			throws SQLException {
+		String sql = generateSql.createQueryForElements(searchCriteria);
+		System.out.println("--- xxx---" + sql);
+		RowMapper<Mester> rm = BeanPropertyRowMapper.newInstance(Mester.class);
+		Map<String, String> paramMap = verifyParam(searchCriteria);
+		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
+		List<Mester> mesteri= (List<Mester>) namendTemplate.query(sql, paramSource, rm);
+		return mesteri;
+	}
 
-		String sql1 = generateSql.createQueryForCountElements(searchCriteria);
-		String sql2 = generateSql.createQueryForElements(searchCriteria);
-		MyPage page = null;
-		Mester mester=null;
-		Connection conn = null;
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql1);
-			PreparedStatement ps2 = conn.prepareStatement(sql2);
-		
-			int nrParm=1;
-				if (searchCriteria.getFirstName() != null) {
-					 ps.setString(nrParm, searchCriteria.getFirstName());
-					 ps2.setString(nrParm, searchCriteria.getFirstName());
-					 nrParm++;
-					 }
-				if (searchCriteria.getLastName() != null) {
-					 ps.setString(nrParm, searchCriteria.getLastName());
-					 ps2.setString(nrParm, searchCriteria.getLastName());
-					 nrParm++;
-					 }
-				if (searchCriteria.getLocation() != null) {
-					 ps.setString(nrParm, searchCriteria.getLocation());
-					 ps2.setString(nrParm, searchCriteria.getLocation());
-					 nrParm++;
-					 }
-				if (searchCriteria.getSpecialityName() != null) {
-					 ps.setString(nrParm, searchCriteria.getSpecialityName());
-					 ps2.setString(nrParm, searchCriteria.getSpecialityName());
-					 nrParm++;
-					 }
-				if (searchCriteria.getEmail() != null) {
-					 ps.setString(nrParm, searchCriteria.getEmail());
-					 ps2.setString(nrParm, searchCriteria.getEmail());
-					 nrParm++;
-					 }
-				if (searchCriteria.getPhoneNumber() != null) {
-					 ps.setString(nrParm, searchCriteria.getPhoneNumber());
-					 ps2.setString(nrParm, searchCriteria.getPhoneNumber());
-					 nrParm++;
-					 }
-				if (searchCriteria.getRating() != null) {
-					 ps.setInt(nrParm, searchCriteria.getRating());
-					 ps2.setInt(nrParm, searchCriteria.getRating());
-					 nrParm++;
-					  }
-				if (searchCriteria.getPrice() != null) {
-					 ps.setString(nrParm, searchCriteria.getPrice());
-					 ps2.setString(nrParm, searchCriteria.getPrice());
-					 nrParm++;
-					 
-				}
-				
-				if(searchCriteria.getPageNumber() != null) {
-				page.setPageNumber(searchCriteria.getPageNumber());
-				}
-				if(searchCriteria.getPageSize() != null) {
-				page.setPageSize(searchCriteria.getPageSize());
-				}
-			ResultSet resultSet = ps.executeQuery();
-		
-			page.setTotalRezults(resultSet.getInt(1));
-			ps.close();
-			
-			ResultSet resultSet2 = ps2.executeQuery();
-			if (resultSet2.next()) {
-				mester = new Mester();
-				mester.setId(resultSet2.getInt("id"));
-				mester.setFirstName(resultSet2.getString("first_name"));
-				mester.setLastName(resultSet2.getString("last_name"));
-				mester.setDescription(resultSet2.getString("description"));
-				mester.setLocation(resultSet2.getString("location"));
-				page.getContentPage().add(mester);
-			}
-			page.getContentPage();
-			ps2.close();
-		} catch (
+	private Mester getMesterFromDB(Mester mester, ResultSet resultSet) throws SQLException {
+		mester.setId(resultSet.getString("id"));
+		mester.setFirstName(resultSet.getString("first_name"));
+		mester.setLastName(resultSet.getString("last_name"));
+		mester.setDescription(resultSet.getString("description"));
+		mester.setLocation(resultSet.getString("location"));
+		return mester;
+	}
 
-		SQLException e)
-
-		{
-			throw new RuntimeException(e);
-		} finally
-
-		{
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-				}
-
-			}
+	private int setThisPageNumber(MesterSearchCriteria searchCriteria) {
+		int pageNumeber;
+		if (searchCriteria.getPageNumber() != null) {
+			pageNumeber = searchCriteria.getPageNumber();
+		} else {
+			pageNumeber = 1;
 		}
-		return page;
+		return pageNumeber;
+	}
+
+	private int setThisPageSize(MesterSearchCriteria searchCriteria) {
+		int pageSize;
+		if (searchCriteria.getPageSize() != null) {
+			pageSize = searchCriteria.getPageSize();
+		} else {
+			pageSize = 10;
+		}
+		return pageSize;
+	}
+
+	private Map<String, String> verifyParam(MesterSearchCriteria searchCriteria) throws SQLException {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		if (searchCriteria.getFirstName() != null) {
+			paramMap.put("first_name", searchCriteria.getFirstName());
+		}
+		if (searchCriteria.getLastName() != null) {
+			paramMap.put("last_name", searchCriteria.getLastName());
+		}
+		if (searchCriteria.getLocation() != null) {
+			paramMap.put("location", searchCriteria.getLocation());
+		}
+		if (searchCriteria.getSpecialityName() != null) {
+			paramMap.put("speciality_name", searchCriteria.getSpecialityName());
+		}
+		if (searchCriteria.getEmail() != null) {
+			paramMap.put("email", searchCriteria.getEmail());
+		}
+		if (searchCriteria.getPhoneNumber() != null) {
+			paramMap.put("phoneNumber", searchCriteria.getPhoneNumber());
+		}
+		if (searchCriteria.getRating() != null) {
+			paramMap.put("rating", searchCriteria.getRating().toString());
+		}
+		if (searchCriteria.getPrice() != null) {
+			paramMap.put("price", searchCriteria.getPrice());
+		}
+		return paramMap;
+	}
+
+	public void insertIntoMesterHasSpeciality(String mesterId, String specialityId) {
+		String sql = "INSERT INTO mester_has_speciality (id_mester, id_speciality) VALUES (?,?)";
+		template.update(sql, mesterId, specialityId);
+	}
+
+	public void deleteFromMesterHasSpeciality(String mesterId) {
+		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ?";
+		template.update(sql, mesterId);
 	}
 
 }
