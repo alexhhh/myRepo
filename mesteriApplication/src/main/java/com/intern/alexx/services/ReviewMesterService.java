@@ -1,8 +1,7 @@
 package com.intern.alexx.services;
 
 import java.sql.SQLException;
-
-import com.intern.alexx.model.MesterSearchCriteria;
+ 
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 
@@ -16,7 +15,7 @@ public interface ReviewMesterService {
 	
 	public ReviewMester getById(String idReview);
 	
-	public MyPage<ReviewMester> getReviewMasterPage(String idMester, MesterSearchCriteria searchCriteria) throws SQLException;
+	public MyPage<ReviewMester> getReviewMasterPage(String idMester, Integer pageSize,Integer pageNumber) throws SQLException;
 
-	public MyPage<ReviewMester> getReviewAllMasterPage(MesterSearchCriteria searchCriteria) throws SQLException;
+	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize,Integer pageNumber) throws SQLException;
 }

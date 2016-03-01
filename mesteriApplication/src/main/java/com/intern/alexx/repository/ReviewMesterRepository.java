@@ -6,7 +6,7 @@ package com.intern.alexx.repository;
 
 import java.sql.SQLException;
 
-import com.intern.alexx.model.MesterSearchCriteria;
+ 
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 
@@ -25,8 +25,8 @@ public interface ReviewMesterRepository {
 
 	ReviewMester getById(String idReview);
 
-	MyPage<ReviewMester> getAllReviewsPage(MesterSearchCriteria searchCriteria) throws SQLException;
+	MyPage<ReviewMester> getAllReviewsPage(Integer pageSize,Integer pageNumber) throws SQLException;
 	
-	MyPage<ReviewMester> getAllReviewForMester(String idMester, MesterSearchCriteria searchCriteria) throws SQLException;
+	MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize,Integer pageNumber) throws SQLException;
 
 }

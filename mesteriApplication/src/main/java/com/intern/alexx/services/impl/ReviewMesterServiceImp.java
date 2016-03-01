@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 import com.intern.alexx.repository.ReviewMesterRepository;
@@ -47,15 +46,15 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 		return   reviewMesterRepository.getById(idReview);
 	}
 
-	public MyPage<ReviewMester> getReviewMasterPage(String idMester, MesterSearchCriteria searchCriteria) throws SQLException {
+	public MyPage<ReviewMester> getReviewMasterPage(String idMester,Integer pageSize,Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewForMester(idMester, searchCriteria);
+		myPage = reviewMesterRepository.getAllReviewForMester(idMester,  pageSize, pageNumber);
 		return myPage;
 	}
 	
-	public MyPage<ReviewMester> getReviewAllMasterPage(MesterSearchCriteria searchCriteria) throws SQLException {
+	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize,Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewsPage(searchCriteria);
+		myPage = reviewMesterRepository.getAllReviewsPage( pageSize, pageNumber);
 		return myPage;
 	}
 }

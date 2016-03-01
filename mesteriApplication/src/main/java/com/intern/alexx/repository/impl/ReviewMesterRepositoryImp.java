@@ -11,8 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
- 
-import com.intern.alexx.model.MesterSearchCriteria;
+  
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 import com.intern.alexx.repository.ReviewMesterRepository;
@@ -60,10 +59,10 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	}
 
 
-	public MyPage<ReviewMester> getAllReviewsPage(MesterSearchCriteria searchCriteria) throws SQLException {
+	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize,Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-		page.setPageNumber(setThisPageNumber(searchCriteria));
-		page.setPageSize(setThisPageSize(searchCriteria));
+		page.setPageNumber(setPageNumberParam(pageNumber));
+		page.setPageSize(setPageSizeParam(pageSize));
 		
 		String sql = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
 				+ " , " + page.getPageSize() + " ;";
@@ -85,11 +84,11 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return reviews;
 	}
 	
-	public MyPage<ReviewMester> getAllReviewForMester(String idMester, MesterSearchCriteria searchCriteria)
+	public MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize,Integer pageNumber)
 			throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
-		page.setPageNumber(setThisPageNumber(searchCriteria));
-		page.setPageSize(setThisPageSize(searchCriteria));
+		page.setPageNumber(setPageNumberParam(pageNumber));
+		page.setPageSize(setPageSizeParam(pageSize));
 		String sql = "SELECT * FROM review_mester AS rm  WHERE id_mester = ? LIMIT "
 				+ (page.getPageSize() * (page.getPageNumber() - 1)) + " , " + page.getPageSize() + " ;";
 		page.setTotalRezults(executeCountStatement(idMester));
@@ -109,24 +108,14 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return reviews;
 	}
 
-
-
-	private int setThisPageNumber(MesterSearchCriteria searchCriteria){
-		int pageNumeber = 1;
-		if (searchCriteria.getPageNumber() != 0) {
-			pageNumeber =searchCriteria.getPageNumber();
-		}  
-		return pageNumeber;
-	}
-	
-	private int setThisPageSize(MesterSearchCriteria searchCriteria){
-		int	pageSize = 10;
-		if (searchCriteria.getPageSize() != 0) {
-			pageSize =searchCriteria.getPageSize();
-			}  
-		return pageSize;
-	}
-	
+	 private  Integer setPageSizeParam(Integer pageSize) {
+			if(pageSize == null) pageSize=10;
+			return pageSize;
+	 }
+	 private  Integer setPageNumberParam( Integer pageNumber) {
+		 	if(pageNumber ==null) pageNumber=1; 
+			return pageNumber ;
+	 }
 	private ReviewMester getReviewFromDB(ReviewMester review, ResultSet resultSet) throws SQLException {
 		
 		review.setId(resultSet.getString("id"));
