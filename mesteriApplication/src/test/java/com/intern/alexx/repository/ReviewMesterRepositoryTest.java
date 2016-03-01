@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
+import com.intern.alexx.model.ReviewMester.Price;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/beans.xml")
@@ -74,7 +75,7 @@ public class ReviewMesterRepositoryTest {
 		reviewMester.setId("55");
 		reviewMester.setIdMester("10");
 		reviewMester.setIdClient("5");
-		reviewMester.setPrice("Mediu");
+		reviewMester.setPrice(Price.LOW);
 		reviewMester.setRating(5);
 		reviewMester.setFeedback("Awesome Update");
 		return reviewMester;
