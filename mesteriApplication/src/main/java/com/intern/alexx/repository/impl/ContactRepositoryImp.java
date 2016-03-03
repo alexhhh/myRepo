@@ -19,16 +19,17 @@ public class ContactRepositoryImp implements ContactRepository {
 	private JdbcTemplate template;
 	
 	 
-	public void insert(Contact contact) {
+	public void insert(Contact contact, String idMester) {
 		contact.setId(GUIDGenerator.generatedID());
+		contact.setIdMester(idMester);
 		String sql = "INSERT INTO contact (ID, ID_MESTER, NUMAR_TELEFON, EMAIL, SITE, SOCIAL_PLATFORM) "
 				+ "VALUES (?,?,?,?,?,?)";
 		template.update(sql, new Object[] { contact.getId(), contact.getIdMester(), contact.getTelNr(),
 				contact.getEmail(), contact.getSite(), contact.getSocialPlatform() });
 	}
 	 
-	public void update(Contact contact) {
-
+	public void update(Contact contact, String idMester) {
+		contact.setIdMester(idMester);
 		String sql = "UPDATE  contact SET ID=?, NUMAR_TELEFON= ?, EMAIL= ?, SITE= ?, SOCIAL_PLATFORM=?  WHERE id_mester = ?";
 		template.update(sql, new Object[] { contact.getId(), contact.getTelNr(), contact.getEmail(), contact.getSite(),
 				contact.getSocialPlatform(), contact.getIdMester() });
@@ -36,7 +37,7 @@ public class ContactRepositoryImp implements ContactRepository {
 	
  
 	public void delete(String idMester) {
-
+		 
 		String sql = "DELETE FROM contact  WHERE id_mester = ? ";
 		template.update(sql, idMester);
 

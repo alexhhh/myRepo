@@ -20,6 +20,8 @@ public interface SpecialityRepository {
 
 	void delete(String idSpeciality);
 
+	public String getSpecialityIdByName(String specialityName);
+	
 	Speciality getByName(String specialityName);
 	
 	List<Speciality> getAllSpecialties();

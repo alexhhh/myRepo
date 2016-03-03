@@ -98,8 +98,21 @@ public class ReviewMesterRestEndpoint {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review was successfuly deleted.", response = ReviewMester.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response delete(@PathParam("id") String id) {
-		reviewService.deleteReviewMester(id);
-		return Response.accepted().build();
+	public Response delete(@PathParam("idReview") String idReview) {
+		reviewService.deleteReviewMester(idReview);
+		return Response.ok().build();
 	}
+	
+	@GET
+	@Path("/Rating/{idReview}")
+	@ApiOperation(value = "Get review by Id ", notes = "Get review.", response = Float.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Rating was successfully retrieved.", response = Float.class),
+			@ApiResponse(code = 404, message = "Review was not found."),
+			@ApiResponse(code = 500, message = "Internal server error.") })
+	public Response getMesterAvgRating(@PathParam("idReview") String idReview) {
+		float avgRating= reviewService.getMesterRating(idReview);
+		return Response.ok().entity(avgRating).build();
+	}
+	
 }

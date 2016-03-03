@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.intern.alexx.model.MesterSearchCriteria;
+import com.intern.alexx.model.ReviewMester.Price;
 import com.intern.alexx.repository.impl.GenerateSql;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -87,7 +88,7 @@ public class GenerateSqlTest {
 		msc.setEmail("tataPuiu@echipaNationala.ro");
 		msc.setPhoneNumber("0749011685");
 		msc.setRating(10);
-		msc.setPrice("fara numar");
+		msc.setPrice(Price.HIGH);
 		msc.setPageNumber(2);
 		msc.setPageSize(20);
 		query = genSql.createQueryForElements(msc);

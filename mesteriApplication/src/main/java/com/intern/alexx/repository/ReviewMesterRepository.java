@@ -24,6 +24,8 @@ public interface ReviewMesterRepository {
 	void delete(String idReview);
 
 	ReviewMester getById(String idReview);
+	
+	public float getAvgRatingForMester(String idReview);
 
 	MyPage<ReviewMester> getAllReviewsPage(Integer pageSize,Integer pageNumber) throws SQLException;
 	

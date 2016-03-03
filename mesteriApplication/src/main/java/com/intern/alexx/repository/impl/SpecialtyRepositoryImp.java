@@ -27,14 +27,12 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 	}
 
 	public void update(Speciality speciality) {
-
 		String sql = "UPDATE  speciality SET  SPECIALITY_NAME=?  WHERE id= ?";
 		template.update(sql, speciality.getSpecialityName(), speciality.getId());
 
 	}
 
 	public void delete(String idSpeciality) {
-
 		String sql = "DELETE FROM speciality  WHERE id = ? ";
 		template.update(sql, idSpeciality);
 

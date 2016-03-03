@@ -11,9 +11,9 @@ import com.intern.alexx.model.Contact;
  */
 public interface ContactRepository {
 	
-	void insert(Contact contact);
+	void insert(Contact contact, String mesterId);
 
-	void update(Contact contact);
+	void update(Contact contact, String mesterId);
 
 	void delete(String idContact);
 

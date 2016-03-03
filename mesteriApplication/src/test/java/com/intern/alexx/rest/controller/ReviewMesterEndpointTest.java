@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  
  
 import com.intern.alexx.model.ReviewMester;
+import com.intern.alexx.model.ReviewMester.Price;
 import com.intern.alexx.rest.ReviewMesterRestEndpoint;
 import com.intern.alexx.services.ReviewMesterService;
 
@@ -101,7 +102,7 @@ public class ReviewMesterEndpointTest {
 		reviewMester.setId("55");
 		reviewMester.setIdMester("8");
 		reviewMester.setIdClient("5");
-		reviewMester.setPrice("Mediu");
+		reviewMester.setPrice(Price.HIGH);
 		reviewMester.setRating(5);
 		reviewMester.setFeedback("Awesome Update");
 		return reviewMester;

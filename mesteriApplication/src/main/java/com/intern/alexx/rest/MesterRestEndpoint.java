@@ -82,7 +82,6 @@ public class MesterRestEndpoint {
 			@ApiResponse(code = 200, message = "Update mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response update(@PathParam("idMester")String idMester,Mester mester) {
-		  mester = new Mester();
 		mester.setId(idMester);
 		mesterService.updateMester(mester);
 		return Response.ok(Status.OK).entity(mester).build();
@@ -96,6 +95,6 @@ public class MesterRestEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response delete(@PathParam("idMester")String idMester) {		 
 		mesterService.deleteMester(idMester);
-		return Response.accepted().build();
+		return Response.ok().build();
 	}
 }
