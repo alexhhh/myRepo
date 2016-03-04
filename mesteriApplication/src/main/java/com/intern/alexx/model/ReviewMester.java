@@ -35,7 +35,7 @@ public class ReviewMester extends BaseModel {
 		this.price = price;
 	}
 
-	//@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+	 
 	public enum Price {
 		LOW(1), MEDIUM(2), HIGH(3);
  
@@ -64,20 +64,7 @@ public class ReviewMester extends BaseModel {
 	 *            the price to set
 	 */
 	
-//	public void getPrice(int priceValue){
-//		this.(priceValue, null);
-//		}
-//
-//
-//		public void getPrice(Price price, int priceValue){
-//		this.price=price;
-//		 price.getValue()=priceValue;
-//		}
-//	
-//	public void setPriceValue(int priceValue){
-//		this.price= price.getValue();
-//	}
-//	
+ 
 	public void setPrice(Price price) {
 		this.price = price;
 	}
@@ -128,11 +115,7 @@ public class ReviewMester extends BaseModel {
 		this.idClient = idClient;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+
 	@Override
 	public String toString() {
 		return "ReviewMester [idReviewMester=" + getId() + ", price=" + price + ", rating=" + rating + ", feedback="
