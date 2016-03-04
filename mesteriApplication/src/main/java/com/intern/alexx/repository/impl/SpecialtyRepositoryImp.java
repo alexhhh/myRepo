@@ -50,8 +50,8 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 	public String getSpecialityIdByName(String specialityName) {
 		String sql = "SELECT id FROM speciality WHERE  SPECIALITY_NAME= ?";
-		return 	template.queryForObject(sql, new Object[] { specialityName },  String.class);
-	 
+		return template.queryForObject(sql, new Object[] { specialityName }, String.class);
+
 	}
 
 	public List<String> getAllSpecialties() {
@@ -67,9 +67,7 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		specialities = template.queryForList(sql, new Object[] { idMester }, String.class);
 		return specialities;
 	}
-	
- 
-	
+
 	public void addSpecialityIntoDB(Speciality speciality, PreparedStatement ps) throws SQLException {
 		ps.setString(1, speciality.getSpecialityName());
 	}
