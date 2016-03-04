@@ -15,9 +15,9 @@ import com.intern.alexx.model.MyPage;
  */
 public interface MesterService {
 
-	void insertMester(Mester mester );
+	void insertMester(Mester mester);
 
-	void updateMester(Mester mester );
+	void updateMester(Mester mester);
 
 	void deleteMester(String mesterId);
 	

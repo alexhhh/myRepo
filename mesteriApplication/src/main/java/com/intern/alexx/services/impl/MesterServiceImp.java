@@ -37,7 +37,8 @@ public class MesterServiceImp implements MesterService {
 //		}
 		mesterRepository.insert(mester);
 		LOGGER.info(mester.toString());
-		contactRepository.insert(mester.getContact(), mester.getId());
+		mester.getContact().setIdMester(mester.getId());
+		contactRepository.insert(mester.getContact());
 		LOGGER.info(mester.getId());
 		LOGGER.info(mester.getContact().toString());
 		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName())  != null) {
@@ -60,7 +61,8 @@ public class MesterServiceImp implements MesterService {
 		
 		mesterRepository.deleteFromMesterHasSpeciality(mester.getId());
 		mesterRepository.update(mester);
-		contactRepository.update( mester.getContact(), mester.getId() );
+		mester.getContact().setIdMester(mester.getId());
+		contactRepository.update( mester.getContact());
 		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName()) != null) {
 			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
 		} else {
