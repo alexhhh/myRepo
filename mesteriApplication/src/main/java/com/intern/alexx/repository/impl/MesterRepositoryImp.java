@@ -1,5 +1,7 @@
 package com.intern.alexx.repository.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,12 +26,14 @@ import com.intern.alexx.repository.MesterRepository;
 @Component
 public class MesterRepositoryImp implements MesterRepository {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(MesterRepository.class);
+
 	@Autowired
 	private JdbcTemplate template;
-	
+
 	@Autowired
 	private NamedParameterJdbcTemplate namendTemplate;
-	
+
 	@Autowired
 	private GenerateSql generateSql;
 
@@ -38,9 +42,9 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	protected NamedParameterJdbcTemplate getNamedParamJdbcTemplate() {
-		return getNamedParamJdbcTemplate() ;
+		return getNamedParamJdbcTemplate();
 	}
-	
+
 	public void insert(Mester mester) {
 		mester.setId(GUIDGenerator.generatedID());
 		String sql = "INSERT INTO MESTER (ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?)";
@@ -81,22 +85,20 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) throws SQLException {
 		String sql = generateSql.createQueryForCountElements(searchCriteria);
-		System.out.println("--- xxx---" + sql);
+		LOGGER.info("---executeSqlCountStatement---" + sql);
 		Map<String, String> paramMap = verifyParam(searchCriteria);
 		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
 		Integer totalMesteri = (Integer) namendTemplate.queryForObject(sql, paramSource, Integer.class);
 		return totalMesteri;
 	}
 
-	 
-	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria)
-			throws SQLException {
+	private List<Mester> executeSqlSelectStatement(MesterSearchCriteria searchCriteria) throws SQLException {
 		String sql = generateSql.createQueryForElements(searchCriteria);
-		System.out.println("--- xxx---" + sql);
+		LOGGER.info("---executeSqlSelectStatement---" + sql);
 		RowMapper<Mester> rm = BeanPropertyRowMapper.newInstance(Mester.class);
 		Map<String, String> paramMap = verifyParam(searchCriteria);
 		SqlParameterSource paramSource = new MapSqlParameterSource(paramMap);
-		List<Mester> mesteri= (List<Mester>) namendTemplate.query(sql, paramSource, rm);
+		List<Mester> mesteri = (List<Mester>) namendTemplate.query(sql, paramSource, rm);
 		return mesteri;
 	}
 

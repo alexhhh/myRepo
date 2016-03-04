@@ -4,6 +4,8 @@
 package com.intern.alexx.model;
  
 
+import java.util.List;
+
 import com.wordnik.swagger.annotations.ApiModel;
 
 /**
@@ -19,7 +21,7 @@ public class Mester extends BaseModel {
 	private String location;
 	private String description;
 	private Contact contact;
-	private Speciality speciality;
+	private List<Speciality> speciality;
 
 	public Mester() {
 	}
@@ -109,11 +111,11 @@ public class Mester extends BaseModel {
 	}
 
  
-	public Speciality getSpeciality() {
+	public List<Speciality> getSpeciality() {
 		return speciality;
 	}
 
-	public void setSpeciality( Speciality speciality) {
+	public void setSpeciality( List<Speciality> speciality) {
 		this.speciality = speciality;
 	}
 

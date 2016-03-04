@@ -64,8 +64,6 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return avgValue;
 	}
 
-	
-	
 	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
 		page.setPageNumber(setPageNumberParam(pageNumber));

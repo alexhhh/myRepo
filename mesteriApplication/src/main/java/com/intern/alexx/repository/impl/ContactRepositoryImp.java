@@ -1,12 +1,12 @@
 package com.intern.alexx.repository.impl;
- 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.stereotype.Component; 
+import org.springframework.stereotype.Component;
 
 import com.intern.alexx.model.Contact;
 
@@ -17,8 +17,7 @@ public class ContactRepositoryImp implements ContactRepository {
 
 	@Autowired
 	private JdbcTemplate template;
-	
-	 
+
 	public void insert(Contact contact, String idMester) {
 		contact.setId(GUIDGenerator.generatedID());
 		contact.setIdMester(idMester);
@@ -27,23 +26,21 @@ public class ContactRepositoryImp implements ContactRepository {
 		template.update(sql, new Object[] { contact.getId(), contact.getIdMester(), contact.getTelNr(),
 				contact.getEmail(), contact.getSite(), contact.getSocialPlatform() });
 	}
-	 
+
 	public void update(Contact contact, String idMester) {
 		contact.setIdMester(idMester);
 		String sql = "UPDATE  contact SET ID=?, NUMAR_TELEFON= ?, EMAIL= ?, SITE= ?, SOCIAL_PLATFORM=?  WHERE id_mester = ?";
 		template.update(sql, new Object[] { contact.getId(), contact.getTelNr(), contact.getEmail(), contact.getSite(),
 				contact.getSocialPlatform(), contact.getIdMester() });
 	}
-	
- 
+
 	public void delete(String idMester) {
-		 
+
 		String sql = "DELETE FROM contact  WHERE id_mester = ? ";
 		template.update(sql, idMester);
 
 	}
-	
-	 
+
 	public Contact getByIdMester(String idMester) {
 
 		String sql = "SELECT * FROM contact WHERE id_mester = ?";
@@ -67,5 +64,5 @@ public class ContactRepositoryImp implements ContactRepository {
 		contact.setSocialPlatform(resultSet.getString("social_platform"));
 		return contact;
 	}
- 
+
 }

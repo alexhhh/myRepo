@@ -32,9 +32,9 @@ public class MesterServiceImp implements MesterService {
 	@Transactional
 	public void insertMester(Mester mester) {
 	 
-//		if (mester.getId() != null){
-//			throw new IllegalArgumentException("mester ID shoud be null");
-//		}
+		if (mester.getId() != null){
+			throw new IllegalArgumentException("mester ID shoud be null");
+		}
 		mesterRepository.insert(mester);
 		LOGGER.info(mester.toString());
 		contactRepository.insert(mester.getContact(), mester.getId());
@@ -65,7 +65,6 @@ public class MesterServiceImp implements MesterService {
 			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
 		} else {
 			specialityRepository.insert(mester.getSpeciality());
-			LOGGER.info("----------" +mester.getSpeciality().toString());
 		}
 		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
 		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
