@@ -1,6 +1,7 @@
 package com.intern.alexx.services.impl;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import com.intern.alexx.repository.ContactRepository;
 import com.intern.alexx.repository.MesterRepository;
 import com.intern.alexx.repository.SpecialityRepository;
 import com.intern.alexx.services.MesterService;
+import com.intern.alexx.services.SpecialityService;
 
 @Component
 
@@ -27,28 +29,31 @@ public class MesterServiceImp implements MesterService {
 	@Autowired
 	private ContactRepository contactRepository;
 	@Autowired
-	private SpecialityRepository specialityRepository;
+	private SpecialityService specialityService;
 
 	@Transactional
 	public void insertMester(Mester mester) {
 	 
-//		if (mester.getId() != null){
-//			throw new IllegalArgumentException("mester ID shoud be null");
-//		}
+		if (mester.getId() != null){
+			throw new IllegalArgumentException("mester ID shoud be null");
+		}
 		mesterRepository.insert(mester);
 		LOGGER.info(mester.toString());
 		mester.getContact().setIdMester(mester.getId());
 		contactRepository.insert(mester.getContact());
 		LOGGER.info(mester.getId());
 		LOGGER.info(mester.getContact().toString());
-		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName())  != null) {
-			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
-		} else {
-			specialityRepository.insert(mester.getSpeciality());
-			LOGGER.info(mester.getSpeciality().toString());
-		}
-		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
-		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
+	 
+	//	specialityService.verifySpeciality(mester.getSpeciality());
+		//TODO verify if E spec , and add if not
+//		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName())  != null) {
+//			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
+//		} else {
+//			specialityRepository.insert(mester.getSpeciality());
+//			LOGGER.info(mester.getSpeciality().toString());
+//		}
+//		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
+//		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
 		LOGGER.info(mester.toString());
 	}
 
@@ -63,14 +68,14 @@ public class MesterServiceImp implements MesterService {
 		mesterRepository.update(mester);
 		mester.getContact().setIdMester(mester.getId());
 		contactRepository.update( mester.getContact());
-		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName()) != null) {
-			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
-		} else {
-			specialityRepository.insert(mester.getSpeciality());
-			LOGGER.info("----------" +mester.getSpeciality().toString());
-		}
-		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
-		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
+//		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName()) != null) {
+//			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
+//		} else {
+//			specialityRepository.insert(mester.getSpeciality());
+//			LOGGER.info("----------" +mester.getSpeciality().toString());
+//		}
+//		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
+//		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
 	}
 
 	@Transactional

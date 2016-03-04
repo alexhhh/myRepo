@@ -22,8 +22,10 @@ public interface SpecialityRepository {
 
 	public String getSpecialityIdByName(String specialityName);
 	
-	Speciality getByName(String specialityName);
+	public Speciality getByName(String specialityName);
 	
-	List<Speciality> getAllSpecialties();
+	public List<String> getAllMesterSpecialities(String idMester);
+	
+	public List<String> getAllSpecialties();
 	
  }

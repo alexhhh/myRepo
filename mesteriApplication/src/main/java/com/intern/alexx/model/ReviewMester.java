@@ -3,9 +3,8 @@
  */
 package com.intern.alexx.model;
 
- 
 import com.fasterxml.jackson.annotation.JsonValue;
- 
+
 import com.wordnik.swagger.annotations.ApiModel;
 
 /**
@@ -18,7 +17,7 @@ public class ReviewMester extends BaseModel {
 
 	private String idMester;
 	private String idClient;
-	private  Price price;
+	private Price price;
 	private int rating;
 	private String feedback;
 
@@ -35,21 +34,20 @@ public class ReviewMester extends BaseModel {
 		this.price = price;
 	}
 
-	 
 	public enum Price {
 		LOW(1), MEDIUM(2), HIGH(3);
- 
-		private Price(  int aValue) {
-			 value = aValue;
+
+		private Price(int aValue) {
+			value = aValue;
 		}
 
 		@JsonValue
 		public int getValue() {
 			return value;
 		}
-		
-		private  final int value;
- 
+
+		private final int value;
+
 	}
 
 	/**
@@ -63,8 +61,7 @@ public class ReviewMester extends BaseModel {
 	 * @param price
 	 *            the price to set
 	 */
-	
- 
+
 	public void setPrice(Price price) {
 		this.price = price;
 	}
@@ -114,7 +111,6 @@ public class ReviewMester extends BaseModel {
 	public void setIdClient(String idClient) {
 		this.idClient = idClient;
 	}
-
 
 	@Override
 	public String toString() {

@@ -2,6 +2,9 @@ package com.intern.alexx.service;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -65,7 +68,7 @@ public class MesterServiceTest {
 	private Mester createMester() {
 		Mester mester = new Mester();
 		Contact contact = createContract();
-		Speciality speciality = createSpeciality();
+		List<Speciality> speciality = createSpeciality();
 		 
 		mester.setFirstName("Ionel");
 		mester.setLastName("Ionescu");
@@ -87,11 +90,12 @@ public class MesterServiceTest {
 		return contact;
 	}
 
-	private Speciality createSpeciality() {
+	private List<Speciality> createSpeciality() {
+		List<Speciality> spec = new ArrayList<Speciality>();
 		Speciality speciality = new Speciality();
- 
+		spec.add(speciality);
 		speciality.setSpecialityName("metalhead");
-		return speciality;
+		return spec;
 
 	}
 	

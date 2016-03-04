@@ -9,21 +9,18 @@ package com.intern.alexx.model;
  */
 public class Client extends BaseModel {
 
- 
 	private String firstName;
 	private String lastName;
-	
- 
 
 	/**
 	 * @return the idClient
 	 */
-	public  Client(String idClient,String firstName,String lastName ) {
-		 super(idClient);
-		 this.firstName=firstName;
-		 this.lastName=lastName;
+	public Client(String idClient, String firstName, String lastName) {
+		super(idClient);
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
- 
+
 	/**
 	 * @return the fisrtName
 	 */
@@ -31,9 +28,9 @@ public class Client extends BaseModel {
 		return firstName;
 	}
 
-
 	/**
-	 * @param fisrtName the fisrtName to set
+	 * @param fisrtName
+	 *            the fisrtName to set
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -47,20 +44,21 @@ public class Client extends BaseModel {
 	}
 
 	/**
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Client [ idClient=" +  getId()  +"firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Client [ idClient=" + getId() + "firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
-	
-	
 }

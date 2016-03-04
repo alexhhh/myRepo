@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,7 +72,7 @@ public class MesterRepositoryTest {
 	private Mester createMester() {
 		Mester mester = new Mester();
 		Contact contact = createContract();
-		Speciality speciality = createSpeciality();
+		List<Speciality> speciality = createSpeciality();
 		mester.setId("66");
 		mester.setFirstName("Ionel");
 		mester.setLastName("Ionescu");
@@ -92,11 +94,12 @@ public class MesterRepositoryTest {
 		return contact;
 	}
 
-	private Speciality createSpeciality() {
+	private List<Speciality> createSpeciality() {
+		List<Speciality> spec = new ArrayList<Speciality>();
 		Speciality speciality = new Speciality();
-		speciality.setSpecialityName("zidar");
-		return speciality;
-
+		spec.add(speciality);
+		speciality.setSpecialityName("metalhead");
+		return spec;
 	}
 
 	private MesterSearchCriteria createMSC() {

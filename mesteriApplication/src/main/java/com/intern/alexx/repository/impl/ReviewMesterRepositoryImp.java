@@ -64,16 +64,12 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return avgValue;
 	}
 
-	
-	
 	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
 		page.setPageNumber(setPageNumberParam(pageNumber));
 		page.setPageSize(setPageSizeParam(pageSize));
-
 		String sql = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
 				+ " , " + page.getPageSize() + " ;";
-
 		page.setTotalRezults(executeCountStatementForAllReviews());
 		page.setContentPage(executeElementsStatementForAllReviews(sql));
 		return page;
@@ -149,7 +145,6 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	}
 
 	private ReviewMester getReviewFromDB(ReviewMester review, ResultSet resultSet) throws SQLException {
-
 		review.setId(resultSet.getString("id"));
 		review.setIdMester(resultSet.getString("id_mester"));
 		review.setIdClient(resultSet.getString("id_client"));
