@@ -3,6 +3,9 @@
  */
 package com.intern.alexx.model;
 
+ 
+import com.fasterxml.jackson.annotation.JsonValue;
+ 
 import com.wordnik.swagger.annotations.ApiModel;
 
 /**
@@ -12,29 +15,47 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @ApiModel
 public class ReviewMester extends BaseModel {
-	
+
 	private String idMester;
 	private String idClient;
-	private String price;
+	private  Price price;
 	private int rating;
 	private String feedback;
 
 	public ReviewMester() {
 	}
 
-	public ReviewMester(String idReviewMester, String idMester, String idClient, String price, int rating, String feedback) {
+	public ReviewMester(String idReviewMester, String idMester, String idClient, Price price, int rating,
+			String feedback) {
 		super(idReviewMester);
-		this.idMester=idMester;
-		this.idClient=idClient;
+		this.idMester = idMester;
+		this.idClient = idClient;
 		this.feedback = feedback;
 		this.rating = rating;
 		this.price = price;
 	}
 
+	 
+	public enum Price {
+		LOW(1), MEDIUM(2), HIGH(3);
+ 
+		private Price(  int aValue) {
+			 value = aValue;
+		}
+
+		@JsonValue
+		public int getValue() {
+			return value;
+		}
+		
+		private  final int value;
+ 
+	}
+
 	/**
 	 * @return the price
 	 */
-	public String getPrice() {
+	public Price getPrice() {
 		return price;
 	}
 
@@ -42,7 +63,9 @@ public class ReviewMester extends BaseModel {
 	 * @param price
 	 *            the price to set
 	 */
-	public void setPrice(String price) {
+	
+ 
+	public void setPrice(Price price) {
 		this.price = price;
 	}
 
@@ -92,12 +115,7 @@ public class ReviewMester extends BaseModel {
 		this.idClient = idClient;
 	}
 
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+
 	@Override
 	public String toString() {
 		return "ReviewMester [idReviewMester=" + getId() + ", price=" + price + ", rating=" + rating + ", feedback="

@@ -153,7 +153,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			paramMap.put("rating", searchCriteria.getRating().toString());
 		}
 		if (searchCriteria.getPrice() != null) {
-			paramMap.put("price", searchCriteria.getPrice());
+			paramMap.put("price", searchCriteria.getPrice().name());
 		}
 		return paramMap;
 	}

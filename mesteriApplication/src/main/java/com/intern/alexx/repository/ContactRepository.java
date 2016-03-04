@@ -2,7 +2,7 @@
  * 
  */
 package com.intern.alexx.repository;
- 
+
 import com.intern.alexx.model.Contact;
 
 /**
@@ -10,7 +10,7 @@ import com.intern.alexx.model.Contact;
  *
  */
 public interface ContactRepository {
-	
+
 	void insert(Contact contact);
 
 	void update(Contact contact);

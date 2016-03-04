@@ -1,6 +1,6 @@
 package com.intern.alexx.model;
 
-
+import com.intern.alexx.model.ReviewMester.Price;
 
 public class MesterSearchCriteriaBuilder {
 	
@@ -47,7 +47,7 @@ public class MesterSearchCriteriaBuilder {
 		return this;
 
 	}
-	public MesterSearchCriteriaBuilder setPrice(String price) {
+	public MesterSearchCriteriaBuilder setPrice(Price price) {
 		msc.setPrice(price);
 		return this;
 

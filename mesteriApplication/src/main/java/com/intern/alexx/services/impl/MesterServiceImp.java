@@ -32,19 +32,22 @@ public class MesterServiceImp implements MesterService {
 	@Transactional
 	public void insertMester(Mester mester) {
 	 
-		if (mester.getId() != null){
-			throw new IllegalArgumentException("mester is ID be null");
-		}
+//		if (mester.getId() != null){
+//			throw new IllegalArgumentException("mester ID shoud be null");
+//		}
 		mesterRepository.insert(mester);
 		LOGGER.info(mester.toString());
+		mester.getContact().setIdMester(mester.getId());
 		contactRepository.insert(mester.getContact());
+		LOGGER.info(mester.getId());
 		LOGGER.info(mester.getContact().toString());
-		if (specialityRepository.getByName(mester.getSpeciality().getSpecialityName()) != null) {
+		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName())  != null) {
 			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
 		} else {
 			specialityRepository.insert(mester.getSpeciality());
 			LOGGER.info(mester.getSpeciality().toString());
 		}
+		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
 		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
 		LOGGER.info(mester.toString());
 	}
@@ -53,31 +56,32 @@ public class MesterServiceImp implements MesterService {
 	public void updateMester(Mester mester) {
 		
 		if (mester.getId() == null){
-			throw new IllegalArgumentException("mester is ID must not be null");
+			throw new IllegalArgumentException("mester ID must not be null");
 		}
 		
 		mesterRepository.deleteFromMesterHasSpeciality(mester.getId());
 		mesterRepository.update(mester);
-		contactRepository.update(mester.getContact());
-		if (specialityRepository.getByName(mester.getSpeciality().getSpecialityName()) != null) {
+		mester.getContact().setIdMester(mester.getId());
+		contactRepository.update( mester.getContact());
+		if (specialityRepository.getSpecialityIdByName(mester.getSpeciality().getSpecialityName()) != null) {
 			mester.setSpeciality(specialityRepository.getByName(mester.getSpeciality().getSpecialityName()));
 		} else {
 			specialityRepository.insert(mester.getSpeciality());
-			System.out.println(mester.getSpeciality().toString());
+			LOGGER.info("----------" +mester.getSpeciality().toString());
 		}
+		LOGGER.info("---------"+ mester.getId() +"    +   " + mester.getSpeciality().getId()+"-------");
 		mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), mester.getSpeciality().getId());
 	}
 
 	@Transactional
 	public void deleteMester(String mesterId) {
-		if (mesterId != null){
+		if (mesterId == null){
 			throw new IllegalArgumentException("mester ID is null");
-		}
+		}  
 		mesterRepository.deleteFromMesterHasSpeciality(mesterId);
 		contactRepository.delete(mesterId);
 		mesterRepository.delete(mesterId);
-		
-		 
+ 
 	}
 	 
 	@Transactional

@@ -13,7 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.intern.alexx.model.Contact;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.Speciality;
-import com.intern.alexx.repository.GenerateSqlTest; 
+import com.intern.alexx.repository.GenerateSqlTest;
+import com.intern.alexx.repository.impl.GUIDGenerator;
 import com.intern.alexx.services.MesterService;
  
 
@@ -31,6 +32,7 @@ public class MesterServiceTest {
 	@Test
 	public void testInsertMester_WhenSuccesfull_ThenReturnCreatedMester() {
 		Mester mester= createMester();
+		 
 		mesterService.insertMester(mester);
 		Mester newMester= mesterService.getById(mester.getId());
 		logger.info(newMester.toString());
@@ -44,6 +46,7 @@ public class MesterServiceTest {
 		assertNotNull(dbMester);
 		mesterService.updateMester(mester);
 		assertEquals(mester.getLocation(), dbMester.getLocation());
+		 System.out.println("--***--" +mester.getId());
 		mesterService.deleteMester(mester.getId());
 		 
 	}
@@ -52,33 +55,31 @@ public class MesterServiceTest {
 	@Test
 	public void testDelete_WhenSuccesfull_ThenDeleteMester(){
 		Mester mester= createMester();
+		mester.setId(GUIDGenerator.generatedID());
 		Mester dbMester = mesterService.getById(mester.getId());
 		assertNotNull(dbMester);
 		mesterService.deleteMester(mester.getId());
-		
-		
+	
 	}
-	
-	
-	
+ 
 	private Mester createMester() {
 		Mester mester = new Mester();
 		Contact contact = createContract();
 		Speciality speciality = createSpeciality();
-		mester.setId("67");
+		 
 		mester.setFirstName("Ionel");
 		mester.setLastName("Ionescu");
 		mester.setLocation("Miami");
 		mester.setDescription(" ");
 		mester.setContact(contact);
+	 
 		mester.setSpeciality(speciality);
 		return mester;
 	}
 
 	private Contact createContract() {
 		Contact contact = new Contact();
-		contact.setId("67");
-		contact.setIdMester("67");
+ 
 		contact.setEmail("mester@contact.com");
 		contact.setTelNr("0479011333");
 		contact.setSite("youtube");
@@ -88,8 +89,8 @@ public class MesterServiceTest {
 
 	private Speciality createSpeciality() {
 		Speciality speciality = new Speciality();
-		speciality.setId("122");
-		speciality.setSpecialityName("zidar");
+ 
+		speciality.setSpecialityName("metalhead");
 		return speciality;
 
 	}
