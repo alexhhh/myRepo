@@ -50,6 +50,13 @@ public class ContactRepositoryImp implements ContactRepository {
 		return contact;
 	}
 
+	public String getIDByIdMester(String idMester) {
+		String sql = "SELECT id FROM contact WHERE id_mester = ?";
+		return	template.queryForObject(sql, new Object[] {idMester}, String.class);
+
+	}
+	
+	
 	private Contact getContactFromDB(Contact contact, ResultSet resultSet) throws SQLException {
 		contact.setId(resultSet.getString("id"));
 		contact.setIdMester(resultSet.getString("id_mester"));

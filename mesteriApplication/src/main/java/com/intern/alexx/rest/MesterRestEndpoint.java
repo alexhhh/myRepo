@@ -1,6 +1,7 @@
 package com.intern.alexx.rest;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,7 +23,7 @@ import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.services.MesterService;
-
+import com.intern.alexx.services.SpecialityService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponses;
@@ -36,6 +37,9 @@ public class MesterRestEndpoint {
 
 	@Autowired
 	private MesterService mesterService;
+	
+	@Autowired
+	private SpecialityService specService;
 
 	 @Context
 	 private UriInfo uriInfo;
@@ -97,4 +101,17 @@ public class MesterRestEndpoint {
 		mesterService.deleteMester(idMester);
 		return Response.ok().build();
 	}
+	
+	@GET
+	@Path("/specialities/{idMester} ")
+	@ApiOperation(value = "Get the  mester specialities", notes = "Get specialities.", response = String.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Mester specialities was successfully retrived.", response = String.class),
+			@ApiResponse(code = 404, message = "Mester specialities not found."),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getMesterSpecialities(@PathParam("idMester") String idMester) throws SQLException {
+		List<String> specialities = specService.getAllMesterSpeciality(idMester);
+		return Response.ok(Status.OK).entity(specialities).build();
+	}
+
 }
