@@ -1,5 +1,6 @@
 package com.intern.alexx.repository;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Test;
@@ -28,8 +29,8 @@ public class SpecialityRepositoryTest {
 	}
 
 	@Test
-	public void testGetMesterSpec_WhenSuccesful_thenReturnSpecs() {
-		List<String> spec = specRepo.getAllMesterSpecialities("10");
+	public void testGetMesterSpec_WhenSuccesful_thenReturnSpecs() throws SQLException {
+		List<Speciality> spec = specRepo.getAllMesterSpecialities("10");
 		LOGGER.info(spec.toString());
 	}
 }

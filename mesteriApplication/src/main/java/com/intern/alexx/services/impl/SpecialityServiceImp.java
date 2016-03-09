@@ -1,5 +1,6 @@
 package com.intern.alexx.services.impl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,12 @@ public class SpecialityServiceImp implements SpecialityService {
 	}
 
 	@Transactional
-	public List<String> getAllMesterSpeciality(String mesterId) {
+	public List<Speciality> getAllMesterSpeciality(String mesterId) throws SQLException {
 		return specialityRepository.getAllMesterSpecialities(mesterId);
 	}
 
 	@Transactional
-	public List<String> getAllSpeciality() {
+	public List<Speciality> getAllSpeciality() throws SQLException {
 		return specialityRepository.getAllSpecialties();
 	}
 
@@ -51,6 +52,22 @@ public class SpecialityServiceImp implements SpecialityService {
 		}
 		return specialityRepository.getByName(specialityName);
 
+	}
+
+	@Transactional
+	public void insertSpeciality(Speciality speciality) {
+		 specialityRepository.insert(speciality);
+	}
+
+	@Transactional
+	public void updateSpeciality(Speciality speciality) {
+		specialityRepository.update(speciality);
+		
+	}
+
+	@Transactional
+	public void deleteSpeciality(String idSpeciality) {
+		specialityRepository.delete(idSpeciality);
 	}
 
 }

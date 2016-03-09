@@ -4,6 +4,7 @@
 package com.intern.alexx.repository;
 
  
+import java.sql.SQLException;
 import java.util.List;
 
 import com.intern.alexx.model.Speciality;
@@ -24,8 +25,8 @@ public interface SpecialityRepository {
 	
 	public Speciality getByName(String specialityName);
 	
-	public List<String> getAllMesterSpecialities(String idMester);
+	public List<Speciality> getAllMesterSpecialities(String idMester) throws SQLException;
 	
-	public List<String> getAllSpecialties();
+	public List<Speciality> getAllSpecialties() throws SQLException;
 	
  }

@@ -1,5 +1,6 @@
 package com.intern.alexx.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.intern.alexx.model.Speciality;
 import com.intern.alexx.services.SpecialityService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,8 +24,8 @@ public class SpecialityServiceTest {
 	private SpecialityService specService;
 	
 	@Test
-	public void testGetMesterSpec_WhenSuccesful_thenReturnSpecs(){	
-		List<String> spec =	specService.getAllMesterSpeciality("10");
+	public void testGetMesterSpec_WhenSuccesful_thenReturnSpecs() throws SQLException{	
+		List<Speciality> spec =	specService.getAllMesterSpeciality("10");
 		LOGGER.info(spec.toString());
 	}
 }
