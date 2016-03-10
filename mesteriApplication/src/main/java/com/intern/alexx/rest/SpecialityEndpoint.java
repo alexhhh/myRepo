@@ -46,7 +46,7 @@ public class SpecialityEndpoint {
 	}
 
 	@GET
-	@Path("/mesterId/{idMester} ")
+	@Path("/mesterId/{idMester}")
 	@ApiOperation(value = "Get the  mester specialities", notes = "Get specialities.", response = Speciality.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Mester specialities was successfully retrived.", response = Speciality.class),
