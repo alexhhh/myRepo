@@ -11,19 +11,18 @@ import com.wordnik.swagger.annotations.ApiModel;
  */
 
 @ApiModel
-public class Speciality extends BaseModel{
+public class Speciality extends BaseModel {
 
-	
-	
 	private String specialityName;
-	
-	public Speciality (){}
-	
-	public Speciality (String idSpeciality, String specialityName){
-		super(idSpeciality);
-		this.specialityName=specialityName;
+
+	public Speciality() {
 	}
- 
+
+	public Speciality(String idSpeciality, String specialityName) {
+		super(idSpeciality);
+		this.specialityName = specialityName;
+	}
+
 	/**
 	 * @return the specialityName
 	 */
@@ -32,22 +31,21 @@ public class Speciality extends BaseModel{
 	}
 
 	/**
-	 * @param specialityName the specialityName to set
+	 * @param specialityName
+	 *            the specialityName to set
 	 */
 	public void setSpecialityName(String specialityName) {
 		this.specialityName = specialityName;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Speciality [idSpeciality=" + getId()+"specialityName=" + specialityName   + "]";
+		return "Speciality [idSpeciality=" + getId() + "specialityName=" + specialityName + "]";
 	}
 
-
-
-	 
-	
 }

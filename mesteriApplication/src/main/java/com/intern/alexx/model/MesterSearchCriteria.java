@@ -16,7 +16,7 @@ public class MesterSearchCriteria {
 	private Price price;
 	private Integer pageSize;
 	private Integer pageNumber;
-	
+
 	/**
 	 * @return the firstName
 	 */
@@ -152,5 +152,5 @@ public class MesterSearchCriteria {
 	public void setPageNumber(Integer pageNumber) {
 		this.pageNumber = pageNumber;
 	}
- 
+
 }

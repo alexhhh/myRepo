@@ -19,7 +19,6 @@ public class Contact extends BaseModel {
 	private String site;
 	private String socialPlatform;
 
-	 
 	public String getIdMester() {
 		return IdMester;
 	}
@@ -86,7 +85,5 @@ public class Contact extends BaseModel {
 		return "Contact [IdMester=" + IdMester + ", telNr=" + telNr + ", email=" + email + ", site=" + site
 				+ ", socialPlatform=" + socialPlatform + "]";
 	}
-
- 
 
 }

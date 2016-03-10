@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -110,7 +112,7 @@ public class MesterEndpointTest {
 	private Mester createMester() {
 		Mester mester = new Mester();
 		Contact contact = createContract();
-		Speciality speciality = createSpeciality();
+		List<Speciality> speciality = createSpeciality();
 		mester.setId("101");
 		mester.setFirstName("Ion");
 		mester.setLastName("Ionescu");
@@ -131,10 +133,11 @@ public class MesterEndpointTest {
 		return contact;
 	}
 
-	private Speciality createSpeciality() {
+	private List<Speciality> createSpeciality() {
+		List<Speciality> spec = new ArrayList<Speciality>();
 		Speciality speciality = new Speciality();
-		speciality.setSpecialityName("stress2");
-		return speciality;
-
+		spec.add(speciality);
+		speciality.setSpecialityName("metalhead");
+		return spec;
 	}
 }

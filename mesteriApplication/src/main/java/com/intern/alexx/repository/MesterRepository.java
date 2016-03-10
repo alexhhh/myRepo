@@ -28,4 +28,6 @@ public interface MesterRepository {
 	void insertIntoMesterHasSpeciality(String mesterId,String specialityId);
 
 	void deleteFromMesterHasSpeciality(String mesterId );
+	
+	void deleteOneFromMesterHasSpeciality(String mesterId,String specialityId);
 }

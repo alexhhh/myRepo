@@ -19,17 +19,17 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 
 	@Transactional
 	public void insertReviewMester(ReviewMester reviewMester) {
-		if (reviewMester.getId() != null) {
-			throw new IllegalArgumentException("review ID is not null");
-		}
+//		if (reviewMester.getId() != null) {
+//			throw new IllegalArgumentException("review ID is not null");
+//		}
 		reviewMesterRepository.insert(reviewMester);
 	}
 
 	@Transactional
 	public void updateReviewMester(ReviewMester reviewMester) {
-		if (reviewMester.getId() == null) {
-			throw new IllegalArgumentException("review ID is null");
-		}
+//		if (reviewMester.getId() == null) {
+//			throw new IllegalArgumentException("review ID is null");
+//		}
 		reviewMesterRepository.update(reviewMester);
 	}
 

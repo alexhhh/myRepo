@@ -22,7 +22,6 @@ import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.services.MesterService;
-
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponses;
@@ -37,9 +36,9 @@ public class MesterRestEndpoint {
 	@Autowired
 	private MesterService mesterService;
 
-	 @Context
-	 private UriInfo uriInfo;
-	
+	@Context
+	private UriInfo uriInfo;
+
 	@GET
 	@Path("/{idMester}")
 	@ApiOperation(value = "Return mester", notes = "Return one mester", response = Mester.class)
@@ -47,9 +46,9 @@ public class MesterRestEndpoint {
 			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = Mester.class),
 			@ApiResponse(code = 404, message = "Mester not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getById(@PathParam("idMester")String idMester) {
-		 Mester mester = mesterService.getById(idMester);
-			int status = mester == null ? 404 : 200;
+	public Response getById(@PathParam("idMester") String idMester) {
+		Mester mester = mesterService.getById(idMester);
+		int status = mester == null ? 404 : 200;
 		return Response.ok(status).entity(mester).build();
 	}
 
@@ -64,11 +63,10 @@ public class MesterRestEndpoint {
 		MyPage<Mester> newMester = mesterService.searchMester(searchCriteria);
 		return Response.ok(Status.OK).entity(newMester).build();
 	}
-	
+
 	@POST
 	@ApiOperation(value = "Add mester", notes = "Saves full a mester.")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "Meseter was successfuly created "),
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Meseter was successfuly created "),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response insert(Mester mester) {
 		mesterService.insertMester(mester);
@@ -78,23 +76,22 @@ public class MesterRestEndpoint {
 	@PUT
 	@Path("/{idMester}")
 	@ApiOperation(value = "Update mester", notes = "Update a full mester", response = Mester.class)
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Update mester was successful", response = Mester.class),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Update mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response update(@PathParam("idMester")String idMester,Mester mester) {
+	public Response update(@PathParam("idMester") String idMester, Mester mester) {
 		mester.setId(idMester);
 		mesterService.updateMester(mester);
 		return Response.ok(Status.OK).entity(mester).build();
 	}
-	
+
 	@DELETE
 	@Path("/{idMester}")
 	@ApiOperation(value = "Remove mester", notes = "Remove a full mester", response = Mester.class)
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Delete mester was successful", response = Mester.class),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Delete mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response delete(@PathParam("idMester")String idMester) {		 
+	public Response delete(@PathParam("idMester") String idMester) {
 		mesterService.deleteMester(idMester);
 		return Response.ok().build();
 	}
+
 }

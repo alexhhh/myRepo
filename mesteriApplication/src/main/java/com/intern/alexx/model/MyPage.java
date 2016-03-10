@@ -1,26 +1,22 @@
 package com.intern.alexx.model;
 
 import java.util.List;
- 
- 
 
 public class MyPage<T> {
 
-	
 	private List<T> contentPage;
 	private Integer totalRezults;
 	private Integer pageSize;
 	private Integer pageNumber;
-	
-	 
+
 	public List<T> getContentPage() {
 		return contentPage;
 	}
- 
+
 	public void setContentPage(List<T> contentPage) {
-		this.contentPage =  contentPage;
+		this.contentPage = contentPage;
 	}
-	
+
 	/**
 	 * @return the totalRezults
 	 */
@@ -68,9 +64,8 @@ public class MyPage<T> {
 
 	@Override
 	public String toString() {
-		return "MyPage [contentPage=" + contentPage + ", totalRezults="
-				+ totalRezults + ", pageSize=" + pageSize + ", pageNumber=" + pageNumber + "]";
+		return "MyPage [contentPage=" + contentPage + ", totalRezults=" + totalRezults + ", pageSize=" + pageSize
+				+ ", pageNumber=" + pageNumber + "]";
 	}
- 
 
 }
