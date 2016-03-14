@@ -20,6 +20,35 @@
 		<jetty.version>9.2.3.v20140905</jetty.version>
 	</properties>
 
+
+	<build>
+		<finalName>mesteriApplication</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.0</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.version}</version>
+					<configuration>
+						<webApp>
+							<contextPath>/mesteriApplication</contextPath>
+						</webApp>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+
 	<dependencies>
 		<!-- Jersey -->
 		<dependency>
@@ -97,6 +126,11 @@
 			<artifactId>spring-data-commons-core</artifactId>
 			<version>1.4.1.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>4.2.5.RELEASE</version>
+		</dependency>
 
 		<!-- mysql -->
 		<dependency>
@@ -160,38 +194,6 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.1</version>
 		</dependency>
-
 	</dependencies>
-
-
-
-	<build>
-		<finalName>mesteriApplication</finalName>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.0</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>${jetty.version}</version>
-					<configuration>
-						<webApp>
-							<contextPath>/mesteriApplication</contextPath>
-						</webApp>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
-
-	</build>
 
 </project>

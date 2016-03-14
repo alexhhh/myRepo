@@ -24,6 +24,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
+
+
+
 @Api(value = "/speciality", description = "Endpoint for speciality listing")
 @Component
 @Path("/speciality")
@@ -54,7 +57,10 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response getMesterSpecialities(@PathParam("idMester") String idMester) throws SQLException {
 		List<Speciality> specialities = specialityService.getAllMesterSpeciality(idMester);
-		return Response.ok(Status.OK).entity(specialities).build();
+		return Response.ok(Status.OK).entity(specialities)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
 	}
 
 	@POST
@@ -99,16 +105,21 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error.") })
 	public Response editSpeciality(Speciality speciality) {
 		specialityService.updateSpeciality(speciality);
-		return Response.ok().entity(speciality).build();
+		return Response.ok().header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").entity(speciality).build();
 	}
 	
 	@DELETE
+	@Path("/{id}")
 	@ApiOperation(value = "Delete a speciality", notes = "Delete speciality", response = Speciality.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Speciality was successfuly deleted.", response = Speciality.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response deleteSpeciality(String idSpeciality) {
+	public Response deleteSpeciality(@PathParam("id") String idSpeciality) {
 		specialityService.deleteSpeciality(idSpeciality); 
-		return Response.ok().build();
+		return Response.ok().header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
 	}
 }
