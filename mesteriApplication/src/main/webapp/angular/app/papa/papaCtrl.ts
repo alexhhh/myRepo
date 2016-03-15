@@ -12,13 +12,13 @@ module App.Controllers
         datacontext: App.Services.IDatacontext;
         dataService: Services.IDataService;
         log: any;
-        alex: string;
+    
         success: string;
         idSpec: Array<String>;
         nameSpec: Array<String>;
         spec: Array<any>; 
         
-        addMesterRequest: App.Services.AddMesterRequest;
+        addSpecilaityRequest: App.Services.AddSpecialityRequest ;
         
         
         //#endregion
@@ -30,7 +30,7 @@ module App.Controllers
             
             this.dataService = dataService;
             
-            this.alex='asdf';
+            
             // Queue all promises and wait for them to finish before loading the view
             this.activate([]);
             this.success="Habar nu am cum!";
@@ -38,14 +38,14 @@ module App.Controllers
             this.idSpec=["1","2","3","4"];
             this.nameSpec=["spec1","spec2","spec3","spec4"];
             
-            this.addMesterRequest = new App.Services.AddMesterRequest();
+            this.addSpecilaityRequest = new App.Services.AddSpecialityRequest();
         
             //this.spec = new Array<any>();
             //this.spec.push({id: 1,name: 'spec1'})
            
             
             // Queue all promises and wait for them to finish before loading the view
-            this.activate([this.getMesteri()]);
+            this.activate([this.getSpecialities()]);
         }
 
         // TODO: is there a more elegant way of activating the controller - base class?
@@ -55,28 +55,28 @@ module App.Controllers
                 .then(() => { this.log('Activated Dashboard View'); });
         }
         
-        getMesteri = () => {
-          var requestData = new App.Services.GetMesteriRequest();
+        getSpecialities = () => {
+          var requestData = new App.Services.GetSpecialityRequest();
           
-            var promise = this.dataService.getMesteri(requestData, (response) =>{
+            var promise = this.dataService.getSpecialities(requestData, (response) =>{
                 this.spec = response;
             } );
             return promise;
         }
         
-        addMester = () => {
-             var promise = this.dataService.addMester(this.addMesterRequest, (response) =>{
-                 this.getMesteri();
+        addSpeciality = () => {
+             var promise = this.dataService.addSpeciality(this.addSpecilaityRequest, (response) =>{
+                 this.getSpecialities();
              } );
              return promise;
         }
         
-        deleteMester = (id: string) => {
-            var deleteMesterRequest =  new App.Services.DeleteMesterRequest();
-            deleteMesterRequest.idSpeciality = id;
+        deleteSpeciality = (id: string) => {
+            var deleteSpecialityRequest =  new App.Services.DeleteSpecialityRequest();
+            deleteSpecialityRequest.idSpeciality = id;
             
-             var promise = this.dataService.deleteMester(deleteMesterRequest, (response) =>{
-                 this.getMesteri(); 
+             var promise = this.dataService.deleteSpeciality(deleteSpecialityRequest, (response) =>{
+                 this.getSpecialities(); 
              } );
              return promise;
         }

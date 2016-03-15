@@ -37,7 +37,7 @@ module App{
 
     var config:IConfigurations = {
         appErrorPrefix: '[HT Error] ', //Configure the exceptionHandler decorator
-        docTitle: 'HotTowel: ',
+        docTitle: 'Mesteri Application: ',
         events: events,
         remoteServiceName: remoteServiceName,
         version: '2.1.0',

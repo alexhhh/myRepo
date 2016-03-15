@@ -47,6 +47,17 @@ var App;
                         content: '<i class="fa fa-arrows"></i> Papa'
                     }
                 }
+            },
+            {
+                url: '/mester',
+                config: {
+                    title: 'mester',
+                    templateUrl: 'app/mester/mester.html',
+                    settings: {
+                        nav: 4,
+                        content: '<i class="fa fa-arrows"></i> Mester'
+                    }
+                }
             }
         ];
     }

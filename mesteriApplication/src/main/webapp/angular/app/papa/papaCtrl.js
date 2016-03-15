@@ -9,24 +9,24 @@ var App;
                 var _this = this;
                 //#region Variables
                 this.controllerId = PapaCtrl.controllerId;
-                this.getMesteri = function () {
-                    var requestData = new App.Services.GetMesteriRequest();
-                    var promise = _this.dataService.getMesteri(requestData, function (response) {
+                this.getSpecialities = function () {
+                    var requestData = new App.Services.GetSpecialityRequest();
+                    var promise = _this.dataService.getSpecialities(requestData, function (response) {
                         _this.spec = response;
                     });
                     return promise;
                 };
-                this.addMester = function () {
-                    var promise = _this.dataService.addMester(_this.addMesterRequest, function (response) {
-                        _this.getMesteri();
+                this.addSpeciality = function () {
+                    var promise = _this.dataService.addSpeciality(_this.addSpecilaityRequest, function (response) {
+                        _this.getSpecialities();
                     });
                     return promise;
                 };
-                this.deleteMester = function (id) {
-                    var deleteMesterRequest = new App.Services.DeleteMesterRequest();
-                    deleteMesterRequest.idSpeciality = id;
-                    var promise = _this.dataService.deleteMester(deleteMesterRequest, function (response) {
-                        _this.getMesteri();
+                this.deleteSpeciality = function (id) {
+                    var deleteSpecialityRequest = new App.Services.DeleteSpecialityRequest();
+                    deleteSpecialityRequest.idSpeciality = id;
+                    var promise = _this.dataService.deleteSpeciality(deleteSpecialityRequest, function (response) {
+                        _this.getSpecialities();
                     });
                     return promise;
                 };
@@ -41,17 +41,16 @@ var App;
                 this.datacontext = datacontext;
                 this.log = common.logger.getLogFn();
                 this.dataService = dataService;
-                this.alex = 'asdf';
                 // Queue all promises and wait for them to finish before loading the view
                 this.activate([]);
                 this.success = "Habar nu am cum!";
                 this.idSpec = ["1", "2", "3", "4"];
                 this.nameSpec = ["spec1", "spec2", "spec3", "spec4"];
-                this.addMesterRequest = new App.Services.AddMesterRequest();
+                this.addSpecilaityRequest = new App.Services.AddSpecialityRequest();
                 //this.spec = new Array<any>();
                 //this.spec.push({id: 1,name: 'spec1'})
                 // Queue all promises and wait for them to finish before loading the view
-                this.activate([this.getMesteri()]);
+                this.activate([this.getSpecialities()]);
             }
             // TODO: is there a more elegant way of activating the controller - base class?
             PapaCtrl.prototype.activate = function (promises) {

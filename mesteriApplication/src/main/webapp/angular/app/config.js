@@ -13,7 +13,7 @@ var App;
     };
     var config = {
         appErrorPrefix: '[HT Error] ',
-        docTitle: 'HotTowel: ',
+        docTitle: 'Mesteri Application: ',
         events: events,
         remoteServiceName: remoteServiceName,
         version: '2.1.0',

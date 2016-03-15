@@ -7,13 +7,13 @@ var App;
             function DataService($http, httpi) {
                 var _this = this;
                 this.serviceRoot = 'http://localhost:8080/mesteriApplication/rest';
-                this.getMesteri = function (requestData, callback) {
+                this.getSpecialities = function (requestData, callback) {
                     return _this.Request('GET', '/speciality/specialities', requestData, callback);
                 };
-                this.addMester = function (requestData, callback) {
+                this.addSpeciality = function (requestData, callback) {
                     return _this.Request('POST', '/speciality', requestData, callback);
                 };
-                this.deleteMester = function (requestData, callback) {
+                this.deleteSpeciality = function (requestData, callback) {
                     var urlParam = '/speciality/' + requestData.idSpeciality;
                     return _this.Request('DELETE', urlParam, null, callback);
                 };

@@ -25,7 +25,7 @@
                                     <tr ng-repeat="item in vm.spec"  >
                                         <td >{{item.id}}</td>
                                         <td >{{item.specialityName}}</td>
-                                        <td><input type="button" ng-click="vm.deleteMester(item.id)" value="Delete mester"/></td>
+                                        <td><input type="button" ng-click="vm.deleteSpeciality(item.id)" value="Delete Speciality"/></td>
                                     </tr>
                                     
                                     <!--<tr ng-repeat="item in vm.idSpec track by $index">
@@ -45,14 +45,14 @@
             
             <div class="row">
                 <div class="col-md-8">
-                    <input ng-model="vm.addMesterRequest.specialityName"/>
-                    <input type="button" ng-click="vm.addMester()" value="Add mester"/>
+                    <input ng-model="vm.addSpecialityRequest.specialityName"/>
+                    <input type="button" ng-click="vm.addSpeciality()" value="Add Speciality"/>
                 </div>
             </div>
              <div class="row">
                 <div class="col-md-8">
-                    <input ng-model="vm.deleteMesterRequest.idSpeciality"/>
-                    <input type="button" ng-click="vm.deleteMester()" value="Delete mester"/>
+                    <input ng-model="vm.deleteSpecialityRequest.idSpeciality"/>
+                    <input type="button" ng-click="vm.deleteSpeciality()" value="Delete Speciality"/>
                 </div>
             </div>
         </div>

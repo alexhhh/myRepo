@@ -1,12 +1,12 @@
 module App.Services {
  
-    export class GetMesteriRequest {
+    export class GetSpecialityRequest {
     }
     
-    export class AddMesterRequest {
+    export class AddSpecialityRequest {
         public specialityName: string;
     }   
-      export class DeleteMesterRequest {
+      export class DeleteSpecialityRequest {
         public idSpeciality: string;
     }   
 }

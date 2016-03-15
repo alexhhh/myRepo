@@ -4,9 +4,9 @@ module App.Services {
 
     export interface IDataService
     {
-        getMesteri(requestData: GetMesteriRequest, callback: Function): ng.IHttpPromise<any>;
-        addMester(requestData: AddMesterRequest, callback: Function): ng.IHttpPromise<any>;
-        deleteMester(requestData: DeleteMesterRequest, callback: Function): ng.IHttpPromise<any>;
+        getSpecialities(requestData: GetSpecialityRequest, callback: Function): ng.IHttpPromise<any>;
+        addSpeciality(requestData: AddSpecialityRequest , callback: Function): ng.IHttpPromise<any>;
+        deleteSpeciality(requestData: DeleteSpecialityRequest , callback: Function): ng.IHttpPromise<any>;
     }
 
     export class DataService implements IDataService
@@ -23,15 +23,15 @@ module App.Services {
             this.Httpi = httpi;
         }
         
-        public getMesteri = (requestData: GetMesteriRequest, callback: Function): ng.IHttpPromise<any> => {
+        public getSpecialities = (requestData: GetSpecialityRequest, callback: Function): ng.IHttpPromise<any> => {
             return this.Request('GET', '/speciality/specialities', requestData, callback);
         }
         
-        public addMester = (requestData: AddMesterRequest, callback: Function): ng.IHttpPromise<any> => {
+        public addSpeciality = (requestData: AddSpecialityRequest, callback: Function): ng.IHttpPromise<any> => {
             return this.Request('POST', '/speciality', requestData, callback);
         }
         
-         public deleteMester = (requestData: DeleteMesterRequest, callback: Function): ng.IHttpPromise<any> => {
+         public deleteSpeciality = (requestData: DeleteSpecialityRequest, callback: Function): ng.IHttpPromise<any> => {
             var urlParam = '/speciality/'+ requestData.idSpeciality;
             return this.Request('DELETE', urlParam, null, callback);
         }
