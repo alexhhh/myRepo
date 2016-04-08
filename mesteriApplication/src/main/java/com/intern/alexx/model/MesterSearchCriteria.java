@@ -1,6 +1,6 @@
 package com.intern.alexx.model;
 
-import com.intern.alexx.model.ReviewMester.Price;
+ 
 import com.wordnik.swagger.annotations.ApiModel;
 
 @ApiModel
@@ -13,7 +13,7 @@ public class MesterSearchCriteria {
 	private String email;
 	private String phoneNumber;
 	private Integer rating;
-	private Price price;
+	private Integer price;
 	private Integer pageSize;
 	private Integer pageNumber;
 
@@ -125,7 +125,7 @@ public class MesterSearchCriteria {
 	/**
 	 * @return the price
 	 */
-	public Price getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
@@ -133,7 +133,7 @@ public class MesterSearchCriteria {
 	 * @param price
 	 *            the price to set
 	 */
-	public void setPrice(Price price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 

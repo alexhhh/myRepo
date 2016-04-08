@@ -39,9 +39,9 @@ public class ContactRepositoryImp implements ContactRepository {
 
 	public Contact getByIdMester(String idMester) {
 
-		String sql = "SELECT * FROM contact WHERE id_mester = ?";
+		String sql = "SELECT * FROM contact WHERE contact.id_mester = ?";
 		Contact contact = new Contact();
-		template.query(sql, new Object[] {}, new RowCallbackHandler() {
+		template.query(sql, new Object[] {idMester}, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				getContactFromDB(contact, rs);
 			}

@@ -2,6 +2,7 @@ package com.intern.alexx.service;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +61,19 @@ public class MesterServiceTest {
 		mesterService.deleteMester(mester.getId());
 
 	}
+	
+	
+	@Test
+	public void testGetMester_WhenSuccesfull_ThenReturnMester() throws SQLException {
+	 
+		
+		Mester dbMester = mesterService.getMesterById("c1ac53bc-a690-4328-a8a9-cec6c8c6f7b0");
+		assertNotNull(dbMester);
+		System.out.println("----------"  +dbMester.toString());
+		 
+
+	}
+	
 
 	private Mester createMester() {
 		Mester mester = new Mester();

@@ -15,7 +15,7 @@ public interface ReviewMesterService {
 	
 	public ReviewMester getById(String idReview);
 	
-	public float getMesterRating(String idReview);
+	public float getMesterRating(String idMester);
 	
 	public MyPage<ReviewMester> getReviewMasterPage(String idMester, Integer pageSize,Integer pageNumber) throws SQLException;
 

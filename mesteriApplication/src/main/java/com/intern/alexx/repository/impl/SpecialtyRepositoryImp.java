@@ -71,7 +71,7 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 	
 	public List<Speciality> getAllMesterSpecialities(String idMester) throws SQLException {
 		List<Speciality> specialities = new ArrayList<Speciality>();
-		String sql = " SELECT speciality_name FROM speciality as s JOIN mester_has_speciality as mhs JOIN mester as m ON m.id = mhs.id_mester AND s.id = mhs.id_speciality WHERE m.id=?";
+		String sql = " SELECT * FROM speciality as s JOIN mester_has_speciality as mhs JOIN mester as m ON m.id = mhs.id_mester AND s.id = mhs.id_speciality WHERE m.id=?";
 		List<Map<String, Object>> rows = template.queryForList(sql, idMester);
 		for (Map<String, Object> row : rows) {
 			Speciality speciality = new Speciality();

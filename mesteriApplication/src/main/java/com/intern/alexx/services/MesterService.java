@@ -22,6 +22,8 @@ public interface MesterService {
 	void deleteMester(String mesterId);
 	
 	public Mester getById(String id);
+	
+	public Mester getMesterById(String mesterId) throws SQLException ;
 
 	MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria) throws SQLException;
 	

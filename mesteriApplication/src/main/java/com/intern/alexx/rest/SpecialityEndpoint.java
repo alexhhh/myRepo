@@ -16,16 +16,14 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+ 
 import com.intern.alexx.model.Speciality;
 import com.intern.alexx.services.SpecialityService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-
-
-
+  
 
 @Api(value = "/speciality", description = "Endpoint for speciality listing")
 @Component
@@ -43,7 +41,7 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 200, message = "All specialities was successfully retrived.", response = Speciality.class),
 			@ApiResponse(code = 404, message = "Speciality page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getSpecialities() throws SQLException {
+	public Response getSpecialities() throws SQLException {		 
 		List<Speciality> specialities = specialityService.getAllSpeciality();
 		return Response.ok(Status.OK).entity(specialities).build();
 	}
@@ -57,10 +55,7 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response getMesterSpecialities(@PathParam("idMester") String idMester) throws SQLException {
 		List<Speciality> specialities = specialityService.getAllMesterSpeciality(idMester);
-		return Response.ok(Status.OK).entity(specialities)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-				.allow("OPTIONS").build();
+		return Response.ok(Status.OK).entity(specialities).build();
 	}
 
 	@POST
@@ -83,7 +78,7 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error.") })
 	public Response delete(@PathParam("specialityName") String specialityName, @PathParam("idMester") String idMester) {
 		specialityService.deleteOneMesterSpeciality(specialityName, idMester);
-		return Response.ok().build();
+		return Response.ok(200).build();
 	}
 
 	@POST
@@ -105,9 +100,7 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error.") })
 	public Response editSpeciality(Speciality speciality) {
 		specialityService.updateSpeciality(speciality);
-		return Response.ok().header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-				.allow("OPTIONS").entity(speciality).build();
+		return Response.ok().entity(speciality).build();
 	}
 	
 	@DELETE
@@ -118,8 +111,6 @@ public class SpecialityEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error.") })
 	public Response deleteSpeciality(@PathParam("id") String idSpeciality) {
 		specialityService.deleteSpeciality(idSpeciality); 
-		return Response.ok().header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-				.allow("OPTIONS").build();
+		return Response.ok().build();
 	}
 }

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class MesterEndpointTest {
 	
 
 	@Test
-	public void testFindOne_WhenMesterFound_ThenMesterIsReturned() {
+	public void testFindOne_WhenMesterFound_ThenMesterIsReturned() throws SQLException {
 		String id = "101";
 		Mester mester= createMester();
 		Mockito.when(mesterService.getById(id)).thenReturn(mester);		
@@ -54,7 +55,7 @@ public class MesterEndpointTest {
 	
 
 	@Test
-	public void testFindOneMester_WhenMesterNotFound_ThenNullIsReturned() {
+	public void testFindOneMester_WhenMesterNotFound_ThenNullIsReturned() throws SQLException {
 		String id = "1010";
 		Mockito.when(mesterService.getById(id)).thenReturn(null);	
 		Response response = endpoint.getById(id);	
@@ -86,9 +87,9 @@ public class MesterEndpointTest {
 	
 	@Test
 	public void testUpdate_WhenSuccesfull_ThenServiceUpdatesMester(){
-		String id = "1010";
+		 
 		Mester mester= createMester();	
-		Response response= endpoint.update(id, mester);
+		Response response= endpoint.update(mester);
 		assertThat(isSuccessful(response), is(true));
 	//	Mockito.verify(mesterService).updateMester(mester);
 	}

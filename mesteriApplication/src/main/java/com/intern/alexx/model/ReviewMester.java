@@ -2,9 +2,8 @@
  * 
  */
 package com.intern.alexx.model;
-
+ 
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import com.wordnik.swagger.annotations.ApiModel;
 
 /**
@@ -17,18 +16,20 @@ public class ReviewMester extends BaseModel {
 
 	private String idMester;
 	private String idClient;
-	private Price price;
+	private Integer price;
 	private int rating;
+	private String title;
 	private String feedback;
 
 	public ReviewMester() {
 	}
 
-	public ReviewMester(String idReviewMester, String idMester, String idClient, Price price, int rating,
+	public ReviewMester(String idReviewMester, String idMester, String idClient, String title, Integer price, int rating,
 			String feedback) {
 		super(idReviewMester);
 		this.idMester = idMester;
 		this.idClient = idClient;
+		this.title=title;
 		this.feedback = feedback;
 		this.rating = rating;
 		this.price = price;
@@ -53,7 +54,7 @@ public class ReviewMester extends BaseModel {
 	/**
 	 * @return the price
 	 */
-	public Price getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
@@ -62,7 +63,7 @@ public class ReviewMester extends BaseModel {
 	 *            the price to set
 	 */
 
-	public void setPrice(Price price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
@@ -96,6 +97,14 @@ public class ReviewMester extends BaseModel {
 		this.feedback = feedback;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public String getIdMester() {
 		return idMester;
 	}
@@ -114,7 +123,7 @@ public class ReviewMester extends BaseModel {
 
 	@Override
 	public String toString() {
-		return "ReviewMester [idReviewMester=" + getId() + ", price=" + price + ", rating=" + rating + ", feedback="
+		return "ReviewMester [idReviewMester=" + getId()+", title=" +title + ", price=" + price + ", rating=" + rating + ", feedback="
 				+ feedback + "]";
 	}
 }

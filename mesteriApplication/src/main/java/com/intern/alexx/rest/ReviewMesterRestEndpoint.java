@@ -9,6 +9,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -46,26 +47,28 @@ public class ReviewMesterRestEndpoint {
 		return Response.ok(status).entity(review).build();
 	}
 
-	@POST
-	@Path("/pageSize={size}pageNumber={number}")
+	@GET
+	@Path("/query")
 	@ApiOperation(value = "Get the review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewPage(@PathParam("size")Integer pageSize,@PathParam("number")Integer pageNumber) throws SQLException {
+	public Response getReviewPage(@QueryParam("pageSize")Integer pageSize,@QueryParam("pageNumber")Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewAllMasterPage( pageSize, pageNumber);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
 
-	@POST
-	@Path("/mester/{idMester}/pageSize={size}pageNumber={number}")
+	@GET
+	@Path("/mester/query")
 	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
 			@ApiResponse(code = 404, message = "Review page not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getReviewForMesterPage(@PathParam("idMester") String idMester,@PathParam("size")Integer pageSize,@PathParam("number")Integer pageNumber) throws SQLException {
+	public Response getReviewForMesterPage(@QueryParam("idMester") String idMester,
+			@QueryParam("pageSize")Integer pageSize,
+			@QueryParam("pageNumber")Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, pageSize,pageNumber );
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
@@ -104,14 +107,14 @@ public class ReviewMesterRestEndpoint {
 	}
 	
 	@GET
-	@Path("/Rating/{idReview}")
-	@ApiOperation(value = "Get review by Id ", notes = "Get review.", response = Float.class)
+	@Path("/rating/query")
+	@ApiOperation(value = "Get mester rating by id ", notes = "Get rating.", response = Float.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Rating was successfully retrieved.", response = Float.class),
 			@ApiResponse(code = 404, message = "Review was not found."),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response getMesterAvgRating(@PathParam("idReview") String idReview) {
-		float avgRating= reviewService.getMesterRating(idReview);
+	public Response getMesterAvgRating(@QueryParam("idMester") String idMester) {
+		float avgRating= reviewService.getMesterRating(idMester);
 		return Response.ok().entity(avgRating).build();
 	}
 	

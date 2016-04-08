@@ -18,6 +18,8 @@ public interface MesterRepository {
 	void insert(Mester mester);
 
 	void update(Mester mester);
+	
+	void updateAvg(Mester mester);  
 
 	void delete(String mesterId);
 

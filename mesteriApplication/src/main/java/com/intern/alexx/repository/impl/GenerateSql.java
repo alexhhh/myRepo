@@ -18,12 +18,12 @@ public class GenerateSql {
 		query = new StringBuilder("SELECT ");
 		String limit;
 		StringBuilder from = createString(searchCriteria);
-		if ((searchCriteria.getPageSize() != null) && (searchCriteria.getPageNumber() != null)) {
-			limit = " LIMIT " + (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " , "
+		if (searchCriteria.getPageSize() == null){searchCriteria.setPageSize(10);}
+		if (searchCriteria.getPageNumber() == null){searchCriteria.setPageNumber(1);}
+		//if ((searchCriteria.getPageSize() != null) && (searchCriteria.getPageNumber() != null)) {
+		limit = " LIMIT " + (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " , "
 					+ (searchCriteria.getPageSize()) + " ;";
-		} else {
-			limit = " ; ";
-		}
+		
 		sql = query.append(" * ").append(from).append(limit).toString();
 		return sql;
 	}
@@ -71,13 +71,13 @@ public class GenerateSql {
 		}
 
 		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {
-			joinList.add("JOIN review_mester AS rm ON m.id=rm.id_mester ");
+			 
 
 			if (searchCriteria.getRating() != null) {
-				whereList.add(" rm.rating=:rating ");
+				whereList.add(" m.avg_rating=:rating ");
 			}
 			if (searchCriteria.getPrice() != null) {
-				whereList.add(" rm.price=:price ");
+				whereList.add(" m.avg_price=:price ");
 			}
 		}
 
