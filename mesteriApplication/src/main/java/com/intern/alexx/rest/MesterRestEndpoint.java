@@ -7,8 +7,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,14 +40,14 @@ public class MesterRestEndpoint {
 	private UriInfo uriInfo;
 
 	@GET
-	@Path("/{idMester}")
+	@Path("/query")
 	@ApiOperation(value = "Return mester", notes = "Return one mester", response = Mester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = Mester.class),
 			@ApiResponse(code = 404, message = "Mester not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getById(@PathParam("idMester") String idMester) {
-		Mester mester = mesterService.getById(idMester);
+	public Response getById(@QueryParam("idMester") String idMester) throws SQLException {
+		Mester mester = mesterService.getMesterById(idMester);
 		int status = mester == null ? 404 : 200;
 		return Response.ok(status).entity(mester).build();
 	}
@@ -74,22 +74,22 @@ public class MesterRestEndpoint {
 	}
 
 	@PUT
-	@Path("/{idMester}")
+	@Path("/edit")
 	@ApiOperation(value = "Update mester", notes = "Update a full mester", response = Mester.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Update mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response update(@PathParam("idMester") String idMester, Mester mester) {
-		mester.setId(idMester);
+	public Response update(  Mester mester) {
+		 
 		mesterService.updateMester(mester);
 		return Response.ok(Status.OK).entity(mester).build();
 	}
 
 	@DELETE
-	@Path("/{idMester}")
+	@Path("/query")
 	@ApiOperation(value = "Remove mester", notes = "Remove a full mester", response = Mester.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Delete mester was successful", response = Mester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response delete(@PathParam("idMester") String idMester) {
+	public Response delete(@QueryParam("idMester") String idMester) {
 		mesterService.deleteMester(idMester);
 		return Response.ok().build();
 	}

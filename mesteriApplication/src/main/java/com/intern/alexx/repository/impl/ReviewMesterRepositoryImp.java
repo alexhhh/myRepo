@@ -12,8 +12,7 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Component;
 
 import com.intern.alexx.model.MyPage;
-import com.intern.alexx.model.ReviewMester;
-import com.intern.alexx.model.ReviewMester.Price;
+import com.intern.alexx.model.ReviewMester; 
 import com.intern.alexx.repository.ReviewMesterRepository;
 
 @Component
@@ -28,18 +27,18 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 
 	public void insert(ReviewMester reviewMester) {
 		reviewMester.setId(GUIDGenerator.generatedID());
-		String sql = "INSERT INTO review_mester (id, id_mester, id_client, rating, price, feedback) "
-				+ "VALUES (?,?,?,?,?,?)";
+		String sql = "INSERT INTO review_mester (id, id_mester, id_client, title, rating, price, feedback) "
+				+ "VALUES (?,?,?,?,?,?,?)";
 		template.update(sql,
-				new Object[] { reviewMester.getId(), reviewMester.getIdMester(), reviewMester.getIdClient(),
-						reviewMester.getRating(), reviewMester.getPrice().getValue(), reviewMester.getFeedback() });
+				new Object[] { reviewMester.getId(), reviewMester.getIdMester(), reviewMester.getIdClient(), reviewMester.getTitle(),
+						reviewMester.getRating(), reviewMester.getPrice() , reviewMester.getFeedback() });
 	}
 
 	public void update(ReviewMester reviewMester) {
-		String sql = "UPDATE review_mester SET id_mester=?, id_client=?, rating=?, price=?, feedback=? WHERE id=?";
+		String sql = "UPDATE review_mester SET id_mester=?, id_client=?,title=?, rating=?, price=?, feedback=? WHERE id=?";
 		template.update(sql,
-				new Object[] { reviewMester.getIdMester(), reviewMester.getIdClient(), reviewMester.getRating(),
-						reviewMester.getPrice().getValue(), reviewMester.getFeedback(), reviewMester.getId() });
+				new Object[] { reviewMester.getIdMester(), reviewMester.getIdClient(), reviewMester.getRating(),reviewMester.getTitle(),
+						reviewMester.getPrice() , reviewMester.getFeedback(), reviewMester.getId() });
 	}
 
 	public void delete(String idReview) {
@@ -58,10 +57,16 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return review;
 	}
 
-	public float getAvgRatingForMester(String idReview) {
-		String sql = "SELECT AVG(rating) FROM review_mester WHERE id_mester = ?";
-		float avgValue = template.queryForObject(sql, new Object[] { idReview }, Float.class);
-		return avgValue;
+	public int getAvgRatingForMester(String idMester) {
+		String sql = "SELECT ROUND(AVG(rating)) FROM review_mester WHERE id_mester = ?";
+		int avgRating = template.queryForObject(sql, new Object[] { idMester }, Integer.class);
+		return avgRating;
+	}
+	
+	public int getAvgPriceForMester(String idMester) {
+		String sql = "SELECT ROUND(AVG(price)) FROM review_mester WHERE id_mester = ?";
+		int avgPrice = template.queryForObject(sql, new Object[] { idMester }, Integer.class);
+		return avgPrice;
 	}
 
 	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
@@ -70,7 +75,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		page.setPageSize(setPageSizeParam(pageSize));
 		String sql = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
 				+ " , " + page.getPageSize() + " ;";
-		page.setTotalRezults(executeCountStatementForAllReviews());
+		page.setTotalResults(executeCountStatementForAllReviews());
 		page.setContentPage(executeElementsStatementForAllReviews(sql));
 		return page;
 	}
@@ -98,8 +103,8 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		page.setPageNumber(setPageNumberParam(pageNumber));
 		page.setPageSize(setPageSizeParam(pageSize));
 		String sql = "SELECT * FROM review_mester AS rm  WHERE id_mester = ? LIMIT "
-				+ (page.getPageSize() * (page.getPageNumber() - 1)) + " , " + page.getPageSize() + " ;";
-		page.setTotalRezults(executeCountStatement(idMester));
+				+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
+		page.setTotalResults(executeCountStatement(idMester));
 		page.setContentPage(executeElementsStatement(idMester, sql));
 		return page;
 	}
@@ -137,9 +142,10 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		review.setId((String) (row.get("id")));
 		review.setIdMester((String) (row.get("id_mester")));
 		review.setIdClient((String) (row.get("id_client")));
+		review.setTitle((String) (row.get("title")));
 		review.setRating((int) (row.get("rating")));
-		int value = ((int) (row.get("price")));
-		setPriceEnum(review, value);
+		review.setPrice((int) (row.get("price")));
+		//setPriceEnum(review, value);
 		review.setFeedback((String) (row.get("feedback")));
 		return review;
 	}
@@ -148,22 +154,23 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		review.setId(resultSet.getString("id"));
 		review.setIdMester(resultSet.getString("id_mester"));
 		review.setIdClient(resultSet.getString("id_client"));
+		review.setTitle(resultSet.getString("title"));
 		review.setRating(resultSet.getInt("rating"));
-		int value = resultSet.getInt("price");
-		setPriceEnum(review, value);
+		review.setPrice(resultSet.getInt("price"));
+		//setPriceEnum(review, value);
 		review.setFeedback(resultSet.getString("feedback"));
 		return review;
 	}
 
-	private void setPriceEnum(ReviewMester review, int value) throws SQLException {
-		if (value == 1) {
-			review.setPrice(Price.LOW);
-		} else if (value == 2) {
-			review.setPrice(Price.MEDIUM);
-		} else if (value == 3) {
-			review.setPrice(Price.HIGH);
-		} else
-			throw new IllegalArgumentException("the price is invalide.");
-	}
+//	private void setPriceEnum(ReviewMester review, int value) throws SQLException {
+//		if (value == 1) {
+//			review.setPrice(Price.LOW);
+//		} else if (value == 2) {
+//			review.setPrice(Price.MEDIUM);
+//		} else if (value == 3) {
+//			review.setPrice(Price.HIGH);
+//		} else
+//			throw new IllegalArgumentException("the price is invalide.");
+//	}
 
 }

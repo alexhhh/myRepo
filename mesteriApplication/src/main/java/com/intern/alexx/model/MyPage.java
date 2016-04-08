@@ -5,7 +5,7 @@ import java.util.List;
 public class MyPage<T> {
 
 	private List<T> contentPage;
-	private Integer totalRezults;
+	private Integer totalResults;
 	private Integer pageSize;
 	private Integer pageNumber;
 
@@ -18,18 +18,18 @@ public class MyPage<T> {
 	}
 
 	/**
-	 * @return the totalRezults
+	 * @return the totalResults
 	 */
-	public Integer getTotalRezults() {
-		return totalRezults;
+	public Integer getTotalResults() {
+		return totalResults;
 	}
 
 	/**
-	 * @param totalRezults
-	 *            the totalRezults to set
+	 * @param totalResults
+	 *            the totalResults to set
 	 */
-	public void setTotalRezults(Integer totalRezults) {
-		this.totalRezults = totalRezults;
+	public void setTotalResults(Integer totalResults) {
+		this.totalResults = totalResults;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class MyPage<T> {
 
 	@Override
 	public String toString() {
-		return "MyPage [contentPage=" + contentPage + ", totalRezults=" + totalRezults + ", pageSize=" + pageSize
+		return "MyPage [contentPage=" + contentPage + ", totalResults=" + totalResults + ", pageSize=" + pageSize
 				+ ", pageNumber=" + pageNumber + "]";
 	}
 

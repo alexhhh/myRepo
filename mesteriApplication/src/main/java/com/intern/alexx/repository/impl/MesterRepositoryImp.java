@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
-import com.intern.alexx.model.MyPage;
+import com.intern.alexx.model.MyPage; 
 import com.intern.alexx.repository.MesterRepository;
 
 @Component
@@ -57,6 +57,11 @@ public class MesterRepositoryImp implements MesterRepository {
 		template.update(sql, new Object[] { mester.getFirstName(), mester.getLastName(), mester.getDescription(),
 				mester.getLocation(), mester.getId() });
 	}
+	
+	public void updateAvg(Mester mester) {
+		String sql = "UPDATE  mester SET AVG_RATING= ?, AVG_PRICE= ? WHERE id = ?";
+		template.update(sql, new Object[] { mester.getAvgRating(), mester.getAvgPrice(), mester.getId() });
+	}
 
 	public void delete(String mesterId) {
 		String sql = "DELETE FROM MESTER  WHERE id = ? ";
@@ -78,7 +83,7 @@ public class MesterRepositoryImp implements MesterRepository {
 		MyPage<Mester> page = new MyPage<Mester>();
 		page.setPageNumber(setThisPageNumber(searchCriteria));
 		page.setPageSize(setThisPageSize(searchCriteria));
-		page.setTotalRezults(executeSqlCountStatement(searchCriteria));
+		page.setTotalResults(executeSqlCountStatement(searchCriteria));
 		page.setContentPage(executeSqlSelectStatement(searchCriteria));
 		return page;
 	}
@@ -108,6 +113,8 @@ public class MesterRepositoryImp implements MesterRepository {
 		mester.setLastName(resultSet.getString("last_name"));
 		mester.setDescription(resultSet.getString("description"));
 		mester.setLocation(resultSet.getString("location"));
+		mester.setAvgPrice(resultSet.getInt( "avg_price"));
+		mester.setAvgRating(resultSet.getInt("avg_rating"));
 		return mester;
 	}
 
@@ -155,7 +162,7 @@ public class MesterRepositoryImp implements MesterRepository {
 			paramMap.put("rating", searchCriteria.getRating().toString());
 		}
 		if (searchCriteria.getPrice() != null) {
-			paramMap.put("price", searchCriteria.getPrice().name());
+			paramMap.put("price", searchCriteria.getPrice().toString());
 		}
 		return paramMap;
 	}

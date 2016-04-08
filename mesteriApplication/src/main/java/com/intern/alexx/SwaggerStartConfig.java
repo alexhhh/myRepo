@@ -17,6 +17,7 @@ public SwaggerStartConfig() {
 		final String swaggerJaxrsListingPackage = "com.wordnik.swagger.jaxrs.listing";
 		
 		packages(restEndpointsPackge, swaggerJaxrsJsonPackage, swaggerJaxrsListingPackage, jacksonPackage);		                
-	     register(MultiPartFeature.class);	
+	    register(MultiPartFeature.class);	
+	    register(CORSResponseFilter.class);
 }
 }

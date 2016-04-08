@@ -20,17 +20,21 @@ public class Mester extends BaseModel {
 	private String location;
 	private String description;
 	private Contact contact;
+	private Integer avgPrice;
+	private Integer avgRating;
 	private List<Speciality> speciality;
 
 	public Mester() {
 	}
 
-	public Mester(String idMester, String firstName, String lastName, String description, String location) {
+	public Mester(String idMester, String firstName, String lastName, String description, Integer avgPrice,Integer avgRating, String location) {
 
 		super(idMester);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.description = description;
+		this.avgPrice=avgPrice;
+		this.avgRating=avgRating;
 		this.location = location;
 	}
 
@@ -109,6 +113,22 @@ public class Mester extends BaseModel {
 		this.contact = contact;
 	}
 
+	public Integer getAvgPrice() {
+		return avgPrice;
+	}
+
+	public void setAvgPrice(Integer avgPrice) {
+		this.avgPrice = avgPrice;
+	}
+
+	public Integer getAvgRating() {
+		return avgRating;
+	}
+
+	public void setAvgRating(Integer avgRating) {
+		this.avgRating = avgRating;
+	}
+
 	public List<Speciality> getSpeciality() {
 		return speciality;
 	}
@@ -120,7 +140,7 @@ public class Mester extends BaseModel {
 	@Override
 	public String toString() {
 		return "Mester [idMester=" + getId() + ", fisrtName=" + firstName + ", lastName=" + lastName + ", description="
-				+ description + ", location=" + location + ", contact=" + contact + "]";
+				+ description + ", location=" + location + ", contact=" + contact + ", Rating="+avgRating+", Price="+ avgPrice+  " specialities=" + speciality+ "]";
 	}
 
 }

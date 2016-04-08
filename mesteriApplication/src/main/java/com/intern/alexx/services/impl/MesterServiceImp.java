@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
+ 
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -88,10 +88,25 @@ public class MesterServiceImp implements MesterService {
 		mesterRepository.delete(mesterId);
 
 	}
-
+ 
 	@Transactional
 	public Mester getById(String idMester) {
 		Mester mester = mesterRepository.getById(idMester);
+		return mester;
+	}
+	
+	@Transactional
+	public Mester getMesterById(String idMester) throws SQLException {
+		LOGGER.info("--------1------");
+		Mester mester = mesterRepository.getById(idMester);
+		LOGGER.info("--------2------" + mester.toString());
+
+		mester.setContact(contactRepository.getByIdMester(idMester)) ;
+		LOGGER.info("--------3------"+  mester.toString());
+
+	
+		mester.setSpeciality(specialityService.getAllMesterSpeciality(idMester));
+		LOGGER.info("--------4------"+  mester.toString());
 		return mester;
 	}
 

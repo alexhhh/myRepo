@@ -11,8 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  
 import com.intern.alexx.model.MyPage;
-import com.intern.alexx.model.ReviewMester;
-import com.intern.alexx.model.ReviewMester.Price;
+import com.intern.alexx.model.ReviewMester; 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/beans.xml")
@@ -74,7 +73,7 @@ public class ReviewMesterRepositoryTest {
 		 
 		reviewMester.setIdMester("10");
 		reviewMester.setIdClient("5");
-		reviewMester.setPrice(Price.HIGH);
+		reviewMester.setPrice(3);
 		reviewMester.setRating(5);
 		reviewMester.setFeedback("Awesome Update");
 		return reviewMester;

@@ -25,7 +25,9 @@ public interface ReviewMesterRepository {
 
 	ReviewMester getById(String idReview);
 	
-	public float getAvgRatingForMester(String idReview);
+	public int getAvgRatingForMester(String idMester);
+	
+	public int getAvgPriceForMester(String idMester) ;
 
 	MyPage<ReviewMester> getAllReviewsPage(Integer pageSize,Integer pageNumber) throws SQLException;
 	
