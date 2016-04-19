@@ -91,8 +91,7 @@ public class MesterServiceImp implements MesterService {
  
 	@Transactional
 	public Mester getById(String idMester) {
-		Mester mester = mesterRepository.getById(idMester);
-		return mester;
+		return mesterRepository.getById(idMester);
 	}
 	
 	@Transactional

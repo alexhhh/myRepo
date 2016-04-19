@@ -9,6 +9,7 @@ package com.intern.alexx.model;
  */
 public class Client extends BaseModel {
 
+	private String clientUserId;
 	private String firstName;
 	private String lastName;
 
@@ -51,6 +52,14 @@ public class Client extends BaseModel {
 		this.lastName = lastName;
 	}
 
+	public String getClientUserId() {
+		return clientUserId;
+	}
+
+	public void setClientUserId(String clientUserId) {
+		this.clientUserId = clientUserId;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,7 +67,7 @@ public class Client extends BaseModel {
 	 */
 	@Override
 	public String toString() {
-		return "Client [ idClient=" + getId() + "firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Client [ idClient=" + getId() +" clientUserId="+ clientUserId + "firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 
 }

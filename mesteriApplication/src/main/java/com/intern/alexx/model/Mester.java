@@ -14,7 +14,8 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @ApiModel
 public class Mester extends BaseModel {
-
+	
+	private String mesterUserId;
 	private String firstName;
 	private String lastName;
 	private String location;
@@ -137,9 +138,17 @@ public class Mester extends BaseModel {
 		this.speciality = speciality;
 	}
 
+	public String getMesterUserId() {
+		return mesterUserId;
+	}
+
+	public void setMesterUserId(String mesterUserId) {
+		this.mesterUserId = mesterUserId;
+	}
+
 	@Override
 	public String toString() {
-		return "Mester [idMester=" + getId() + ", fisrtName=" + firstName + ", lastName=" + lastName + ", description="
+		return "Mester [idMester=" + getId() +"  mesterUserId=" +mesterUserId+ ", fisrtName=" + firstName + ", lastName=" + lastName + ", description="
 				+ description + ", location=" + location + ", contact=" + contact + ", Rating="+avgRating+", Price="+ avgPrice+  " specialities=" + speciality+ "]";
 	}
 
