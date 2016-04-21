@@ -16,13 +16,12 @@
 		use-expressions="false" pattern="/rest/**">
 		<security:csrf disabled="true" />
 		
-		 <security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
-        <security:intercept-url pattern="/admin/**" access="ROLE_CLIENT" />
+		<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        <security:intercept-url pattern="/rest/speciality/**" access="ROLE_ADMIN" />
+        <security:intercept-url pattern="/rest/admin/**" access="ROLE_CLIENT" />
         <security:intercept-url pattern="/admin/**" access="ROLE_MESTER" />
       
-        
-	 
+   
 		<security:http-basic />
 	</security:http>
 

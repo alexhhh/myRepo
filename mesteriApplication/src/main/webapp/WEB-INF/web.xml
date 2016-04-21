@@ -33,12 +33,29 @@
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 
+	<!--CORS Filter -->
+	<filter>
+		<filter-name>CORS</filter-name>
+		<filter-class>com.intern.alexx.filter.CORSFilter</filter-class>
+
+		<init-param>
+			<param-name>cors.allowOrigin</param-name>
+			<param-value>*</param-value>
+		</init-param>
+	</filter>
+
+
 	<!--Hook into spring security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 
+	<filter-mapping>
+		<filter-name>CORS</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+	
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/rest/*</url-pattern>
