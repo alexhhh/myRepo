@@ -29,6 +29,7 @@ public class AuthenticationEndpoint {
 	@Autowired
 	private UserService  userService;
 	
+	
 	@POST
 	@Path("/login")
 	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged",response = User.class)
@@ -81,5 +82,18 @@ public class AuthenticationEndpoint {
 	public Response checkUser(@QueryParam("userName") String userName) {
 		User dbUser =userService.getUserByName(userName);
 		return Response.ok().entity(dbUser).build();
+	}
+	
+	@GET 
+	@Path("/activate/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged",response = User.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "User is logged in.",response = User.class ),
+			@ApiResponse(code = 401, message = "Not authorized"),
+			@ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response checkUserToken(@QueryParam("tokenId") String tokenId) {
+		 userService.activateUser(tokenId);
+		return Response.ok().build();
 	}
 }

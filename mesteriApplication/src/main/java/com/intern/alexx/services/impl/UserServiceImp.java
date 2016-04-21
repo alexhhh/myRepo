@@ -1,49 +1,67 @@
 package com.intern.alexx.services.impl;
 
-//import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Set;
-//
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Calendar;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component; 
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.intern.alexx.model.User; 
+import com.intern.alexx.model.Token;
+import com.intern.alexx.model.User;
+import com.intern.alexx.repository.TokenRepository;
 import com.intern.alexx.repository.UserRepository;
+import com.intern.alexx.services.AuthMailService;
 import com.intern.alexx.services.UserService;
 
 @Component
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
 
-	
+	private static Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
+
 	@Autowired
 	private UserRepository userRepo;
-	
+
+	@Autowired
+	private TokenRepository tokenRepo;
+
+	@Autowired
+	private AuthMailService authMail;
+
 	@Transactional
 	public User getUser(String userName, String password) {
-		return	userRepo.getUserByCredentials(userName, password);
-		 
+		return userRepo.getUserByCredentials(userName, password);
 	}
 
-	
 	@Transactional
-	public User getUserByName(String userName ) {
-		return	 userRepo.getUserByUserName(userName );
-		 
+	public User getUserByName(String userName) {
+		return userRepo.getUserByUserName(userName);
 	}
-
 
 	@Transactional
 	public void insertUser(User user) {
 		userRepo.insertUser(user);
+		Token token = tokenRepo.insert(user.getUserName());
+		LOGGER.info("--before send mail ---" + user.toString() + "..." + token.toString() + "----");
+		authMail.AuthMailContent(user, token);
 	}
-	
-	
-	
-	
+
+	@Transactional
+	public void activateUser(String tokenId) {
+		Token token = tokenRepo.getById(tokenId);
+		LOGGER.info("--token ---" + token.toString() + "----");
+
+		if (currentDate.before(token.getExpirationDate())) {
+			User user = userRepo.getUserByUserName(token.getUserName());
+			user.setEnable(true);
+			LOGGER.info("--after ---" + user.toString() + "----");
+
+			userRepo.updateUser(user);
+		}
+
+	}
+
+	private java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
 }

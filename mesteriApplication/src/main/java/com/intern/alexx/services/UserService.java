@@ -1,7 +1,9 @@
 package com.intern.alexx.services;
 
+ 
 import com.intern.alexx.model.User;
 
+ 
 public interface UserService {
 
 	
@@ -10,4 +12,7 @@ public interface UserService {
 	public User getUserByName(String userName ) ;
 	
 	public void insertUser(User user) ;
+	
+	public void activateUser(String tokenId);
+ 
 }

@@ -63,7 +63,7 @@ public class UserRepositoryImp implements UserRepository {
 	}
 
 	public void updateUser(User user) {
-		String sql = "UPDATE  contact SET USER_NAME= ?,PASSWORD=?, EMAIL= ?, ROLE_ID=?, ENABLE=?  WHERE id = ?";
+		String sql = "UPDATE  user SET USER_NAME= ?,PASSWORD=?, EMAIL= ?, ROLE_ID=?, ENABLE=?  WHERE id = ?";
 		template.update(sql, new Object[] { user.getUserName(), user.getPassword(), user.getEmail(), user.getRoleId(),
 				user.isEnable(), user.getId() });
 	}
