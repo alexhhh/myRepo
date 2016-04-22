@@ -11,7 +11,7 @@ public interface UserService {
 	
 	public User getUserByName(String userName ) ;
 	
-	public void insertUser(User user) ;
+	public void insertUser(User user) throws Exception ;
 	
 	public void activateUser(String tokenId);
  

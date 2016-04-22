@@ -1,5 +1,6 @@
 package com.intern.alexx.services.impl;
 
+import java.security.GeneralSecurityException;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.intern.alexx.encryption.Encryption;
 import com.intern.alexx.model.Token;
 import com.intern.alexx.model.User;
 import com.intern.alexx.repository.TokenRepository;
@@ -19,7 +21,10 @@ import com.intern.alexx.services.UserService;
 public class UserServiceImp implements UserService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(UserServiceImp.class);
-
+	
+	@Autowired
+	private Encryption encryption;
+	
 	@Autowired
 	private UserRepository userRepo;
 
@@ -40,7 +45,8 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Transactional
-	public void insertUser(User user) {
+	public void insertUser(User user) throws GeneralSecurityException {
+		user.setPassword(encryption.encrypt(user.getPassword()));
 		userRepo.insertUser(user);
 		Token token = tokenRepo.insert(user.getUserName());
 		LOGGER.info("--before send mail ---" + user.toString() + "..." + token.toString() + "----");

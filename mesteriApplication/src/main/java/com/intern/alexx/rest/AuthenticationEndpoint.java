@@ -65,7 +65,7 @@ public class AuthenticationEndpoint {
 			@ApiResponse(code = 401, message = "Not authorized"),
 			@ApiResponse(code = 404, message = "User was not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response AddUser(User user) throws SQLException {
+	public Response AddUser(User user) throws Exception {
 	  	 userService.insertUser(user);
 		return Response.ok().build();
 	}

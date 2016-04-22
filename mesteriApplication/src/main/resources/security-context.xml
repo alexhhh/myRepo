@@ -31,7 +31,7 @@
 
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="userDetailsService">
-		 
+		  		<security:password-encoder hash="md5" />
 		</security:authentication-provider>
 	</security:authentication-manager>
 
