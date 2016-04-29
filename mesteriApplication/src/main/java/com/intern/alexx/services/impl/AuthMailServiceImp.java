@@ -32,7 +32,7 @@ public class AuthMailServiceImp implements AuthMailService {
 		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
 				+ "  please CLICK THE LINK BELOW to confirm your email and to finish the authentication. You have 7 days for confirmation.  "
-				+ "http://localhost:8080/mesteriApplication/rest/user/activate/query?tokenId=" + token.getId() + ";");
+				+ "http://localhost/#/activateUser/" + token.getId() + ";");
 		LOGGER.info(msg.getText());
 		try {
 			this.mailSender.send(msg);

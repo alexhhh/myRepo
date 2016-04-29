@@ -24,7 +24,7 @@ public class GenerateSql {
 		limit = " LIMIT " + (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " , "
 					+ (searchCriteria.getPageSize()) + " ;";
 		
-		sql = query.append(" * ").append(from).append(limit).toString();
+		sql = query.append(" m.* ").append(from).append(limit).toString();
 		return sql;
 	}
 

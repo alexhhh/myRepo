@@ -1,12 +1,14 @@
 package com.intern.alexx.repository.impl;
 
 import java.sql.ResultSet;
-import java.sql.SQLException; 
+import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Component;
 
@@ -27,19 +29,28 @@ public class UserRepositoryImp implements UserRepository {
 
 	@Override
 	public User getUserByCredentials(String userName, String password) {
-
-		User user = new User();
 		String sql = "SELECT * FROM user WHERE user_name = ?  AND password=?";
-		template.query(sql, new Object[] { userName, password }, new RowCallbackHandler() {
-			public void processRow(ResultSet rs) throws SQLException {
-				getUserFromDB(user, rs);
+
+		User user = template.query(sql, new Object[] { userName, password }, new ResultSetExtractor<User>() {
+			@Override
+			public User extractData(ResultSet rs) throws SQLException, DataAccessException {
+				User user = null;
+				if (rs.next()) {
+					user = new User();
+					getUserFromDB(user, rs);
+					LOGGER.info("---user-up--" + user.toString());
+				}
+				return user;
 			}
 		});
-		//String userToken = "Basic " + org.springframework.security.crypto.codec.Base64.(userName + ":" + password);
-		LOGGER.info("---user---" + user.toString());
+		
+		if (user == null){
+			//todo throw exception
+		}
+
 		return user;
 	}
-	
+
 	public User getUserByUserName(String userName) {
 
 		User user = new User();
@@ -47,9 +58,9 @@ public class UserRepositoryImp implements UserRepository {
 		template.query(sql, new Object[] { userName }, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				getUserFromDB(user, rs);
+				LOGGER.info("---user--u-" + user.toString());
 			}
 		});
-		LOGGER.info("---user---" + user.toString());
 		return user;
 	}
 
@@ -73,11 +84,11 @@ public class UserRepositoryImp implements UserRepository {
 		template.update(sql, id);
 	}
 
-	public String getUserRole (int roleId){
+	public String getUserRole(int roleId) {
 		String sql = "SELECT role FROM role  WHERE id= ? ";
 		return template.queryForObject(sql, new Object[] { roleId }, String.class);
 	}
-	
+
 	private User getUserFromDB(User user, ResultSet resultSet) throws SQLException {
 		user.setId(resultSet.getString("id"));
 		user.setUserName(resultSet.getString("user_name"));

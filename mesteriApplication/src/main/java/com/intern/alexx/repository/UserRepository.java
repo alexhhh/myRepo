@@ -7,7 +7,7 @@ public interface UserRepository {
 	public User getUserByCredentials(String userName, String password);
 	
 	public User getUserByUserName(String userName) ;
-
+	 
 	public void insertUser(User user);
 
 	public void updateUser(User user);

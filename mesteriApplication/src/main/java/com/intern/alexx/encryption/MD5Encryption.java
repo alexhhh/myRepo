@@ -1,7 +1,8 @@
 package com.intern.alexx.encryption;
 
-import java.security.GeneralSecurityException;
+ 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.springframework.stereotype.Component; 
 
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Component;
 public class MD5Encryption implements Encryption {
 
 	@Override
-	public String  encrypt(String content) throws GeneralSecurityException {
+	public String  encrypt(String content)  {
 		 // Create MessageDigest instance for MD5
-		MessageDigest md = MessageDigest.getInstance("MD5");
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		
 		 //Add password bytes to digest
         md.update(content.getBytes());
       //Get the hash's bytes 
@@ -24,8 +28,12 @@ public class MD5Encryption implements Encryption {
    	     	if(hex.length()==1) hexString.append('0');
    	     	hexString.append(hex);
     	}
-    	 
         return hexString.toString(); 
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} 
 	}
 	
 

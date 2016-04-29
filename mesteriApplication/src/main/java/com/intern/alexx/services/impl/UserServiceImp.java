@@ -1,6 +1,6 @@
 package com.intern.alexx.services.impl;
 
-import java.security.GeneralSecurityException;
+ 
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.intern.alexx.encryption.Encryption;
+import com.intern.alexx.encryption.Encryption; 
 import com.intern.alexx.model.Token;
 import com.intern.alexx.model.User;
 import com.intern.alexx.repository.TokenRepository;
@@ -36,7 +36,8 @@ public class UserServiceImp implements UserService {
 
 	@Transactional
 	public User getUser(String userName, String password) {
-		return userRepo.getUserByCredentials(userName, password);
+		String newPassword = encryption.encrypt(password);
+		return userRepo.getUserByCredentials(userName, newPassword);
 	}
 
 	@Transactional
@@ -45,7 +46,7 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Transactional
-	public void insertUser(User user) throws GeneralSecurityException {
+	public void insertUser(User user)  {
 		user.setPassword(encryption.encrypt(user.getPassword()));
 		userRepo.insertUser(user);
 		Token token = tokenRepo.insert(user.getUserName());
@@ -62,12 +63,15 @@ public class UserServiceImp implements UserService {
 			User user = userRepo.getUserByUserName(token.getUserName());
 			user.setEnable(true);
 			LOGGER.info("--after ---" + user.toString() + "----");
-
 			userRepo.updateUser(user);
 		}
-
 	}
 
 	private java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 
+	@Transactional
+	public String getUserRole (int  roleId) { 
+		return	userRepo.getUserRole(roleId);
+	}
+ 
 }

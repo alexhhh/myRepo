@@ -75,7 +75,7 @@ public class TokenRepositoryImp implements TokenRepository {
 	private Token setToken(String userName) {
 		Token token = new Token();
 		token.setId(GUIDGenerator.generatedID());
-		java.sql.Date expDate = new java.sql.Date(Calendar.getInstance().getTime().getTime() + 86400000); // o zi																											 
+		java.sql.Date expDate = new java.sql.Date(Calendar.getInstance().getTime().getTime() + 864000000); // o zi																											 
 		token.setExpirationDate(expDate);
 		token.setUserName(userName);
 		return token;

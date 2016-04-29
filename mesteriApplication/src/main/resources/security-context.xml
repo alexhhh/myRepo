@@ -4,24 +4,40 @@
 	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
     	http://www.springframework.org/schema/beans 
-    	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-   
+    	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
         http://www.springframework.org/schema/security 
         http://www.springframework.org/schema/security/spring-security.xsd">
 
-
-
 	<!-- Stateless RESTful services use BASIC authentication -->
-	<security:http auto-config="true" create-session="stateless"
-		use-expressions="false" pattern="/rest/**">
+	<security:http auto-config="true" 
+				   create-session="stateless"
+				   use-expressions="false" pattern="/rest/**">
 		<security:csrf disabled="true" />
 		
-		<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
-        <security:intercept-url pattern="/rest/speciality/**" access="ROLE_ADMIN" />
-        <security:intercept-url pattern="/rest/admin/**" access="ROLE_CLIENT" />
-        <security:intercept-url pattern="/admin/**" access="ROLE_MESTER" />
-      
-   
+		<security:intercept-url pattern="/rest/user" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER"/>
+		
+		<security:intercept-url pattern="/rest/speciality/all" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+		<security:intercept-url pattern="/rest/speciality/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/speciality/mester/**" access="ROLE_MESTER,ROLE_ADMIN" />
+		<security:intercept-url pattern="/rest/speciality" access="ROLE_ADMIN" />
+		
+        <security:intercept-url pattern="/rest/mester/search" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="POST"/>
+        <security:intercept-url pattern="/rest/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/mester" access="ROLE_ADMIN,ROLE_MESTER" method="DELETE"/>
+		<security:intercept-url pattern="/rest/mester" access="ROLE_MESTER"/>
+		
+        <security:intercept-url pattern="/rest/review/getAll/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/review/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/review/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/review" access="ROLE_ADMIN,ROLE_CLIENT" method="DELETE"/>
+        <security:intercept-url pattern="/rest/review" access="ROLE_CLIENT" />
+        
+	<!-- 	<security:intercept-url pattern="/rest/speciality/**" access="IS_AUTHENTICATED" />
+        <security:intercept-url pattern="/rest/speciality/mester/**" access="IS_AUTHENTICATED" />
+        <security:intercept-url pattern="/rest/mester/**" access="IS_AUTHENTICATED" />
+        <security:intercept-url pattern="/rest/mester" access="IS_AUTHENTICATED" />
+        <security:intercept-url pattern="/rest/review/**" access="IS_AUTHENTICATED" />
+        <security:intercept-url pattern="/rest/review" access="IS_AUTHENTICATED" /> -->
 		<security:http-basic />
 	</security:http>
 
