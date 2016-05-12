@@ -33,4 +33,14 @@ public class SpecialityRepositoryTest {
 		List<Speciality> spec = specRepo.getAllMesterSpecialities("10");
 		LOGGER.info(spec.toString());
 	}
+	
+	@Test
+	public void testDeleteSpecById_WhenSuccesful_retunOK() throws SQLException {
+		String id="f4e885bf-123d-447e-9f71-b33e75fd4c1c";
+		specRepo.delete(id);
+		Speciality spec = new Speciality();
+		spec = specRepo.getByName("p");
+		LOGGER.info(spec.toString());
+	}
+	
 }

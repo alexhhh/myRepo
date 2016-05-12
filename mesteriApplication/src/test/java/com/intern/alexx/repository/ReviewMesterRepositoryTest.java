@@ -26,8 +26,7 @@ public class ReviewMesterRepositoryTest {
 		ReviewMester review = createReviewMester();
 		reviewMesterRepository.insert(review);
 		ReviewMester dbReview = reviewMesterRepository.getById(review.getId());	
-		assertNotNull(dbReview);
-		
+		assertNotNull(dbReview);		
 		assertEquals(review.getIdMester(), dbReview.getIdMester());
 
 	}
@@ -39,7 +38,7 @@ public class ReviewMesterRepositoryTest {
 		ReviewMester dbReview = reviewMesterRepository.getById(review.getId());
 		assertNotNull(dbReview);
 		reviewMesterRepository.update(review);
-		assertEquals(review.getIdMester() , dbReview.getIdMester());
+		assertEquals(review.getIdMester(),dbReview.getIdMester());
 		reviewMesterRepository.delete(review.getId());
 	 
 	}
@@ -49,30 +48,27 @@ public class ReviewMesterRepositoryTest {
 		ReviewMester review = createReviewMester();
 		ReviewMester dbReview = reviewMesterRepository.getById(review.getId());
 		assertNotNull(dbReview);
-		reviewMesterRepository.delete(review.getId());
-	 
+		reviewMesterRepository.delete(review.getId());	 
 	}
 
 	@Test
-	public void testGetAllReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException {
- 
+	public void testGetAllReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException { 
 		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewsPage(4,1);
 		assertNotNull(page);
   
 	}
 	
 	@Test
-	public void testGetMesterReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException {
- 
+	public void testGetMesterReviews_WhenCalled_ThenReturnPageWithReviews() throws SQLException { 
 		MyPage<ReviewMester> page = reviewMesterRepository.getAllReviewForMester("10",4,1);
 		assertNotNull(page);
 	}
 
 	private ReviewMester createReviewMester() {
-		ReviewMester reviewMester = new ReviewMester();
-		 
-		reviewMester.setIdMester("10");
-		reviewMester.setIdClient("5");
+		ReviewMester reviewMester = new ReviewMester();		 
+		reviewMester.setIdMester("3");
+		reviewMester.setIdClient("2");
+		reviewMester.setTitle("test");
 		reviewMester.setPrice(3);
 		reviewMester.setRating(5);
 		reviewMester.setFeedback("Awesome Update");

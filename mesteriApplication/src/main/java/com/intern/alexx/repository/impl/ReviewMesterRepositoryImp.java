@@ -37,7 +37,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 	public void update(ReviewMester reviewMester) {
 		String sql = "UPDATE review_mester SET id_mester=?, id_client=?,title=?, rating=?, price=?, feedback=? WHERE id=?";
 		template.update(sql,
-				new Object[] { reviewMester.getIdMester(), reviewMester.getIdClient(), reviewMester.getRating(),reviewMester.getTitle(),
+				new Object[] { reviewMester.getIdMester(), reviewMester.getIdClient(), reviewMester.getTitle(),reviewMester.getRating(),
 						reviewMester.getPrice() , reviewMester.getFeedback(), reviewMester.getId() });
 	}
 
@@ -73,8 +73,9 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
 		page.setPageNumber(setPageNumberParam(pageNumber));
 		page.setPageSize(setPageSizeParam(pageSize));
-		String sql = "SELECT * FROM review_mester AS rm LIMIT " + (page.getPageSize() * (page.getPageNumber() - 1))
-				+ " , " + page.getPageSize() + " ;";
+		String sql = "SELECT * FROM review_mester AS rm LIMIT " 
+		//+ (page.getPageSize() * (page.getPageNumber() - 1))	+ " , " + page.getPageSize() + " ;";
+		+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
 		page.setTotalResults(executeCountStatementForAllReviews());
 		page.setContentPage(executeElementsStatementForAllReviews(sql));
 		return page;
@@ -109,12 +110,32 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return page;
 	}
 
+	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException {
+		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
+		page.setPageNumber(setPageNumberParam(pageNumber));
+		page.setPageSize(setPageSizeParam(pageSize));
+		String sql = "SELECT * FROM review_mester AS rm  WHERE id_client = ? LIMIT "
+				+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
+		page.setTotalResults(executeCountClientStatement(idClient));
+		page.setContentPage(executeElementsStatement(idClient, sql));
+		return page;
+	}
+	
+	
+	private int executeCountClientStatement(String idClient) throws SQLException {
+		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_client=? ;";
+		Integer totalElements = template.queryForObject(sql, Integer.class, idClient);
+		return totalElements;
+	}
+	
 	private int executeCountStatement(String idMester) throws SQLException {
 		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_mester=? ;";
 		Integer totalElements = template.queryForObject(sql, Integer.class, idMester);
 		return totalElements;
 	}
 
+	
 	private List<ReviewMester> executeElementsStatement(String idMester, String sql) throws SQLException {
 		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
 		List<Map<String, Object>> rows = template.queryForList(sql, new Object[] { idMester });

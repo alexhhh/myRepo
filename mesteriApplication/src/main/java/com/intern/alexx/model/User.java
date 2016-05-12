@@ -9,10 +9,10 @@ public class User extends BaseModel {
 	private String userName;
 	private String password;
 	private int roleId;
-	private boolean isEnable;
+	private int isEnable;
 	private String email;
 	
-	public User (String idUser, String userName, String password, String email,int roleId, boolean isEnable){
+	public User (String idUser, String userName, String password, String email,int roleId, int isEnable){
 		super(idUser);
 		this.userName=userName;
 		this.password=password;
@@ -47,12 +47,12 @@ public class User extends BaseModel {
 		this.roleId = roleId;
 	}
 
-	public boolean isEnable() {
+	public int isEnable() {
 		return isEnable;
 	}
 
-	public void setEnable(boolean isEnable) {
-		this.isEnable = isEnable;
+	public void setEnable(Integer integer) {
+		this.isEnable = integer;
 	}
 
 	public String getEmail() {

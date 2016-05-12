@@ -16,12 +16,15 @@ public class Client extends BaseModel {
 	/**
 	 * @return the idClient
 	 */
-	public Client(String idClient, String firstName, String lastName) {
+	public Client(String idClient, String firstName, String lastName, String clientUserId) {
 		super(idClient);
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.clientUserId=clientUserId;
 	}
-
+	
+	public Client(){}
+	
 	/**
 	 * @return the fisrtName
 	 */
@@ -60,14 +63,10 @@ public class Client extends BaseModel {
 		this.clientUserId = clientUserId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Client [ idClient=" + getId() +" clientUserId="+ clientUserId + "firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Client [clientUserId=" + clientUserId + ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
+ 
 
 }

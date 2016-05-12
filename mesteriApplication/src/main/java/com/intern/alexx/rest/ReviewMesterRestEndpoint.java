@@ -67,11 +67,12 @@ public class ReviewMesterRestEndpoint {
 	}
 
 	@DELETE
+	@Path("/query")
 	@ApiOperation(value = "Delete a review by id", notes = "Delete review by id", response = ReviewMester.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Review was successfuly deleted.", response = ReviewMester.class),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response delete(String idReview) {
+	public Response delete(@QueryParam("idReview")String idReview) {
 		reviewService.deleteReviewMester(idReview);
 		return Response.ok().build();
 	}
@@ -89,7 +90,22 @@ public class ReviewMesterRestEndpoint {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, pageSize, pageNumber);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
+	   
 
+	@GET
+	@Path("/client/query")
+	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = ReviewMester.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = ReviewMester.class),
+			@ApiResponse(code = 404, message = "Review page not found."),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getReviewFromClientPage(@QueryParam("idClient") String idClient,
+			@QueryParam("pageSize") Integer pageSize, @QueryParam("pageNumber") Integer pageNumber)
+					throws SQLException {
+		MyPage<ReviewMester> reviewPage = reviewService.getAllReviewFromClient(idClient, pageSize, pageNumber);
+		return Response.ok(Status.OK).entity(reviewPage).build();
+	}
+	
 	@GET
 	@Path("/getAll/query")
 	@ApiOperation(value = "Get the review page", notes = "Get the page.", response = ReviewMester.class)

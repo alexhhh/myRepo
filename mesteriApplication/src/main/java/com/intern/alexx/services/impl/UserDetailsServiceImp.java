@@ -33,7 +33,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
 	}
 
 	private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), user.isEnable(), true, true, true,
+		   boolean enable = false;
+		if( user.isEnable() == 1 ) { enable=true;}
+		else {enable=false;}
+		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), enable, true, true, true,
 				authorities);
 	}
 

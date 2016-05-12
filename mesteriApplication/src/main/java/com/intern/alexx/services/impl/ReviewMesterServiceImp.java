@@ -50,8 +50,8 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 		if (idReview == null) {
 			throw new IllegalArgumentException("review ID is null");
 		}
-		reviewMesterRepository.delete(idReview);
 		ReviewMester review =  getById(idReview);
+		reviewMesterRepository.delete(idReview);
 		updateMesterAvgPriceAndRating(review.getIdMester());
 	}
 
@@ -72,6 +72,14 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize, Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
 		myPage = reviewMesterRepository.getAllReviewsPage(pageSize, pageNumber);
+		return myPage;
+	}
+	
+	@Transactional
+	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException {
+		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
+		myPage = reviewMesterRepository.getAllReviewFromClient(idClient, pageSize, pageNumber);
 		return myPage;
 	}
 

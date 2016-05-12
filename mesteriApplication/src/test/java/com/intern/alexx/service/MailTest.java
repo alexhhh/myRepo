@@ -24,7 +24,7 @@ public class MailTest {
 		
 		SimpleMailMessage mail= new SimpleMailMessage();
 		mail.setFrom("micu.alexandru.ioan@gmail.com");
-		mail.setTo("robert.baban@gmail.com");
+		mail.setTo("m_alex.rock@yahoo.com");
 		mail.setSubject("test mail");
 		mail.setText("nvm");
 		mailSender.send(mail);

@@ -8,14 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
- 
+
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.Speciality;
+import com.intern.alexx.model.User;
 import com.intern.alexx.repository.ContactRepository;
 import com.intern.alexx.repository.MesterRepository;
 import com.intern.alexx.repository.SpecialityRepository;
+import com.intern.alexx.repository.UserRepository;
 import com.intern.alexx.services.MesterService;
 import com.intern.alexx.services.SpecialityService;
 
@@ -33,13 +35,13 @@ public class MesterServiceImp implements MesterService {
 	private SpecialityService specialityService;
 	@Autowired
 	private SpecialityRepository specRepo;
+	@Autowired
+	private UserRepository userRepo;
+	
 
 	@Transactional
 	public void insertMester(Mester mester) {
 
-		if (mester.getId() != null) {
-			throw new IllegalArgumentException("mester ID shoud be null");
-		}
 		mesterRepository.insert(mester);
 		LOGGER.info(mester.toString());
 		mester.getContact().setIdMester(mester.getId());
@@ -47,12 +49,14 @@ public class MesterServiceImp implements MesterService {
 		LOGGER.info(mester.getId());
 		LOGGER.info(mester.getContact().toString());
 		List<Speciality> specialities = mester.getSpeciality();
-		for (Speciality speciality : specialities) {
-			LOGGER.info("---------"+ speciality.toString());
-			specialityService.verifySpeciality(speciality.getSpecialityName());
-			speciality.setId(specRepo.getSpecialityIdByName(speciality.getSpecialityName()));
-			mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), speciality.getId());
-			LOGGER.info("---------" + mester.getId() + "    +   " + speciality.getId() + "-------");
+		if (specialities != null) {
+			for (Speciality speciality : specialities) {
+				LOGGER.info("---------" + speciality.toString());
+				specialityService.verifySpeciality(speciality.getSpecialityName());
+				speciality.setId(specRepo.getSpecialityIdByName(speciality.getSpecialityName()));
+				mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), speciality.getId());
+				LOGGER.info("---------" + mester.getId() + "    +   " + speciality.getId() + "-------");
+			}
 		}
 		LOGGER.info(mester.toString());
 	}
@@ -66,7 +70,7 @@ public class MesterServiceImp implements MesterService {
 
 		mesterRepository.deleteFromMesterHasSpeciality(mester.getId());
 		mesterRepository.update(mester);
-		mester.getContact().setId(contactRepository.getIDByIdMester(mester.getId()));
+		// mester.getContact().setId(contactRepository.getIDByIdMester(mester.getId()));
 		mester.getContact().setIdMester(mester.getId());
 		contactRepository.update(mester.getContact());
 		List<Speciality> specialities = mester.getSpeciality();
@@ -76,6 +80,9 @@ public class MesterServiceImp implements MesterService {
 			mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), speciality.getId());
 			LOGGER.info("---------" + mester.getId() + "    +   " + speciality.getId() + "-------");
 		}
+		User user=userRepo.getUserById(mester.getMesterUserId());
+		user.setEmail(mester.getContact().getEmail());
+		userRepo.updateUserEmail(user);
 	}
 
 	@Transactional
@@ -88,24 +95,23 @@ public class MesterServiceImp implements MesterService {
 		mesterRepository.delete(mesterId);
 
 	}
- 
+
 	@Transactional
 	public Mester getById(String idMester) {
 		return mesterRepository.getById(idMester);
 	}
-	
+
 	@Transactional
 	public Mester getMesterById(String idMester) throws SQLException {
 		LOGGER.info("--------1------");
 		Mester mester = mesterRepository.getById(idMester);
 		LOGGER.info("--------2------" + mester.toString());
 
-		mester.setContact(contactRepository.getByIdMester(idMester)) ;
-		LOGGER.info("--------3------"+  mester.toString());
+		mester.setContact(contactRepository.getByIdMester(idMester));
+		LOGGER.info("--------3------" + mester.toString());
 
-	
 		mester.setSpeciality(specialityService.getAllMesterSpeciality(idMester));
-		LOGGER.info("--------4------"+  mester.toString());
+		LOGGER.info("--------4------" + mester.toString());
 		return mester;
 	}
 

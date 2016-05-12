@@ -3,13 +3,10 @@
  */
 package com.intern.alexx.repository;
 
-
 import java.sql.SQLException;
 
- 
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
-
 
 /**
  * @author malex
@@ -23,14 +20,18 @@ public interface ReviewMesterRepository {
 
 	void delete(String idReview);
 
-	ReviewMester getById(String idReview);
-	
-	public int getAvgRatingForMester(String idMester);
-	
-	public int getAvgPriceForMester(String idMester) ;
+	public ReviewMester getById(String idReview);
 
-	MyPage<ReviewMester> getAllReviewsPage(Integer pageSize,Integer pageNumber) throws SQLException;
-	
-	MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize,Integer pageNumber) throws SQLException;
+	public int getAvgRatingForMester(String idMester);
+
+	public int getAvgPriceForMester(String idMester);
+
+	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+
+	public MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize, Integer pageNumber)
+			throws SQLException;
+
+	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException;
 
 }

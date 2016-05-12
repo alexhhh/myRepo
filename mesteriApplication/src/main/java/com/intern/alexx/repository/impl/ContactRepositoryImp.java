@@ -27,9 +27,9 @@ public class ContactRepositoryImp implements ContactRepository {
 	}
 
 	public void update(Contact contact) {
-		String sql = "UPDATE  contact SET ID=?, NUMAR_TELEFON= ?, EMAIL= ?, SITE= ?, SOCIAL_PLATFORM=?  WHERE id_mester = ?";
-		template.update(sql, new Object[] { contact.getId(), contact.getTelNr(), contact.getEmail(), contact.getSite(),
-				contact.getSocialPlatform(), contact.getIdMester() });
+		String sql = "UPDATE  contact SET NUMAR_TELEFON= ?, EMAIL= ?, SITE= ?  WHERE id_mester = ?";
+		template.update(sql, new Object[] { contact.getTelNr(), contact.getEmail(), contact.getSite(),
+				 contact.getIdMester() });
 	}
 
 	public void delete(String idMester) {

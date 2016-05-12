@@ -45,7 +45,7 @@ public class MesterEndpointTest {
 	@Test
 	public void testFindOne_WhenMesterFound_ThenMesterIsReturned() throws SQLException {
 		String id = "741b0316-175c-48ed-a5fc-c24ae0312452";
-		Mester mester= createMester();
+		Mester mester= mesterService.getById(id);
 		Mockito.when(mesterService.getById(id)).thenReturn(mester);		
 		Response response = endpoint.getById(id);
 		Mester theMester = (Mester)response.getEntity();

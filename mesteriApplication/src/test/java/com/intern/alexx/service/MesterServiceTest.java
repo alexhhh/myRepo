@@ -33,10 +33,10 @@ public class MesterServiceTest {
 	@Test
 	public void testInsertMester_WhenSuccesfull_ThenReturnCreatedMester() {
 		Mester mester = createMester();
-
 		mesterService.insertMester(mester);
 		Mester newMester = mesterService.getById(mester.getId());
 		logger.info(newMester.toString());
+		mesterService.deleteMester(mester.getId()); 
 	}
 
 	@Test
@@ -79,7 +79,8 @@ public class MesterServiceTest {
 		Mester mester = new Mester();
 		Contact contact = createContract();
 		List<Speciality> speciality = createSpeciality();
-
+		mester.setId("66");
+		mester.setMesterUserId("3");
 		mester.setFirstName("Ionel");
 		mester.setLastName("Ionescu");
 		mester.setLocation("Miami");

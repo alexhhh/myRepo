@@ -46,9 +46,9 @@ public class MesterRepositoryImp implements MesterRepository {
 	}
 
 	public void insert(Mester mester) {
-		mester.setId(GUIDGenerator.generatedID());
-		String sql = "INSERT INTO MESTER (ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?)";
-		template.update(sql, new Object[] { mester.getId(), mester.getFirstName(), mester.getLastName(),
+		// mester.setId(GUIDGenerator.generatedID());
+		String sql = "INSERT INTO MESTER (ID, USER_ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?,?)";
+		template.update(sql, new Object[] { mester.getId(),mester.getMesterUserId(), mester.getFirstName(), mester.getLastName(),
 				mester.getDescription(), mester.getLocation() });
 	}
 
@@ -109,6 +109,7 @@ public class MesterRepositoryImp implements MesterRepository {
 
 	private Mester getMesterFromDB(Mester mester, ResultSet resultSet) throws SQLException {
 		mester.setId(resultSet.getString("id"));
+		mester.setMesterUserId(resultSet.getString("user_id"));
 		mester.setFirstName(resultSet.getString("first_name"));
 		mester.setLastName(resultSet.getString("last_name"));
 		mester.setDescription(resultSet.getString("description"));

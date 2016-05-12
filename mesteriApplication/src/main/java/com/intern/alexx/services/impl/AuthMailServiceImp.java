@@ -31,7 +31,7 @@ public class AuthMailServiceImp implements AuthMailService {
 		LOGGER.info("-----"+ user.toString()+"-------"+token.toString()+"------");
 		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
-				+ "  please CLICK THE LINK BELOW to confirm your email and to finish the authentication. You have 7 days for confirmation.  "
+				+ "  please CLICK THE LINK BELOW to confirm your email and to finish the authentication. You have 10 days for confirmation.  "
 				+ "http://localhost/#/activateUser/" + token.getId() + ";");
 		LOGGER.info(msg.getText());
 		try {

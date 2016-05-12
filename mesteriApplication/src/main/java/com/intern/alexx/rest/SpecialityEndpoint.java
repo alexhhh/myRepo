@@ -70,11 +70,12 @@ public class SpecialityEndpoint {
 	}
 	
 	@DELETE
-	@ApiOperation(value = "Delete a speciality by id", notes = "Delete speciality by id", response = Speciality.class)
+	@Path("/query")
+	@ApiOperation(value = "Delete a speciality by id", notes = "Delete speciality by id" )
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Speciality was successfuly deleted.", response = Speciality.class),
+			@ApiResponse(code = 200, message = "Speciality was successfuly deleted."),
 			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response deleteSpeciality(String idSpeciality) {
+	public Response deleteSpeciality(@QueryParam("idSpeciality")String idSpeciality) {
 		specialityService.deleteSpeciality(idSpeciality); 
 		return Response.ok().build();
 	}

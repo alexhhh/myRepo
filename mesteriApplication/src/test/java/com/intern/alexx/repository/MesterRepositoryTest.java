@@ -38,6 +38,7 @@ public class MesterRepositoryTest {
 		Mester dbMester = mesterRepository.getById(mester.getId());
 		assertNotNull(dbMester);
 		assertEquals(mester.getLocation(), dbMester.getLocation());
+		mesterRepository.delete(mester.getId());
 	}
 
 	@Test
@@ -74,6 +75,7 @@ public class MesterRepositoryTest {
 		Contact contact = createContract();
 		List<Speciality> speciality = createSpeciality();
 		mester.setId("66");
+		mester.setMesterUserId("3");
 		mester.setFirstName("Ionel");
 		mester.setLastName("Ionescu");
 		mester.setLocation("Miami");

@@ -14,6 +14,8 @@
 				   use-expressions="false" pattern="/rest/**">
 		<security:csrf disabled="true" />
 		
+		<security:intercept-url pattern="/rest/user/all" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/rest/user/edit" access="ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER"/>
 		<security:intercept-url pattern="/rest/user" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER"/>
 		
 		<security:intercept-url pattern="/rest/speciality/all" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
@@ -31,6 +33,10 @@
         <security:intercept-url pattern="/rest/review/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
         <security:intercept-url pattern="/rest/review" access="ROLE_ADMIN,ROLE_CLIENT" method="DELETE"/>
         <security:intercept-url pattern="/rest/review" access="ROLE_CLIENT" />
+        
+        <security:intercept-url pattern="/rest/client" access="ROLE_ADMIN,ROLE_CLIENT" method="DELETE"/>
+        <security:intercept-url pattern="/rest/client" access="ROLE_CLIENT" />
+        
         
 	<!-- 	<security:intercept-url pattern="/rest/speciality/**" access="IS_AUTHENTICATED" />
         <security:intercept-url pattern="/rest/speciality/mester/**" access="IS_AUTHENTICATED" />
