@@ -24,10 +24,18 @@
 		<security:intercept-url pattern="/rest/speciality" access="ROLE_ADMIN" />
 		
         <security:intercept-url pattern="/rest/mester/search" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="POST"/>
+        <security:intercept-url pattern="/rest/mester/area" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="POST"/>
         <security:intercept-url pattern="/rest/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
         <security:intercept-url pattern="/rest/mester" access="ROLE_ADMIN,ROLE_MESTER" method="DELETE"/>
 		<security:intercept-url pattern="/rest/mester" access="ROLE_MESTER"/>
 		
+		<security:intercept-url pattern="/rest/location/mester" access="ROLE_MESTER" method="PUT"/>
+		<security:intercept-url pattern="/rest/location/all" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" />
+		<security:intercept-url pattern="/rest/location/all_by_ids" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" />
+		<security:intercept-url pattern="/rest/location/mester/query" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" />
+		
+		 <security:intercept-url pattern="/rest/review/full/getAll/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
+        <security:intercept-url pattern="/rest/review/full/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
         <security:intercept-url pattern="/rest/review/getAll/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
         <security:intercept-url pattern="/rest/review/mester/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>
         <security:intercept-url pattern="/rest/review/query*" access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_ADMIN,ROLE_CLIENT,ROLE_MESTER" method="GET"/>

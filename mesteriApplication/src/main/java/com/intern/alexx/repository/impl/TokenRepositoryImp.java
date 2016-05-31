@@ -69,6 +69,7 @@ public class TokenRepositoryImp implements TokenRepository {
 		token.setId(resultSet.getString("id"));
 		token.setUserName(resultSet.getString("user_name"));
 		token.setExpirationDate(resultSet.getDate("exp_date"));
+		token.setPassword(resultSet.getString("password"));
 		return token;
 	}
 

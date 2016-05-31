@@ -5,25 +5,35 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.MesterSearchCriteria;
 
 @Component
 public class GenerateSql {
 
 	private String sql;
-	private StringBuilder query;
-
+	private StringBuilder query; 
+	
+	public String createQueryForAreaSearch(AreaSearchCriteria areaSearchCriteria) {
+		return  "SELECT m.* FROM mester AS m  LEFT JOIN location AS l ON m.id=l.mester_id WHERE l.latitude BETWEEN "+
+				areaSearchCriteria.getMinLat()+" AND "+ areaSearchCriteria.getMaxLat()+ " AND l.longitude  BETWEEN "+
+				areaSearchCriteria.getMinLng()+" AND "+ areaSearchCriteria.getMaxLng() + " ;";	 
+	}
+	 
 	public String createQueryForElements(MesterSearchCriteria searchCriteria) {
 		sql = null;
 		query = new StringBuilder("SELECT ");
 		String limit;
 		StringBuilder from = createString(searchCriteria);
-		if (searchCriteria.getPageSize() == null){searchCriteria.setPageSize(10);}
-		if (searchCriteria.getPageNumber() == null){searchCriteria.setPageNumber(1);}
-		//if ((searchCriteria.getPageSize() != null) && (searchCriteria.getPageNumber() != null)) {
+		if (searchCriteria.getPageSize() == null) {
+			searchCriteria.setPageSize(10);
+		}
+		if (searchCriteria.getPageNumber() == null) {
+			searchCriteria.setPageNumber(1);
+		} 
 		limit = " LIMIT " + (searchCriteria.getPageSize() * (searchCriteria.getPageNumber() - 1)) + " , "
-					+ (searchCriteria.getPageSize()) + " ;";
-		
+				+ (searchCriteria.getPageSize()) + " ;";
+
 		sql = query.append(" m.* ").append(from).append(limit).toString();
 		return sql;
 	}
@@ -36,11 +46,15 @@ public class GenerateSql {
 		return sql;
 	}
 
-	public StringBuilder createString(MesterSearchCriteria searchCriteria) {
-		String join, where;
+	private StringBuilder createString(MesterSearchCriteria searchCriteria) {
+		String join, on, where ;
 		StringBuilder from = new StringBuilder("FROM mester as m ");
 		List<String> joinList = new LinkedList<String>();
+		joinList.add(" JOIN user AS u ");
+		List<String> onList = new LinkedList<String>();
+		onList.add(" ON u.id=m.id ");
 		List<String> whereList = new LinkedList<String>();
+		whereList.add("WHERE u.enable=1 " );
 
 		if (searchCriteria.getFirstName() != null) {
 			whereList.add(" m.first_name=:first_name ");
@@ -53,26 +67,23 @@ public class GenerateSql {
 		}
 
 		if (searchCriteria.getSpecialityName() != null) {
-			joinList.add("JOIN mester_has_speciality as mhs JOIN speciality as s "
-					+ "ON m.id = mhs.id_mester AND s.id = mhs.id_speciality ");
+			joinList.add("JOIN mester_has_speciality as mhs JOIN speciality as s ");
+			onList.add(" m.id = mhs.id_mester ");   
+			onList.add(" s.id = mhs.id_speciality ");
 			whereList.add(" s.speciality_name=:speciality_name ");
 		}
-
 		if ((searchCriteria.getEmail() != null) || (searchCriteria.getPhoneNumber() != null)) {
-			joinList.add("JOIN contact AS c ON m.id=c.id_mester ");
-
+			joinList.add("JOIN contact AS c ");
+			onList.add(" m.id=c.id_mester ");
 			if (searchCriteria.getEmail() != null) {
 				whereList.add(" c.email=:email ");
 			}
 			if (searchCriteria.getPhoneNumber() != null) {
 				whereList.add(" c.numar_telefon=:numar_telefon ");
 			}
-
 		}
 
 		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {
-			 
-
 			if (searchCriteria.getRating() != null) {
 				whereList.add(" m.avg_rating=:rating ");
 			}
@@ -82,12 +93,14 @@ public class GenerateSql {
 		}
 
 		where = String.join(" AND ", whereList);
+		on = String.join(" AND ", onList);
 		join = String.join(" ", joinList);
 
-		if (whereList.size() != 0) {
-			return from = from.append(join).append(" WHERE ").append(where);
-		} else {
-			return from;
-		}
+
+			return from = from.append(join).append(on).append(where) ;
+		 
 	}
+
+	
+
 }

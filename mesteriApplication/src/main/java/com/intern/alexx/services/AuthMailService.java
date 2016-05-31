@@ -10,4 +10,5 @@ public interface AuthMailService {
  
 	public void AuthMailContent(User user, Token token);
 	
+	public void ResetPasswordMail(User user, Token token);	
 }

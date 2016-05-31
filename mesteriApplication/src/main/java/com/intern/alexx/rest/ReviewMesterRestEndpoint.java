@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.intern.alexx.model.FullReview;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 import com.intern.alexx.services.ReviewMesterService;
@@ -90,8 +91,7 @@ public class ReviewMesterRestEndpoint {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewMasterPage(idMester, pageSize, pageNumber);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
-	   
-
+	   	
 	@GET
 	@Path("/client/query")
 	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = ReviewMester.class)
@@ -118,5 +118,32 @@ public class ReviewMesterRestEndpoint {
 		MyPage<ReviewMester> reviewPage = reviewService.getReviewAllMasterPage(pageSize, pageNumber);
 		return Response.ok(Status.OK).entity(reviewPage).build();
 	}
+	
 
+	@GET
+	@Path("/full/client/query")
+	@ApiOperation(value = "Get the  mester review page", notes = "Get the page.", response = FullReview.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = FullReview.class),
+			@ApiResponse(code = 404, message = "Review page not found."),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getFullReviewsFromClientPage(@QueryParam("idClient") String idClient,
+			@QueryParam("pageSize") Integer pageSize, @QueryParam("pageNumber") Integer pageNumber)
+					throws SQLException {
+		MyPage<FullReview> reviewPage = reviewService.getAllFullReviewsFromClient(idClient, pageSize, pageNumber);
+		return Response.ok(Status.OK).entity(reviewPage).build();
+	}
+	
+	@GET
+	@Path("/full/getAll/query")
+	@ApiOperation(value = "Get the review page", notes = "Get the page.", response = FullReview.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Review page was successfully retrived.", response = FullReview.class),
+			@ApiResponse(code = 404, message = "Review page not found."),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getFullReviewsPage(@QueryParam("pageSize") Integer pageSize,
+			@QueryParam("pageNumber") Integer pageNumber) throws SQLException {
+		MyPage<FullReview> reviewPage = reviewService.getAllFullReviewsPage(pageSize, pageNumber);
+		return Response.ok(Status.OK).entity(reviewPage).build();
+	}
 }

@@ -63,7 +63,7 @@
 	
 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
 		 <property name="from" value="admin@ikon.com"/>
-    	<property name="subject" value="Authentication"/>
+    	 
 	</bean>
 	 
 	 <bean id="AuthMailService" class="com.intern.alexx.services.impl.AuthMailServiceImp">

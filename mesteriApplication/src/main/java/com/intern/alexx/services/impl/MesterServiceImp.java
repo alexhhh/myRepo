@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.intern.alexx.model.AreaSearchCriteria;
+import com.intern.alexx.model.Location;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.Speciality;
 import com.intern.alexx.model.User;
 import com.intern.alexx.repository.ContactRepository;
+import com.intern.alexx.repository.LocationRepository;
 import com.intern.alexx.repository.MesterRepository;
 import com.intern.alexx.repository.SpecialityRepository;
 import com.intern.alexx.repository.UserRepository;
@@ -37,6 +40,8 @@ public class MesterServiceImp implements MesterService {
 	private SpecialityRepository specRepo;
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private LocationRepository locationRepo;
 	
 
 	@Transactional
@@ -59,6 +64,9 @@ public class MesterServiceImp implements MesterService {
 			}
 		}
 		LOGGER.info(mester.toString());
+		Location location = new Location();
+		location.setMesterId(mester.getId());
+		locationRepo.insert(location);
 	}
 
 	@Transactional
@@ -80,7 +88,7 @@ public class MesterServiceImp implements MesterService {
 			mesterRepository.insertIntoMesterHasSpeciality(mester.getId(), speciality.getId());
 			LOGGER.info("---------" + mester.getId() + "    +   " + speciality.getId() + "-------");
 		}
-		User user=userRepo.getUserById(mester.getMesterUserId());
+		User user=userRepo.getUserById(mester.getId());
 		user.setEmail(mester.getContact().getEmail());
 		userRepo.updateUserEmail(user);
 	}
@@ -92,8 +100,8 @@ public class MesterServiceImp implements MesterService {
 		}
 		mesterRepository.deleteFromMesterHasSpeciality(mesterId);
 		contactRepository.delete(mesterId);
+		locationRepo.delete(mesterId);
 		mesterRepository.delete(mesterId);
-
 	}
 
 	@Transactional
@@ -115,8 +123,22 @@ public class MesterServiceImp implements MesterService {
 		return mester;
 	}
 
+	@Transactional
 	public MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria) throws SQLException {
-		return mesterRepository.prepareSearchForMester(searchCriteria);
+		 MyPage<Mester> myPage = mesterRepository.prepareSearchForMester(searchCriteria);		 
+		for (Mester mester : myPage.getContentPage()){
+			mester.setContact(contactRepository.getByIdMester(mester.getId()));
+		}
+		return myPage;
+	}
+
+	@Transactional
+	public List<Mester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
+		List<Mester> listMesteri= mesterRepository.searchMesterByArea(areaSearchCriteria);
+		for (Mester mester : listMesteri){
+			mester.setContact(contactRepository.getByIdMester(mester.getId()));
+		}
+		return listMesteri;
 	}
 
 }

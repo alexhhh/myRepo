@@ -4,7 +4,9 @@
 package com.intern.alexx.repository;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -32,4 +34,6 @@ public interface MesterRepository {
 	void deleteFromMesterHasSpeciality(String mesterId );
 	
 	void deleteOneFromMesterHasSpeciality(String mesterId,String specialityId);
+
+	List<Mester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException;
 }

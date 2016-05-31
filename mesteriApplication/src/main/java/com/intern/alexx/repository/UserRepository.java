@@ -12,6 +12,8 @@ public interface UserRepository {
 	public User getUserByUserName(String userName);
 	
 	public User getUserById(String id);
+	
+	public User getUserByNameAndEmail(String userName , String email);
 
 	public void insertUser(User user);
 

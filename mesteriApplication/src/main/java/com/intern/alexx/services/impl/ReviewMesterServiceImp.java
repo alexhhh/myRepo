@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.intern.alexx.model.FullReview;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
@@ -62,25 +63,19 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 	
 	@Transactional
 	public MyPage<ReviewMester> getReviewMasterPage(String idMester, Integer pageSize, Integer pageNumber)
-			throws SQLException {
-		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewForMester(idMester, pageSize, pageNumber);
-		return myPage;
+			throws SQLException {		 
+		return reviewMesterRepository.getAllReviewForMester(idMester, pageSize, pageNumber);
 	}
 	
 	@Transactional
-	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize, Integer pageNumber) throws SQLException {
-		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewsPage(pageSize, pageNumber);
-		return myPage;
+	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize, Integer pageNumber) throws SQLException {		 
+		return reviewMesterRepository.getAllReviewsPage(pageSize, pageNumber);
 	}
 	
 	@Transactional
 	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
-			throws SQLException {
-		MyPage<ReviewMester> myPage = new MyPage<ReviewMester>();
-		myPage = reviewMesterRepository.getAllReviewFromClient(idClient, pageSize, pageNumber);
-		return myPage;
+			throws SQLException {		 
+		return reviewMesterRepository.getAllReviewFromClient(idClient, pageSize, pageNumber);
 	}
 
 	@Transactional
@@ -95,6 +90,17 @@ public class ReviewMesterServiceImp implements ReviewMesterService {
 		mester.setAvgPrice(reviewMesterRepository.getAvgPriceForMester(idMester));
 		mesterRepository.updateAvg(mester);
 		LOGGER.info("--after---"+ mester.toString()+"---------");
+	}
+
+	@Override
+	public MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException { 
+		return reviewMesterRepository.getAllFullReviewsPage(pageSize, pageNumber);
+	}
+
+	@Override
+	public MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException { 
+		return reviewMesterRepository.getAllFullReviewsFromClient(idClient, pageSize, pageNumber);
 	}
 	
 }

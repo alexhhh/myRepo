@@ -34,7 +34,6 @@ public class UserRepositoryImp implements UserRepository {
 	@Override
 	public User getUserByCredentials(String userName, String password) {
 		String sql = "SELECT * FROM user WHERE user_name = ?  AND password=?";
-
 		User user = template.query(sql, new Object[] { userName, password }, new ResultSetExtractor<User>() {
 			@Override
 			public User extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -43,22 +42,29 @@ public class UserRepositoryImp implements UserRepository {
 					user = new User();
 					getUserFromDB(user, rs);
 					LOGGER.info("---user-up--" + user.toString());
-				}
-				return user;
-			}
-		});
-		
+				} return user;
+			} });		
 		if (user == null){
 			//todo throw exception
-		}
-
-		return user;
+		} return user;
 	}
 
 	public User getUserByUserName(String userName) {
 		User user = new User();
 		String sql = "SELECT * FROM user WHERE user_name = ? ";
 		template.query(sql, new Object[] { userName }, new RowCallbackHandler() {
+			public void processRow(ResultSet rs) throws SQLException {
+				getUserFromDB(user, rs);
+				LOGGER.info("---user--u-" + user.toString());
+			}
+		});
+		return user;
+	}
+	
+	public User getUserByNameAndEmail(String userName , String email) {
+		User user = new User();
+		String sql = "SELECT * FROM user WHERE user_name = ? AND email=? ";
+		template.query(sql, new Object[] { userName, email }, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				getUserFromDB(user, rs);
 				LOGGER.info("---user--u-" + user.toString());

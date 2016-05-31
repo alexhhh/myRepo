@@ -14,10 +14,12 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage; 
@@ -87,6 +89,19 @@ public class MesterRepositoryImp implements MesterRepository {
 		page.setContentPage(executeSqlSelectStatement(searchCriteria));
 		return page;
 	}
+	
+	
+	public List<Mester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
+		List<Mester> mesterList = new ArrayList<Mester>();
+		String sql = generateSql.createQueryForAreaSearch(areaSearchCriteria);
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map<String, Object> row : rows) {
+			Mester mester = new Mester();
+			mesterRowMapper(mester, row);
+			mesterList.add(mester);
+		}		
+		return mesterList;
+	}
 
 	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) throws SQLException {
 		String sql = generateSql.createQueryForCountElements(searchCriteria);
@@ -107,6 +122,18 @@ public class MesterRepositoryImp implements MesterRepository {
 		return mesteri;
 	}
 
+	private Mester mesterRowMapper(Mester mester, Map<String, Object> row) throws SQLException {
+		mester.setId((String) (row.get("id"))); 
+		mester.setMesterUserId((String) (row.get("user_id")));
+		mester.setFirstName((String) (row.get("first_name")));
+		mester.setLastName((String) (row.get("last_name")));
+		mester.setDescription((String) (row.get("description")));
+		mester.setLocation((String) (row.get("location")));
+		mester.setAvgPrice((Integer) (row.get("avg_price")));
+		mester.setAvgRating((Integer) (row.get("avg_rating")));
+		return mester;
+	}
+	
 	private Mester getMesterFromDB(Mester mester, ResultSet resultSet) throws SQLException {
 		mester.setId(resultSet.getString("id"));
 		mester.setMesterUserId(resultSet.getString("user_id"));
@@ -182,5 +209,6 @@ public class MesterRepositoryImp implements MesterRepository {
 		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ? and  id_speciality = ?";
 		template.update(sql, mesterId, specialityId);
 	}
+
 	
 }

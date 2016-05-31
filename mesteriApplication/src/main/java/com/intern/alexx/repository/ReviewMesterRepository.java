@@ -5,6 +5,7 @@ package com.intern.alexx.repository;
 
 import java.sql.SQLException;
 
+import com.intern.alexx.model.FullReview;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester;
 
@@ -34,4 +35,8 @@ public interface ReviewMesterRepository {
 	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
 			throws SQLException;
 
+	public MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+
+	public MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException;
 }

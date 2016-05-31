@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Component;
 
+import com.intern.alexx.model.FullReview;
 import com.intern.alexx.model.MyPage;
 import com.intern.alexx.model.ReviewMester; 
 import com.intern.alexx.repository.ReviewMesterRepository;
@@ -69,7 +70,7 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return avgPrice;
 	}
 
-	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
+	public MyPage<ReviewMester>  getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
 		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
 		page.setPageNumber(setPageNumberParam(pageNumber));
 		page.setPageSize(setPageSizeParam(pageSize));
@@ -81,32 +82,26 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return page;
 	}
 
-	private int executeCountStatementForAllReviews() throws SQLException {
-		String sql = "SELECT COUNT(*) AS total FROM review_mester;";
-		Integer totalElements = template.queryForObject(sql, Integer.class);
-		return totalElements;
-	}
-
-	private List<ReviewMester> executeElementsStatementForAllReviews(String sql) throws SQLException {
-		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
-		List<Map<String, Object>> rows = template.queryForList(sql);
-		for (Map<String, Object> row : rows) {
-			ReviewMester review = new ReviewMester();
-			reviewRowMapper(review, row);
-			reviews.add(review);
-		}
-		return reviews;
-	}
-
-	public MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize, Integer pageNumber)
-			throws SQLException {
-		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
+	public MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException {
+		MyPage<FullReview> page = new MyPage<FullReview>();
 		page.setPageNumber(setPageNumberParam(pageNumber));
 		page.setPageSize(setPageSizeParam(pageSize));
-		String sql = "SELECT * FROM review_mester AS rm  WHERE id_mester = ? LIMIT "
+		String sql = "SELECT rm.* , m.first_name , m.last_name FROM review_mester AS rm   LEFT JOIN mester AS m ON rm.id_mester=m.id  LIMIT "  
 				+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
-		page.setTotalResults(executeCountStatement(idMester));
-		page.setContentPage(executeElementsStatement(idMester, sql));
+		page.setTotalResults(executeCountStatementForAllReviews());
+		page.setContentPage(executeElementsStatementForAllFullReviews(sql));
+		return page;
+	}
+	
+	public MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException {
+		MyPage<FullReview> page = new MyPage<FullReview>();
+		page.setPageNumber(setPageNumberParam(pageNumber));
+		page.setPageSize(setPageSizeParam(pageSize));
+		String sql = "SELECT rm.* , m.first_name , m.last_name FROM review_mester AS rm LEFT JOIN mester As m ON rm.id_mester=m.id WHERE id_client = ? LIMIT "
+				+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
+		page.setTotalResults(executeCountClientStatement(idClient));
+		page.setContentPage(executeElementsStatementForReview(idClient, sql));
 		return page;
 	}
 
@@ -121,7 +116,24 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		page.setContentPage(executeElementsStatement(idClient, sql));
 		return page;
 	}
-	
+		
+	public MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize, Integer pageNumber)
+			throws SQLException {
+		MyPage<ReviewMester> page = new MyPage<ReviewMester>();
+		page.setPageNumber(setPageNumberParam(pageNumber));
+		page.setPageSize(setPageSizeParam(pageSize));
+		String sql = "SELECT * FROM review_mester AS rm  WHERE id_mester = ? LIMIT "
+				+ (  (page.getPageNumber() )) + " , " + page.getPageSize() + " ;";
+		page.setTotalResults(executeCountStatement(idMester));
+		page.setContentPage(executeElementsStatement(idMester, sql));
+		return page;
+	}
+
+	private int executeCountStatementForAllReviews() throws SQLException {
+		String sql = "SELECT COUNT(*) AS total FROM review_mester;";
+		Integer totalElements = template.queryForObject(sql, Integer.class);
+		return totalElements;
+	}
 	
 	private int executeCountClientStatement(String idClient) throws SQLException {
 		String sql = "SELECT COUNT(*) AS total FROM review_mester WHERE id_client=? ;";
@@ -135,6 +147,27 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		return totalElements;
 	}
 
+	private List<ReviewMester> executeElementsStatementForAllReviews(String sql) throws SQLException {
+		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map<String, Object> row : rows) {
+			ReviewMester review = new ReviewMester();
+			reviewRowMapper(review, row);
+			reviews.add(review);
+		}
+		return reviews;
+	}
+	
+	private List<FullReview> executeElementsStatementForAllFullReviews(String sql) throws SQLException {
+		List<FullReview> reviews = new ArrayList<FullReview>();
+		List<Map<String, Object>> rows = template.queryForList(sql);
+		for (Map<String, Object> row : rows) {
+			FullReview review = new FullReview();
+			fullReviewRowMapper(review, row);
+			reviews.add(review);
+		}
+		return reviews;
+	}
 	
 	private List<ReviewMester> executeElementsStatement(String idMester, String sql) throws SQLException {
 		List<ReviewMester> reviews = new ArrayList<ReviewMester>();
@@ -146,19 +179,31 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		}
 		return reviews;
 	}
-
-	private Integer setPageSizeParam(Integer pageSize) {
-		if (pageSize == null)
-			pageSize = 10;
-		return pageSize;
+	
+	private List<FullReview> executeElementsStatementForReview(String idMester, String sql) throws SQLException {
+		List<FullReview> reviews = new ArrayList<FullReview>();
+		List<Map<String, Object>> rows = template.queryForList(sql, new Object[] { idMester });
+		for (Map<String, Object> row : rows) {
+			FullReview review = new FullReview();
+			fullReviewRowMapper(review, row);
+			reviews.add(review);
+		}
+		return reviews;
 	}
-
-	private Integer setPageNumberParam(Integer pageNumber) {
-		if (pageNumber == null)
-			pageNumber = 1;
-		return pageNumber;
+	
+	private FullReview  fullReviewRowMapper(FullReview review, Map<String, Object> row) throws SQLException {
+		review.setId((String) (row.get("id")));
+		review.setIdMester((String) (row.get("id_mester")));
+		review.setIdClient((String) (row.get("id_client")));
+		review.setTitle((String) (row.get("title")));
+		review.setRating((int) (row.get("rating")));
+		review.setPrice((int) (row.get("price")));
+		review.setFeedback((String) (row.get("feedback")));
+		review.setFirstName((String) (row.get("first_name")));
+		review.setLastName((String) (row.get("last_name")));
+		return review;
 	}
-
+	
 	private ReviewMester reviewRowMapper(ReviewMester review, Map<String, Object> row) throws SQLException {
 		review.setId((String) (row.get("id")));
 		review.setIdMester((String) (row.get("id_mester")));
@@ -166,7 +211,6 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		review.setTitle((String) (row.get("title")));
 		review.setRating((int) (row.get("rating")));
 		review.setPrice((int) (row.get("price")));
-		//setPriceEnum(review, value);
 		review.setFeedback((String) (row.get("feedback")));
 		return review;
 	}
@@ -178,12 +222,23 @@ public class ReviewMesterRepositoryImp implements ReviewMesterRepository {
 		review.setTitle(resultSet.getString("title"));
 		review.setRating(resultSet.getInt("rating"));
 		review.setPrice(resultSet.getInt("price"));
-		//setPriceEnum(review, value);
 		review.setFeedback(resultSet.getString("feedback"));
 		return review;
 	}
 
-//	private void setPriceEnum(ReviewMester review, int value) throws SQLException {
+	private Integer setPageSizeParam(Integer pageSize) {
+		if (pageSize == null)
+			pageSize = 10;
+		return pageSize;
+	}
+	
+	private Integer setPageNumberParam(Integer pageNumber) {
+		if (pageNumber == null)
+			pageNumber = 1;
+		return pageNumber;
+	}
+
+	//	private void setPriceEnum(ReviewMester review, int value) throws SQLException {
 //		if (value == 1) {
 //			review.setPrice(Price.LOW);
 //		} else if (value == 2) {

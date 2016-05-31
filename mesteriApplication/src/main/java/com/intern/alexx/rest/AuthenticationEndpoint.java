@@ -20,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
- 
+
+import com.intern.alexx.model.Token;
 import com.intern.alexx.model.User;
+import com.intern.alexx.services.TokenService;
 import com.intern.alexx.services.UserService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -38,6 +40,8 @@ public class AuthenticationEndpoint {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private TokenService tokenService;
 
 	@POST
 	@Path("/login")
@@ -138,8 +142,39 @@ public class AuthenticationEndpoint {
 		return Response.ok().entity(user).build();
 	}
 	
+	@GET
+	@Path("/reset/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if the email is sent", response = User.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The mail is sent.", response = User.class),
+			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response resetPasswordRequest(@QueryParam("userName") String userName, @QueryParam("email") String email) {
+		userService.resetPasswordRequest(userName, email);
+		return Response.ok().build();
+	}
 	
-	 // updateUserDetails(User user)
+	@GET
+	@Path("/token/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if the token is find", response = Token.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The find is find.", response = Token.class),
+			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response resetPasswordRequest(@QueryParam("tokenId") String tokenId) {
+		Token token = tokenService.getById(tokenId);
+		return Response.ok().entity(token).build();
+	}
+	
+	@PUT
+	@Path("/reset")
+	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "Password was successfuly edited "),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response updatePassword(Token token) {
+		userService.updatePassword(token);
+		return Response.ok().build();
+	}
+	  
 	
 	private String encodeCredentialsInBase64 (String username , String password){
 		String encodedUser = username + ":" + password;

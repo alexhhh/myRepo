@@ -3,7 +3,9 @@ package com.intern.alexx.services;
 
  
 import java.sql.SQLException;
- 
+import java.util.List;
+
+import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -26,6 +28,8 @@ public interface MesterService {
 	public Mester getMesterById(String mesterId) throws SQLException ;
 
 	MyPage<Mester> searchMester(MesterSearchCriteria searchCriteria) throws SQLException;
+
+	List<Mester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException;
 	
  
 }

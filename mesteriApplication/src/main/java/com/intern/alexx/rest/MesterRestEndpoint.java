@@ -1,6 +1,7 @@
 package com.intern.alexx.rest;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
@@ -89,5 +91,17 @@ public class MesterRestEndpoint {
 	public Response search(MesterSearchCriteria searchCriteria) throws SQLException {
 		MyPage<Mester> newMester = mesterService.searchMester(searchCriteria);
 		return Response.ok(Status.OK).entity(newMester).build();
+	}
+	
+	@POST
+	@Path("/area")
+	@ApiOperation(value = "Return a page", notes = "Return a mester page", response = Mester.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Mester page was successfully retrieved.", response = Mester.class),
+			@ApiResponse(code = 404, message = "The page was not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response searchByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
+		List<Mester> mesterList = mesterService.searchMesterByArea(areaSearchCriteria);
+		return Response.ok(Status.OK).entity(mesterList).build();
 	}
 }
