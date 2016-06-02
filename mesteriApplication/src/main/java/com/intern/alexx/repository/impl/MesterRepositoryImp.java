@@ -47,8 +47,7 @@ public class MesterRepositoryImp implements MesterRepository {
 		return getNamedParamJdbcTemplate();
 	}
 
-	public void insert(Mester mester) {
-		// mester.setId(GUIDGenerator.generatedID());
+	public void insert(Mester mester) { 
 		String sql = "INSERT INTO MESTER (ID, USER_ID, FIRST_NAME, LAST_NAME, DESCRIPTION, LOCATION) " + "VALUES (?,?,?,?,?,?)";
 		template.update(sql, new Object[] { mester.getId(),mester.getMesterUserId(), mester.getFirstName(), mester.getLastName(),
 				mester.getDescription(), mester.getLocation() });
@@ -95,14 +94,27 @@ public class MesterRepositoryImp implements MesterRepository {
 		List<Mester> mesterList = new ArrayList<Mester>();
 		String sql = generateSql.createQueryForAreaSearch(areaSearchCriteria);
 		List<Map<String, Object>> rows = template.queryForList(sql);
-		for (Map<String, Object> row : rows) {
-			Mester mester = new Mester();
-			mesterRowMapper(mester, row);
-			mesterList.add(mester);
-		}		
-		return mesterList;
+		for (Map<String, Object> row : rows) { 
+			mesterList.add(mesterRowMapper(row));
+		} return mesterList;
 	}
 
+	public void insertIntoMesterHasSpeciality(String mesterId, String specialityId) {
+		String sql = "INSERT INTO mester_has_speciality (id_mester, id_speciality) VALUES (?,?)";
+		template.update(sql, mesterId, specialityId);
+	}
+
+	public void deleteFromMesterHasSpeciality(String mesterId) {
+		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ?";
+		template.update(sql, mesterId);
+	}
+
+	public void deleteOneFromMesterHasSpeciality(String mesterId, String specialityId) {
+		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ? and  id_speciality = ?";
+		template.update(sql, mesterId, specialityId);
+	}
+
+	
 	private int executeSqlCountStatement(MesterSearchCriteria searchCriteria) throws SQLException {
 		String sql = generateSql.createQueryForCountElements(searchCriteria);
 		LOGGER.info("---executeSqlCountStatement---" + sql);
@@ -122,7 +134,8 @@ public class MesterRepositoryImp implements MesterRepository {
 		return mesteri;
 	}
 
-	private Mester mesterRowMapper(Mester mester, Map<String, Object> row) throws SQLException {
+	private Mester mesterRowMapper(Map<String, Object> row) throws SQLException {
+		Mester mester = new Mester();
 		mester.setId((String) (row.get("id"))); 
 		mester.setMesterUserId((String) (row.get("user_id")));
 		mester.setFirstName((String) (row.get("first_name")));
@@ -195,20 +208,6 @@ public class MesterRepositoryImp implements MesterRepository {
 		return paramMap;
 	}
 
-	public void insertIntoMesterHasSpeciality(String mesterId, String specialityId) {
-		String sql = "INSERT INTO mester_has_speciality (id_mester, id_speciality) VALUES (?,?)";
-		template.update(sql, mesterId, specialityId);
-	}
-
-	public void deleteFromMesterHasSpeciality(String mesterId) {
-		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ?";
-		template.update(sql, mesterId);
-	}
-
-	public void deleteOneFromMesterHasSpeciality(String mesterId, String specialityId) {
-		String sql = "DELETE FROM mester_has_speciality WHERE id_mester = ? and  id_speciality = ?";
-		template.update(sql, mesterId, specialityId);
-	}
 
 	
 }

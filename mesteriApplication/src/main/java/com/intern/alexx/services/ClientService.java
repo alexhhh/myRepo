@@ -4,12 +4,12 @@ import com.intern.alexx.model.Client;
 
 public interface ClientService {
 
-	public Client getClientById(String clientId) ;
-	 
-	public void insertClient(Client client);
+	Client getClientById(String clientId);
 
-	public void updateClient(Client client);
+	void insertClient(Client client);
 
-	public void deleteClient(String clientId);
-	
+	void updateClient(Client client);
+
+	void deleteClient(String clientId);
+
 }

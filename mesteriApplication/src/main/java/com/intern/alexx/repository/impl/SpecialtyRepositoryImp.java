@@ -1,6 +1,6 @@
 package com.intern.alexx.repository.impl;
 
-import java.sql.PreparedStatement;
+ 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 	public void delete(String idSpeciality) {
 		String sql = "DELETE FROM speciality  WHERE id = ? ";
 		template.update(sql, idSpeciality);
-
 	}
 
 	public Speciality getByName(String specialityName) {
@@ -57,34 +56,20 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 
 	public List<Speciality> getAllSpecialties() throws SQLException {
 		List<Speciality> specialities = new ArrayList<Speciality>();
-		String sql = " SELECT * FROM speciality ";
- 
+		String sql = " SELECT * FROM speciality "; 
 		List<Map<String, Object>> rows = template.queryForList(sql);
-		for (Map<String, Object> row : rows) {
-			Speciality speciality = new Speciality();
-			specialityRowMapper(speciality, row);
-			specialities.add(speciality);
-		}
-		return specialities;
+		for (Map<String, Object> row : rows) { 
+			specialities.add(specialityRowMapper(row));
+		} return specialities;
 	}
-
 	
 	public List<Speciality> getAllMesterSpecialities(String idMester) throws SQLException {
 		List<Speciality> specialities = new ArrayList<Speciality>();
 		String sql = " SELECT s.* FROM speciality as s JOIN mester_has_speciality as mhs JOIN mester as m ON m.id = mhs.id_mester AND s.id = mhs.id_speciality WHERE m.id=?";
 		List<Map<String, Object>> rows = template.queryForList(sql, idMester);
-		for (Map<String, Object> row : rows) {
-			Speciality speciality = new Speciality();
-			specialityRowMapper(speciality, row);
-			specialities.add(speciality);
-		}
-		return specialities;
-	}
-
-	
-	
-	public void addSpecialityIntoDB(Speciality speciality, PreparedStatement ps) throws SQLException {
-		ps.setString(1, speciality.getSpecialityName());
+		for (Map<String, Object> row : rows) {			
+			specialities.add(specialityRowMapper(row));
+		} return specialities;
 	}
 
 	private Speciality getSpecialtyFromDB(Speciality speciality, ResultSet resultSet) throws SQLException {
@@ -93,7 +78,8 @@ public class SpecialtyRepositoryImp implements SpecialityRepository {
 		return speciality;
 	}
 	
-	private Speciality specialityRowMapper(Speciality speciality, Map<String, Object> row) throws SQLException {
+	private Speciality specialityRowMapper(Map<String, Object> row) throws SQLException {
+		Speciality speciality = new Speciality();
 		speciality.setId((String) (row.get("id")));
 		speciality.setSpecialityName( ((String) (row.get("speciality_name"))));
 		return speciality;

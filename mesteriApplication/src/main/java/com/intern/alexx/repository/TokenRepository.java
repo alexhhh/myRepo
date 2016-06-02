@@ -8,7 +8,7 @@ public interface TokenRepository {
 
 	void delete(String id);
 
-	public Token getById(String id);
+	Token getById(String id);
 
-	public Token getByUserName(String userName);
+	Token getByUserName(String userName);
 }

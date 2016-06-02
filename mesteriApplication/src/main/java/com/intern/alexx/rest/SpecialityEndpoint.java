@@ -7,8 +7,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.Path; 
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -92,27 +91,5 @@ public class SpecialityEndpoint {
 		return Response.ok(Status.OK).entity(specialities).build();
 	}
 
-	@POST
-	@Path("/mester/Id={idMester}")
-	@ApiOperation(value = "Add speciality to mester", notes = "Add speciality.", response = Speciality.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Speciality was successfully add.", response = Speciality.class),
-			@ApiResponse(code = 404, message = "Speciality was not found."),
-			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response addOneSpeciality(@PathParam("idMester")String idMester, String specialityName) {
-		specialityService.insertMesterSpeciality(specialityName, idMester);
-		return Response.ok().build();
-	}
 
-	@DELETE
-	@Path("/mester/Id={idMester}")
-	@ApiOperation(value = "Delete a mester speciality", notes = "Delete speciality", response = Speciality.class)
-	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Speciality was successfuly deleted.", response = Speciality.class),
-			@ApiResponse(code = 500, message = "Internal server error.") })
-	public Response delete(String specialityName,@PathParam("idMester") String idMester) {
-		specialityService.deleteOneMesterSpeciality(specialityName, idMester);
-		return Response.ok(200).build();
-	}
- 
 }

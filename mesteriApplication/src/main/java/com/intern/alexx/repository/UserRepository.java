@@ -7,26 +7,26 @@ import com.intern.alexx.model.User;
 
 public interface UserRepository {
 
-	public User getUserByCredentials(String userName, String password);
+	User getUserByCredentials(String userName, String password);
 
-	public User getUserByUserName(String userName);
-	
-	public User getUserById(String id);
-	
-	public User getUserByNameAndEmail(String userName , String email);
+	User getUserByUserName(String userName);
 
-	public void insertUser(User user);
+	User getUserById(String id);
 
-	public void updateUser(User user);
+	User getUserByNameAndEmail(String userName, String email);
 
-	public void updateUserDetails(User user);
-	
-	public void updateUserEmail(User user);
+	void insertUser(User user);
 
-	public void deleteUser(String id);
+	void updateUser(User user);
 
-	public String getUserRole(int roleId);
-	
-	public List<User> getAllUsers() throws SQLException;
+	void updateUserDetails(User user);
+
+	void updateUserEmail(User user);
+
+	void deleteUser(String id);
+
+	String getUserRole(int roleId);
+
+	List<User> getAllUsers() throws SQLException;
 
 }

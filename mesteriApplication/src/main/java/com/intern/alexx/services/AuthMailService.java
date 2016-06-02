@@ -7,8 +7,8 @@ import com.intern.alexx.model.User;
 
 @Component
 public interface AuthMailService {
- 
-	public void AuthMailContent(User user, Token token);
-	
-	public void ResetPasswordMail(User user, Token token);	
+
+	void AuthMailContent(User user, Token token);
+
+	void ResetPasswordMail(User user, Token token);
 }

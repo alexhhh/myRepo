@@ -19,5 +19,5 @@ public interface ContactRepository {
 
 	Contact getByIdMester(String idMester);
 
-	public String getIDByIdMester(String idMester);
+	String getIDByIdMester(String idMester);
 }

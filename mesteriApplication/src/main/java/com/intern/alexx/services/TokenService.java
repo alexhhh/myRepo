@@ -4,14 +4,12 @@ import com.intern.alexx.model.Token;
 
 public interface TokenService {
 
-	
-	public Token insert(String userName);
-	
-	public void delete(String id);
-	
-	public Token getById(String id);
-	
-	public Token getByUserName(String userName);
-	
-	
+	Token insert(String userName);
+
+	void delete(String id);
+
+	Token getById(String id);
+
+	Token getByUserName(String userName);
+
 }

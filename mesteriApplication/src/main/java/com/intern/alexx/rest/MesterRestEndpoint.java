@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -23,6 +24,7 @@ import com.intern.alexx.model.AreaSearchCriteria;
 import com.intern.alexx.model.Mester;
 import com.intern.alexx.model.MesterSearchCriteria;
 import com.intern.alexx.model.MyPage;
+import com.intern.alexx.model.Speciality;
 import com.intern.alexx.services.MesterService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -104,4 +106,28 @@ public class MesterRestEndpoint {
 		List<Mester> mesterList = mesterService.searchMesterByArea(areaSearchCriteria);
 		return Response.ok(Status.OK).entity(mesterList).build();
 	}
+	
+	@POST
+	@Path("/Id={idMester}")
+	@ApiOperation(value = "Add speciality to mester", notes = "Add speciality.", response = Speciality.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Speciality was successfully add.", response = Speciality.class),
+			@ApiResponse(code = 404, message = "Speciality was not found."),
+			@ApiResponse(code = 500, message = "Internal server error.") })
+	public Response addOneSpeciality(@PathParam("idMester")String idMester, String specialityName) {
+		mesterService.insertMesterSpeciality(specialityName, idMester);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("/Id={idMester}")
+	@ApiOperation(value = "Delete a mester speciality", notes = "Delete speciality", response = Speciality.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Speciality was successfuly deleted.", response = Speciality.class),
+			@ApiResponse(code = 500, message = "Internal server error.") })
+	public Response delete(String specialityName,@PathParam("idMester") String idMester) {
+		mesterService.deleteOneMesterSpeciality(specialityName, idMester);
+		return Response.ok(200).build();
+	}
+ 
 }

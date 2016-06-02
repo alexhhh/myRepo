@@ -6,16 +6,15 @@ import com.intern.alexx.model.Location;
 
 public interface LocationService {
 
-	 void insert(Location location);
+	void insert(Location location);
 
-	 void update(Location location);
+	void update(Location location);
 
-	 void delete(String mesterId );
+	void delete(String mesterId);
 
-	 Location getById (String mesterId);
-	
-	 List<Location> getAllLocations() ;
+	Location getById(String mesterId);
 
-	 List<Location> getLocationsByIds(List<String> ids);
+	List<Location> getAllLocations();
+
+	List<Location> getLocationsByIds(List<String> ids);
 }
-

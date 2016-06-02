@@ -37,17 +37,14 @@ public class ContactRepositoryImp implements ContactRepository {
 		template.update(sql, idMester);
 	}
 
-	public Contact getByIdMester(String idMester) {
-
+	public Contact getByIdMester(String idMester) { 
 		String sql = "SELECT * FROM contact WHERE contact.id_mester = ?";
 		Contact contact = new Contact();
 		template.query(sql, new Object[] {idMester}, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				getContactFromDB(contact, rs);
 			}
-		});
-
-		return contact;
+		}); return contact;
 	}
 
 	public String getIDByIdMester(String idMester) {
@@ -55,8 +52,7 @@ public class ContactRepositoryImp implements ContactRepository {
 		return	template.queryForObject(sql, new Object[] {idMester}, String.class);
 
 	}
-	
-	
+ 
 	private Contact getContactFromDB(Contact contact, ResultSet resultSet) throws SQLException {
 		contact.setId(resultSet.getString("id"));
 		contact.setIdMester(resultSet.getString("id_mester"));

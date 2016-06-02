@@ -8,24 +8,28 @@ import com.intern.alexx.model.User;
 
 public interface UserService {
 
-	public User getUser(String userName, String password);
+	User getUserById(String id);
 
-	public User getUserByName(String userName);
+	User getUserByName(String userName);
 
-	public void insertUser(User user);
-	
-	public void deleteUser(String userId, int role);
-	
-	public void updateUserDetails(User user);
+	String getUserRole(int roleId);
 
-	public String getUserRole(int roleId);
+	User getUser(String userName, String password);
 
-	public void activateUser(String tokenId);
-	
-	public List<User> getAllUsers()throws SQLException ;
+	void insertUser(User user);
 
-	public void resetPasswordRequest(String userName, String email);
+	void updateUserDetails(User user);
 
-	public void updatePassword(Token token);
+	void updateUserEmail(User user);
+
+	void deleteUser(String userId, int role);
+
+	void activateUser(String tokenId);
+
+	List<User> getAllUsers() throws SQLException;
+
+	void resetPasswordRequest(String userName, String email);
+
+	void updatePassword(Token token);
 
 }

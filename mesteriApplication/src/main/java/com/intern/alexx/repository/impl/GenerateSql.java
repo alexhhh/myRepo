@@ -100,7 +100,5 @@ public class GenerateSql {
 			return from = from.append(join).append(on).append(where) ;
 		 
 	}
-
-	
-
+ 
 }

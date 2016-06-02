@@ -13,19 +13,20 @@ public interface ReviewMesterService {
 	void updateReviewMester(ReviewMester reviewMester);
 
 	void deleteReviewMester(String idReview);
-	
-	public ReviewMester getById(String idReview);
-	
-	public float getMesterRating(String idMester);
-	
-	public MyPage<ReviewMester> getReviewMasterPage(String idMester, Integer pageSize,Integer pageNumber) throws SQLException;
 
-	public MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize,Integer pageNumber) throws SQLException;
-	
-	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)throws SQLException ;
-	
-	public MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+	ReviewMester getById(String idReview);
 
-	public MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
+	float getMesterRating(String idMester);
+
+	MyPage<ReviewMester> getReviewMasterPage(String idMester, Integer pageSize, Integer pageNumber) throws SQLException;
+
+	MyPage<ReviewMester> getReviewAllMasterPage(Integer pageSize, Integer pageNumber) throws SQLException;
+
+	MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
+			throws SQLException;
+
+	MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+
+	MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
 			throws SQLException;
 }

@@ -26,23 +26,6 @@ public class TokenRepositoryImp implements TokenRepository {
 		this.template = template;
 	}
 
-	@Override
-	public Token insert(String  userName  ) {
-		Token token = setToken( userName);
-		String sql = "INSERT INTO token (ID, USER_NAME, EXP_DATE) " + "VALUES (?,?,? )";
-		template.update(sql, new Object[] { token.getId(), token.getUserName(), token.getExpirationDate() });
-		LOGGER.info("---token---" + token.toString());
-		return token;
-	}
-
-	@Override
-	public void delete(String id) {
-		String sql = "DELETE FROM token  WHERE id = ? ";
-		template.update(sql, id);
-
-	}
-
-	@Override
 	public Token getById(String id) {
 		Token token = new Token();
 		String sql = "SELECT * FROM token WHERE id = ? ";
@@ -62,9 +45,22 @@ public class TokenRepositoryImp implements TokenRepository {
 				getTokenFromDB(token, rs);
 			}
 		});
-		return null;
+		return token;
+	}
+	
+	public Token insert(String  userName  ) {
+		Token token = setToken( userName);
+		String sql = "INSERT INTO token (ID, USER_NAME, EXP_DATE) " + "VALUES (?,?,? )";
+		template.update(sql, new Object[] { token.getId(), token.getUserName(), token.getExpirationDate() });
+		LOGGER.info("---token---" + token.toString());
+		return token;
 	}
 
+	public void delete(String id) {
+		String sql = "DELETE FROM token  WHERE id = ? ";
+		template.update(sql, id);
+	}
+ 
 	private Token getTokenFromDB(Token token, ResultSet resultSet) throws SQLException {
 		token.setId(resultSet.getString("id"));
 		token.setUserName(resultSet.getString("user_name"));

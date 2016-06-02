@@ -21,22 +21,22 @@ public interface ReviewMesterRepository {
 
 	void delete(String idReview);
 
-	public ReviewMester getById(String idReview);
+	ReviewMester getById(String idReview);
 
-	public int getAvgRatingForMester(String idMester);
+	int getAvgRatingForMester(String idMester);
 
-	public int getAvgPriceForMester(String idMester);
+	int getAvgPriceForMester(String idMester);
 
-	public MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+	MyPage<ReviewMester> getAllReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
 
-	public MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize, Integer pageNumber)
+	MyPage<ReviewMester> getAllReviewForMester(String idMester, Integer pageSize, Integer pageNumber)
 			throws SQLException;
 
-	public MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
+	MyPage<ReviewMester> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber)
 			throws SQLException;
 
-	public MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
+	MyPage<FullReview> getAllFullReviewsPage(Integer pageSize, Integer pageNumber) throws SQLException;
 
-	public MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
+	MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber)
 			throws SQLException;
 }

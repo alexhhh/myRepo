@@ -24,9 +24,7 @@ public class ClientRepositoryImp implements ClientRepository{
 	public void setJdbcTemplate(JdbcTemplate template) {
 		this.template = template;
 	}
-	
-	
-	@Override
+  
 	public Client getClientById(String clientId) {
 		Client client = new Client();
 		String sql = "SELECT * FROM client WHERE id = ? ";
@@ -38,9 +36,7 @@ public class ClientRepositoryImp implements ClientRepository{
 		});
 		return client;		 
 	}
-
-
-
+ 
 	@Override
 	public void insertClient(Client client) {
 		String sql = "INSERT INTO client (ID, FIRST_NAME, LAST_NAME, USER_ID) " + "VALUES (?,?,?,?)";

@@ -20,8 +20,8 @@ public interface MesterRepository {
 	void insert(Mester mester);
 
 	void update(Mester mester);
-	
-	void updateAvg(Mester mester);  
+
+	void updateAvg(Mester mester);
 
 	void delete(String mesterId);
 
@@ -29,11 +29,11 @@ public interface MesterRepository {
 
 	MyPage<Mester> prepareSearchForMester(MesterSearchCriteria searchCriteria) throws SQLException;
 
-	void insertIntoMesterHasSpeciality(String mesterId,String specialityId);
+	void insertIntoMesterHasSpeciality(String mesterId, String specialityId);
 
-	void deleteFromMesterHasSpeciality(String mesterId );
-	
-	void deleteOneFromMesterHasSpeciality(String mesterId,String specialityId);
+	void deleteFromMesterHasSpeciality(String mesterId);
+
+	void deleteOneFromMesterHasSpeciality(String mesterId, String specialityId);
 
 	List<Mester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException;
 }
