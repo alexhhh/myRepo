@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'Hello, ' + ${specs} + '!'" />
+    
+    	<table>
+		<tr>
+			<th>ID</th>
+			 
+			<th>Spec Name</th>
+		</tr>
+		<tr th:each="speciality : ${specs}">
+			<td th:text="${speciality.id}">yes</td>
+			<td th:text="${speciality.specialityName}">no</td>
+		 
+		</tr>
+		</table >
+</body>
+</html>
