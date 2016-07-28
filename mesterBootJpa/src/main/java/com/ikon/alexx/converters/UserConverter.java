@@ -26,7 +26,8 @@ public class UserConverter extends BaseConverter<UserDTO, User>  {
 		pojo.setUserName(entity.getUserName());
 		pojo.setPassword(entity.getPassword());
 		pojo.setEmail(entity.getEmail());
-		pojo.setIsEnable(entity.getIsEnable());
+		pojo.setIsEnable(entity.getIsEnable()); 
+		pojo.setRoleId(entity.getRole().getId());
 		return pojo;
 	}
 

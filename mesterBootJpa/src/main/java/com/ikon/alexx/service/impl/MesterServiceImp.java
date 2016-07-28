@@ -38,7 +38,6 @@ public class MesterServiceImp implements MesterService {
 	@Override
 	public void insertMester(MesterDTO mester) {
 		//mesterRepo.save(mester);
-
 		 mesterRepo.save(mesterConv.toEntity(mester));
 	}
 

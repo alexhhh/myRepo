@@ -18,7 +18,7 @@ public class Contact {
 	private String telNr;
 	private String email;
 	private String site;
-
+	
 	@OneToOne
 	private Mester mester;
 

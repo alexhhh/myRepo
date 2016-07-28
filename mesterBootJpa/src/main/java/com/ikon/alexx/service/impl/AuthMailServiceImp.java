@@ -1,10 +1,13 @@
 package com.ikon.alexx.service.impl;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import com.ikon.alexx.model.TokenDTO;
@@ -16,48 +19,39 @@ public class AuthMailServiceImp implements AuthMailService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthMailServiceImp.class);
 
-	
-	// de inlocuit aci cu   private JavaMailSender javaMailSender;  si modificat functiile
-	private MailSender mailSender;
-	private SimpleMailMessage templateMessage;
+	 
+	@Autowired
+	private JavaMailSender  mailSender;
+	 
 
-	public void setMailSender(MailSender mailSender) {
-		this.mailSender = mailSender;
-	}
-
-	public void setTemplateMessage(SimpleMailMessage templateMessage) {
-		this.templateMessage = templateMessage;
-	}
-
-	public void AuthMailContent(UserDTO user, TokenDTO token) {
-		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-		msg.setTo(user.getEmail());
+	public void authMailContent(UserDTO user, TokenDTO token) throws MessagingException {	 
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper msg;
+		msg = new MimeMessageHelper(message, true);
 		msg.setSubject("Authentication");
+		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
 				+ "  please CLICK THE LINK BELOW to confirm your email and to finish the authentication. You have 10 days for confirmation.  "
-				+ "http://localhost/#/activateUser/" + token.getId() + ";");
+				+ "http://localhost/#/activateUser/" + token.getId() + ";" , true);
 		LOGGER.info("--Authentication Mail--" + msg.toString());
-		try {
-			this.mailSender.send(msg);
-		} catch (MailException ex) {
-			// simply log it and go on...
-			System.err.println(ex.getMessage());
-		}
+ 
+			mailSender.send(message);
+ 
 	}
 
-	public void ResetPasswordMail(UserDTO user, TokenDTO token) {
-		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-		msg.setTo(user.getEmail());
-		msg.setSubject("Reset password");
-		msg.setText("Dear user " + user.getUserName()
-				+ "  If you want to reset your password please CLICK THE LINK BELOW to confirm and finish this request. "
-				+ "http://localhost/#/resetPassword/" + token.getId() + ";");
-		LOGGER.info("--Reset password mail" + msg.toString());
-		try {
-			this.mailSender.send(msg);
-		} catch (MailException ex) {
-			// simply log it and go on...
-			System.err.println(ex.getMessage());
-		}
-	}
+//	public void resetPasswordMail(UserDTO user, TokenDTO token) {
+//		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
+//		msg.setTo(user.getEmail());
+//		msg.setSubject("Reset password");
+//		msg.setText("Dear user " + user.getUserName()
+//				+ "  If you want to reset your password please CLICK THE LINK BELOW to confirm and finish this request. "
+//				+ "http://localhost/#/resetPassword/" + token.getId() + ";");
+//		LOGGER.info("--Reset password mail" + msg.toString());
+//		try {
+//			this.mailSender.send(msg);
+//		} catch (MailException ex) {
+//			// simply log it and go on...
+//			System.err.println(ex.getMessage());
+//		}
+//	}
 }

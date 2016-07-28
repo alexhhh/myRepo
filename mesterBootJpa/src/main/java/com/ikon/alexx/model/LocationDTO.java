@@ -6,6 +6,7 @@ public class LocationDTO {
 	private String location;
 	private double latitude;
 	private double longitude;
+	private String mesterId;
 
 	public String getId() {
 		return id;
@@ -39,10 +40,20 @@ public class LocationDTO {
 		this.longitude = longitude;
 	}
 
+	public String getMesterId() {
+		return mesterId;
+	}
+
+	public void setMesterId(String mesterId) {
+		this.mesterId = mesterId;
+	}
+
 	@Override
 	public String toString() {
-		return "Location [id=" + id + ", location=" + location + ", latitude=" + latitude + ", longitude=" + longitude
-				+ "]";
+		return "LocationDTO [id=" + id + ", location=" + location + ", latitude=" + latitude + ", longitude="
+				+ longitude + ", mesterId=" + mesterId + "]";
 	}
+
+ 
 
 }

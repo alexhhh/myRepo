@@ -4,24 +4,28 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
+import com.ikon.alexx.converters.UserConverter;
+import com.ikon.alexx.encryption.Encryption;
+import com.ikon.alexx.entity.Roles;
+import com.ikon.alexx.entity.User;
 import com.ikon.alexx.model.ClientDTO;
 import com.ikon.alexx.model.MesterDTO;
 import com.ikon.alexx.model.TokenDTO;
 import com.ikon.alexx.model.UserDTO;
-import com.ikon.alexx.converters.UserConverter;
-import com.ikon.alexx.encryption.Encryption;
-import com.ikon.alexx.entity.User;
 import com.ikon.alexx.repository.RoleRepository;
 import com.ikon.alexx.repository.UserRepository;
 import com.ikon.alexx.service.AuthMailService;
 import com.ikon.alexx.service.ClientService;
 import com.ikon.alexx.service.MesterService;
 import com.ikon.alexx.service.TokenService;
-import com.ikon.alexx.service.UserService;
+import com.ikon.alexx.service.UserService; 
 
 @Transactional
 @Component
@@ -58,7 +62,10 @@ public class UserServiceImp implements UserService{
 
 	@Override
 	public UserDTO getUserByName(String userName) {		 
-		return userConv.fromEntity(userRepo.findByUserName(userName));
+		User user = userRepo.findByUserName(userName);
+		if  (user  != null){return userConv.fromEntity(user);}
+		else return null;
+		
 	}
 
 	@Override
@@ -68,21 +75,25 @@ public class UserServiceImp implements UserService{
 
 	@Override
 	public UserDTO getUser(String userName, String password) { 
-		return userConv.fromEntity(userRepo.findByUserNameAndPassword(userName, password));
+		return userConv.fromEntity(userRepo.findByUserNameAndPassword(userName, encryption.encrypt(password) ));
 	}
 
 	@Override
-	public void insertUser(UserDTO user) {
-		user.setPassword(encryption.encrypt(user.getPassword())); 
-		userRepo.save(userConv.toEntity(user));
-		TokenDTO token = tokenService.insert(user.getUserName());
-		authMailService.AuthMailContent(user, token);
-		if (getUserRole(user.getRoleId()) == "ROLE_MESTER") { 
-			mesterService.insertMester(setMester(user));
-		} else if (getUserRole(user.getRoleId()) == "ROLE_CLIENT") {
-			clientService.insertClient(setClient(user) );
+	public void insertUser(UserDTO userDTO) throws MessagingException {
+		userDTO.setPassword(encryption.encrypt(userDTO.getPassword())); 
+		User user = userConv.toEntity(userDTO);
+		user.setRole(roleRepo.getOne(userDTO.getRoleId()));		
+		user = userRepo.save(user);		
+		Assert.notNull(user.getId(), "Id-ul este null.");
+		userDTO.setId(user.getId());
+		TokenDTO token = tokenService.insert(userDTO.getUserName());
+		authMailService.authMailContent(userDTO, token);
+		if (Roles.ROLE_MESTER.equals(user.getRole().getRole())) { 
+			mesterService.insertMester(setMester(userDTO));
+		} else if (Roles.ROLE_CLIENT.equals(userDTO.getRoleId())) {
 		}
-		userRepo.save(userConv.toEntity(user));
+			clientService.insertClient(setClient(userDTO) );
+		 
 	}
 
 	@Override
@@ -112,7 +123,7 @@ public class UserServiceImp implements UserService{
 		if (currentDate.before(token.getExpirationDate())) {
 			User user = userRepo.findByUserName(token.getUserName());
 			user.setIsEnable(1);
-			 userRepo.save(user); 
+			userRepo.save(user); 
 		}	
 	}
 
@@ -125,7 +136,7 @@ public class UserServiceImp implements UserService{
 	public void resetPasswordRequest(String userName, String email) {
 		UserDTO user = userConv.fromEntity(userRepo.findByUserNameAndEmail(userName, email));
 		if(user.getId()!= null){  
-		 	authMailService.ResetPasswordMail(user, tokenService.insert(user.getUserName()));
+		 //	authMailService.ResetPasswordMail(user, tokenService.insert(user.getUserName()));
 		}
 		}
 

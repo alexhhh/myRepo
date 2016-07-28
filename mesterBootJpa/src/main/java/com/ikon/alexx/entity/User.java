@@ -1,8 +1,7 @@
 package com.ikon.alexx.entity;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Entity; 
 import javax.persistence.GeneratedValue; 
 import javax.persistence.Id; 
 import javax.persistence.OneToOne;
@@ -20,12 +19,12 @@ public class User {
 	private String id;
  
 	
-	private String userName;
+	private String userName; 
 	private String password;
 	private int isEnable;
 	private String email;
 	
-	@OneToOne(fetch = FetchType.EAGER,  cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Role role ;
 	
  

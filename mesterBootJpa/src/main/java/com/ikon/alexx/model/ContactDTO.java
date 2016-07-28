@@ -7,6 +7,8 @@ public class ContactDTO {
 	private String email;
 	private String site;
 
+	 private String  mesterId;
+	
 	public String getId() {
 		return id;
 	}
@@ -37,6 +39,14 @@ public class ContactDTO {
 
 	public void setSite(String site) {
 		this.site = site;
+	}
+
+	public String getMesterId() {
+		return mesterId;
+	}
+
+	public void setMesterId(String mesterId) {
+		this.mesterId = mesterId;
 	}
 
 	@Override

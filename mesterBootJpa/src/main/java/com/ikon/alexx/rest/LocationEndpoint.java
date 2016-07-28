@@ -48,6 +48,7 @@ public class LocationEndpoint {
 		List<LocationDTO> locations = locationService.getAllLocations();
 		return Response.ok(Status.OK).entity(locations).build();
 	}
+	
 	@POST
 	@Path("/new")
 	@ApiOperation(value = "Add locations", notes = "Add locations.", response = LocationDTO.class)

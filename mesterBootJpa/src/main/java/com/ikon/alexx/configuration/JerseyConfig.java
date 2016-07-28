@@ -2,6 +2,7 @@ package com.ikon.alexx.configuration;
 
 import javax.ws.rs.ApplicationPath;
 
+ 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;  
  
@@ -16,8 +17,8 @@ public JerseyConfig() {
 		final String swaggerJaxrsListingPackage = "com.wordnik.swagger.jaxrs.listing";
 		 
 		packages(restEndpointsPackge, swaggerJaxrsJsonPackage, swaggerJaxrsListingPackage, jacksonPackage);		                
- 	  //  register(MultiPartFeature.class);	
- 	    register(CORSResponseFilter.class);
+		register(CORSResponseFilter.class);
+ 	 //  register(MultiPartFeature.class);	
 }
 
 //private void configureSwagger() {

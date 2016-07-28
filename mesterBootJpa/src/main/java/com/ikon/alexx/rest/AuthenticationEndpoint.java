@@ -1,13 +1,17 @@
 package com.ikon.alexx.rest;
 
+import java.nio.charset.Charset;
 //import java.nio.charset.Charset;
 import java.sql.SQLException;
-import java.util.HashMap; 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
- 
+import javax.mail.MessagingException;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST; 
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -50,9 +54,8 @@ public class AuthenticationEndpoint {
 			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response LogIn(UserDTO user) throws SQLException {
-		String userToken ="un token pana bag securitiy"; //encodeCredentialsInBase64(user.getUserName(), user.getPassword());
-		user = new UserDTO();
-	     	userService.getUser(user.getUserName(), user.getPassword());
+		String userToken = encodeCredentialsInBase64(user.getUserName(), user.getPassword());
+		user = userService.getUser(user.getUserName(), user.getPassword());
 		String userRole = userService.getUserRole(user.getRoleId());
 		Map<String, Object> map = new HashMap<>();
 		map.put("token", userToken);
@@ -71,89 +74,89 @@ public class AuthenticationEndpoint {
 		return Response.ok().build();
 	}
 
-//	@POST
-//	@Path("/signup")
-//	@ApiOperation(value = "Return OK", notes = "Return OK if user is created", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "User was successfuly created ", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"),
-//			@ApiResponse(code = 404, message = "User was not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response AddUser(User user) {
-//		userService.insertUser(user);
-//		return Response.ok().build();
-//	}
-//
-//	@GET
-//	@Path("/query")
-//	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is logged in.", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response checkUser(@QueryParam("userName") String userName) {
-//		User dbUser = userService.getUserByName(userName);
-//		return Response.ok().entity(dbUser).build();
-//	}
-//	
-//	
-//	@GET
-//	@Path("/all")
-//	@ApiOperation(value = "Return OK", notes = "Return all users", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "Get all users", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"),
-//			@ApiResponse(code = 404, message = "User not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response allUsers() throws SQLException {
-//		List<User> users = userService.getAllUsers();
-//		LOGGER.info("---user-up--" + users.toString());
-//		return Response.ok().entity(users).build();
-//	}
-//	
-//	@GET
-//	@Path("/activate/query")
-//	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is logged in.", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response checkUserToken(@QueryParam("tokenId") String tokenId) {
-//		userService.activateUser(tokenId);
-//		return Response.ok().build();
-//	}
-//	
-//	@DELETE
-//	@Path("/query")
-//	@ApiOperation(value = "Return OK", notes = "Return OK if user is deleted", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is deleted.", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"), 
-//			@ApiResponse(code = 404, message = "User not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response deleteUser(@QueryParam("idUser") String idUser, @QueryParam("roleId") int roleId) {
-//		 userService.deleteUser(idUser, roleId);
-//		return Response.ok().build();
-//	}
-//	
-//	
-//	@PUT
-//	@Path("/edit")
-//	@ApiOperation(value = "Edit user", notes = "Edit a user.")
-//	@ApiResponses(value = { 
-//			@ApiResponse(code = 201, message = "User was successfuly edited "),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response update(User user) {
-//		userService.updateUserDetails(user);
-//		return Response.ok().entity(user).build();
-//	}
-//	
-//	@GET
-//	@Path("/reset/query")
-//	@ApiOperation(value = "Return OK", notes = "Return OK if the email is sent", response = User.class)
-//	@ApiResponses(value = { @ApiResponse(code = 200, message = "The mail is sent.", response = User.class),
-//			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response resetPasswordRequest(@QueryParam("userName") String userName, @QueryParam("email") String email) {
-//		userService.resetPasswordRequest(userName, email);
-//		return Response.ok().build();
-//	}
-//	
+	@POST
+	@Path("/signup")
+	@ApiOperation(value = "Return OK", notes = "Return OK if user is created", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User was successfuly created ", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"),
+			@ApiResponse(code = 404, message = "User was not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response AddUser(UserDTO user) throws MessagingException {
+		userService.insertUser(user);
+		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is logged in.", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response checkUser(@QueryParam("userName") String userName) {
+		UserDTO dbUser = userService.getUserByName(userName);
+		return Response.ok().entity(dbUser).build();
+	}
+	
+	
+	@GET
+	@Path("/all")
+	@ApiOperation(value = "Return OK", notes = "Return all users", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Get all users", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"),
+			@ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response allUsers() throws SQLException {
+		List<UserDTO> users = userService.getAllUsers();
+		LOGGER.info("---user-up--" + users.toString());
+		return Response.ok().entity(users).build();
+	}
+	
+	@GET
+	@Path("/activate/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if user is logged", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is logged in.", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response checkUserToken(@QueryParam("tokenId") String tokenId) {
+		userService.activateUser(tokenId);
+		return Response.ok().build();
+	}
+	
+	@DELETE
+	@Path("/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if user is deleted", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "User is deleted.", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"), 
+			@ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response deleteUser(@QueryParam("idUser") String idUser, @QueryParam("roleId") String roleId) {
+		 userService.deleteUser(idUser, roleId);
+		return Response.ok().build();
+	}
+	
+	
+	@PUT
+	@Path("/edit")
+	@ApiOperation(value = "Edit user", notes = "Edit a user.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "User was successfuly edited "),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response update(UserDTO user) {
+		userService.updateUserDetails(user);
+		return Response.ok().entity(user).build();
+	}
+	
+	@GET
+	@Path("/reset/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if the email is sent", response = UserDTO.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "The mail is sent.", response = UserDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response resetPasswordRequest(@QueryParam("userName") String userName, @QueryParam("email") String email) {
+		userService.resetPasswordRequest(userName, email);
+		return Response.ok().build();
+	}
+	
 	@GET
 	@Path("/token/query")
 	@ApiOperation(value = "Return OK", notes = "Return OK if the token is find", response = TokenDTO.class)
@@ -165,24 +168,24 @@ public class AuthenticationEndpoint {
 		LOGGER.info(tokenId);
 		return Response.ok().entity(token).build();
 	}
-//	
-//	@PUT
-//	@Path("/reset")
-//	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
-//	@ApiResponses(value = { 
-//			@ApiResponse(code = 201, message = "Password was successfuly edited "),
-//			@ApiResponse(code = 500, message = "Internal server error") })
-//	public Response updatePassword(Token token) {
-//		userService.updatePassword(token);
-//		return Response.ok().build();
-//	}
-//	  
-//	
-//	private String encodeCredentialsInBase64 (String username , String password){
-//		String encodedUser = username + ":" + password;
-//		byte[] byteUserToken = org.springframework.security.crypto.codec.Base64
-//				.encode(encodedUser.getBytes(Charset.forName("UTF-8")));
-//		return  "Basic " + new String(byteUserToken, Charset.forName("UTF-8"));
-//	}
+	
+	@PUT
+	@Path("/reset")
+	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "Password was successfuly edited "),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response updatePassword(TokenDTO token) {
+		userService.updatePassword(token);
+		return Response.ok().build();
+	}
+	  
+	
+	private String encodeCredentialsInBase64 (String username , String password){
+		String encodedUser = username + ":" + password;
+		byte[] byteUserToken = org.springframework.security.crypto.codec.Base64
+				.encode(encodedUser.getBytes(Charset.forName("UTF-8")));
+		return  "Basic " + new String(byteUserToken, Charset.forName("UTF-8"));
+	}
 	
 }

@@ -23,6 +23,7 @@ public class ClientConverter extends BaseConverter<ClientDTO, Client>{
 		pojo.setId(entity.getId());
 		pojo.setFirstName(entity.getFirstName());
 		pojo.setLastName(entity.getLastName());
+		pojo.setUserId(entity.getUser().getId());
 		return pojo;
 	}
 
