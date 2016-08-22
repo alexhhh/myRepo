@@ -10,8 +10,8 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-public class RoutingConsumer {
-	private static final String EXCHANGE_NAME = "direct_logs";
+public class App7Consumer {
+	private static final String EXCHANGE_TOPIC_NAME = "news";
 
 	public static void main(String[] argv) throws Exception {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -19,24 +19,25 @@ public class RoutingConsumer {
 		Connection connection = factory.newConnection();
 		Channel channel = connection.createChannel();
 
-		channel.exchangeDeclare(EXCHANGE_NAME, "direct");
+		channel.exchangeDeclare(EXCHANGE_TOPIC_NAME, "topic");
 		String queueName = channel.queueDeclare().getQueue();
 
-		if (argv.length < 1) {
-			System.err.println("Usage: ReceiveLogsDirect [info] [warning] [error]");
-			System.exit(1);
-		}
+//		if (argv.length < 1) {
+//			System.err.println("Usage: ReceiveNews  main.location.source.type");
+//			System.exit(1);
+//		}
 
-		for (String severity : argv) {
-			channel.queueBind(queueName, EXCHANGE_NAME, severity);
-		}
+		for (String bindingKey : argv) {
+			channel.queueBind(queueName, EXCHANGE_TOPIC_NAME, bindingKey);
+	}
 		System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
 		Consumer consumer = new DefaultConsumer(channel) {
 			public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
 					byte[] body) throws IOException {
 				String message = new String(body, "UTF-8");
-				System.out.println(" [x] Received '" + envelope.getRoutingKey() + "': '" + message + "'");
+				System.out.println(
+						" [x] Received on " + queueName + " '" + envelope.getRoutingKey() + "': '" + message + "'");
 			}
 		};
 		channel.basicConsume(queueName, true, consumer);
