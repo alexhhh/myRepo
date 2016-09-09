@@ -28,7 +28,8 @@ public class MesterConverter  extends BaseConverter<MesterDTO, Mester>{
 		pojo.setLastName(entity.getLastName());
 		pojo.setDescription(entity.getDescription());
 		pojo.setAvgPrice(entity.getAvgPrice());
-		pojo.setAvgRating(entity.getAvgRating());		 		
+		pojo.setAvgRating(entity.getAvgRating());	
+		pojo.setUserId(entity.getUser().getId());
 		return pojo;
 	}
 

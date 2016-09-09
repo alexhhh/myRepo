@@ -94,7 +94,7 @@ public class LocationEndpoint {
 			@ApiResponse(code = 404, message = "Mester location not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response getMesterSpecialities(@QueryParam("mesterId") String mesterId) throws SQLException {
-		LocationDTO location = locationService.getById(mesterId);
+		LocationDTO location = locationService.findByMesterId(mesterId);
 		return Response.ok(Status.OK).entity(location).build();
 	}
 	

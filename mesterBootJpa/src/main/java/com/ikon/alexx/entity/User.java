@@ -1,10 +1,9 @@
 package com.ikon.alexx.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity; 
-import javax.persistence.GeneratedValue; 
-import javax.persistence.Id; 
-import javax.persistence.OneToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
  
@@ -24,12 +23,13 @@ public class User {
 	private int isEnable;
 	private String email;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@ManyToOne //@OneToOne(cascade=CascadeType.ALL)  
 	private Role role ;
 	
  
 	public String getId() {
-		return id;
+		return id; 
 	}
 	public void setId(String id) {
 		this.id = id;

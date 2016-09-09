@@ -3,7 +3,7 @@ package com.ikon.alexx.model;
 public class MesterDTO {
 
 	private String id;
-	private String mesterUserId;
+	private String userId;
 	private String firstName;
 	private String lastName;
 	private String description;
@@ -21,12 +21,12 @@ public class MesterDTO {
 		this.id = id;
 	}
 
-	public String getMesterUserId() {
-		return mesterUserId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setMesterUserId(String mesterUserId) {
-		this.mesterUserId = mesterUserId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstName() {
@@ -71,7 +71,7 @@ public class MesterDTO {
 
 	@Override
 	public String toString() {
-		return "Mester [id=" + id + ", mesterUserId=" + mesterUserId + ", firstName=" + firstName + ", lastName="
+		return "Mester [id=" + id + ", userId=" + userId + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", description=" + description + ", avgPrice=" + avgPrice + ", avgRating=" + avgRating
 				+ " ]";
 	}

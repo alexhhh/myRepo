@@ -9,5 +9,5 @@ public interface AuthMailService {
 
 	void authMailContent(UserDTO user, TokenDTO token) throws MessagingException;
 
-	// void resetPasswordMail(UserDTO user, TokenDTO token);
+	void resetPasswordMail(UserDTO user, TokenDTO token) throws MessagingException;
 }

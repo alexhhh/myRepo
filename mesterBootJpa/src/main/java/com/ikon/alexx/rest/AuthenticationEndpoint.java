@@ -129,8 +129,8 @@ public class AuthenticationEndpoint {
 			@ApiResponse(code = 401, message = "Not authorized"), 
 			@ApiResponse(code = 404, message = "User not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response deleteUser(@QueryParam("idUser") String idUser, @QueryParam("roleId") String roleId) {
-		 userService.deleteUser(idUser, roleId);
+	public Response deleteUser(@QueryParam("idUser") String idUser ) {
+		 userService.deleteUser(idUser);
 		return Response.ok().build();
 	}
 	
@@ -146,13 +146,25 @@ public class AuthenticationEndpoint {
 		return Response.ok().entity(user).build();
 	}
 	
+	@PUT
+	@Path("/reset")
+	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "Password was successfuly edited "),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response updatePassword(TokenDTO token) {
+		userService.updatePassword(token);
+		return Response.ok().build();
+	}
+	
+	
 	@GET
 	@Path("/reset/query")
 	@ApiOperation(value = "Return OK", notes = "Return OK if the email is sent", response = UserDTO.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "The mail is sent.", response = UserDTO.class),
 			@ApiResponse(code = 401, message = "Not authorized"), @ApiResponse(code = 404, message = "User not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response resetPasswordRequest(@QueryParam("userName") String userName, @QueryParam("email") String email) {
+	public Response resetPasswordRequest(@QueryParam("userName") String userName, @QueryParam("email") String email) throws MessagingException {
 		userService.resetPasswordRequest(userName, email);
 		return Response.ok().build();
 	}
@@ -168,18 +180,6 @@ public class AuthenticationEndpoint {
 		LOGGER.info(tokenId);
 		return Response.ok().entity(token).build();
 	}
-	
-	@PUT
-	@Path("/reset")
-	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "Password was successfuly edited "),
-			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response updatePassword(TokenDTO token) {
-		userService.updatePassword(token);
-		return Response.ok().build();
-	}
-	  
 	
 	private String encodeCredentialsInBase64 (String username , String password){
 		String encodedUser = username + ":" + password;

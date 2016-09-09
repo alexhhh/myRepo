@@ -3,7 +3,9 @@ package com.ikon.alexx.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Page;
+
+import com.ikon.alexx.model.MyPage; 
 
 public abstract class BaseConverter<D, E> implements Converter<D, E> {
 
@@ -27,15 +29,21 @@ public abstract class BaseConverter<D, E> implements Converter<D, E> {
 		return entities;
 	}
 	
-	public Page<D> fromEntitiesPage(Page<E> entitiesPage) {
+	public MyPage<D> fromEntitiesPage(Page<E> entitiesPage) {
+		MyPage<D> dtoPage = new MyPage<D>(); 
 		List<D> pojos = fromEntities(entitiesPage.getContent());
-		 
-		return (Page<D>) pojos;		
+		dtoPage.setContentPage(pojos);
+		dtoPage.setTotalResults((int) entitiesPage.getTotalElements()); 
+		dtoPage.setPageNumber(entitiesPage.getNumber());
+		dtoPage.setPageSize(entitiesPage.getSize());
+		return (MyPage<D>) dtoPage;		
 	}
 	
-	public Page<E> toEntitiesPage(Page<D> pojosPage) {
-		List<E> entitiesList =   toEntities(pojosPage.getContent());
-		 
-		return (Page<E>) entitiesList;		
+	public MyPage<E> toEntitiesPage(Page<D> pojosPage) {
+		MyPage<E> entityPage = new MyPage<E>();
+		List<E> entitiesList = toEntities(pojosPage.getContent());
+		entityPage.setContentPage(entitiesList);
+		// we don't have any pojoPages
+		return (MyPage<E>) entityPage;		
 	}
 }

@@ -19,12 +19,10 @@ public class AuthMailServiceImp implements AuthMailService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AuthMailServiceImp.class);
 
-	 
 	@Autowired
-	private JavaMailSender  mailSender;
-	 
+	private JavaMailSender mailSender;
 
-	public void authMailContent(UserDTO user, TokenDTO token) throws MessagingException {	 
+	public void authMailContent(UserDTO user, TokenDTO token) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper msg;
 		msg = new MimeMessageHelper(message, true);
@@ -32,26 +30,21 @@ public class AuthMailServiceImp implements AuthMailService {
 		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
 				+ "  please CLICK THE LINK BELOW to confirm your email and to finish the authentication. You have 10 days for confirmation.  "
-				+ "http://localhost/#/activateUser/" + token.getId() + ";" , true);
+				+ "http://localhost/#/activateUser/" + token.getId() + ";", true);
 		LOGGER.info("--Authentication Mail--" + msg.toString());
- 
-			mailSender.send(message);
- 
+		mailSender.send(message);
 	}
 
-//	public void resetPasswordMail(UserDTO user, TokenDTO token) {
-//		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-//		msg.setTo(user.getEmail());
-//		msg.setSubject("Reset password");
-//		msg.setText("Dear user " + user.getUserName()
-//				+ "  If you want to reset your password please CLICK THE LINK BELOW to confirm and finish this request. "
-//				+ "http://localhost/#/resetPassword/" + token.getId() + ";");
-//		LOGGER.info("--Reset password mail" + msg.toString());
-//		try {
-//			this.mailSender.send(msg);
-//		} catch (MailException ex) {
-//			// simply log it and go on...
-//			System.err.println(ex.getMessage());
-//		}
-//	}
+	public void resetPasswordMail(UserDTO user, TokenDTO token) throws MessagingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper msg;
+		msg = new MimeMessageHelper(message, true);
+		msg.setSubject("Reset password");
+		msg.setTo(user.getEmail());
+		msg.setText("Dear user " + user.getUserName()
+				+ "  If you want to reset your password please CLICK THE LINK BELOW to confirm and finish this request. "
+				+ "http://localhost/#/resetPassword/" + token.getId() + ";", true);
+		LOGGER.info("--Reset password mail" + msg.toString());
+		mailSender.send(message);
+	}
 }

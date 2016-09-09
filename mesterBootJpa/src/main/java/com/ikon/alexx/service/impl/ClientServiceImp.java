@@ -37,13 +37,20 @@ public class ClientServiceImp implements ClientService {
 	}
 
 	@Override
-	public void updateClient(ClientDTO client) {
-		clientRepo.save(clientConv.toEntity(client));
+	public void updateClient(ClientDTO clientDTO) {
+		Client client = clientConv.toEntity(clientDTO);
+		client.setUser(userRepo.findOne(clientDTO.getUserId()));
+		clientRepo.save(client);
 	}
 
 	@Override
 	public void deleteClient(String clientId) {
 		clientRepo.delete(clientId);
+	}
+
+	@Override
+	public ClientDTO getClientByUserId(String userId) {
+		return clientConv.fromEntity(clientRepo.findByUserId(userId));
 	}
 
 }

@@ -25,6 +25,7 @@ public class LocationConverter extends BaseConverter<LocationDTO, Location> {
 		pojo.setLatitude(entity.getLatitude());
 		pojo.setLongitude(entity.getLongitude());
 		pojo.setLocation(entity.getLocation()); 
+		pojo.setMesterId(entity.getMester().getId());
 		return pojo;
 	}
  

@@ -27,6 +27,8 @@ public class ReviewConverter  extends BaseConverter<ReviewDTO, Review> {
 		pojo.setPrice(entity.getPrice());
 		pojo.setRating(entity.getRating());
 		pojo.setFeedback(entity.getFeedback());
+		pojo.setClientId(entity.getClient().getId());
+		pojo.setMesterId(entity.getMester().getId());
 		return pojo;
 	}
 

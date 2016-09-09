@@ -12,7 +12,9 @@ public interface LocationService {
 
 	void delete(String mesterId);
 
-	LocationDTO getById(String mesterId);
+	LocationDTO getById(String id);
+	
+	LocationDTO findByMesterId(String mesterId);
 
 	List<LocationDTO> getAllLocations();
 

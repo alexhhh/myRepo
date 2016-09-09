@@ -1,8 +1,7 @@
 package com.ikon.alexx.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
+import com.ikon.alexx.model.FullReview;
+import com.ikon.alexx.model.MyPage;
 import com.ikon.alexx.model.ReviewDTO;
 
 public interface ReviewService {
@@ -17,14 +16,14 @@ public interface ReviewService {
 
 	// float getMesterRating(String idMester);
 
-	Page<ReviewDTO> getReviewMasterPage(String idMester, Pageable pageable);
+	MyPage<ReviewDTO> getReviewMasterPage(String idMester, Integer pageSize, Integer pageNumber);
 
-	Page<ReviewDTO> getReviewAllMasterPage(Pageable pageable);
+	MyPage<ReviewDTO> getReviewAllMasterPage(Integer pageSize, Integer pageNumber);
 
-	Page<ReviewDTO> getAllReviewFromClient(String idClient, Pageable pageable);
+	MyPage<ReviewDTO> getAllReviewFromClient(String idClient, Integer pageSize, Integer pageNumber);
 
-	// Page<FullReview> getAllFullReviewsPage(Pageable pageable);
+	MyPage<FullReview> getAllFullReviewsPage( Integer pageSize, Integer pageNumber);
 
-	// Page<FullReview> getAllFullReviewsFromClient(String idClient, Pageable
-	// pageable);
+	MyPage<FullReview> getAllFullReviewsFromClient(String idClient, Integer pageSize, Integer pageNumber);
+	 
 }

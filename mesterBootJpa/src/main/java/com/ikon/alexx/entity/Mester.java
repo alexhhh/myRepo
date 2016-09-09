@@ -20,8 +20,7 @@ public class Mester {
 	@GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy="uuid2")
 	private String id;
-	
-	private String mesterUserId;
+
 	private String firstName;
 	private String lastName; 
 	private String description;
@@ -46,21 +45,12 @@ public class Mester {
 	public Mester() {
 	}
  
-	
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getMesterUserId() {
-		return mesterUserId;
-	}
-
-	public void setMesterUserId(String mesterUserId) {
-		this.mesterUserId = mesterUserId;
 	}
 
 	public String getFirstName() {
@@ -155,7 +145,7 @@ public class Mester {
 
 	@Override
 	public String toString() {
-		return "Mester [id=" + id + ", mesterUserId=" + mesterUserId + ", firstName=" + firstName + ", lastName="
+		return "Mester [id=" + id + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", description=" + description + ", avgPrice=" + avgPrice + ", avgRating=" + avgRating
 				+ ", user=" + user + ", contact=" + contact + ", location=" + location + ", reviews=" + reviews
 				+ ", specialities=" + specialities + "]";

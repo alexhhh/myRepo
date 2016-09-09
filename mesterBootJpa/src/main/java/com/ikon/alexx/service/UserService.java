@@ -24,13 +24,13 @@ public interface UserService {
 
 	void updateUserEmail(UserDTO user);
 
-	void deleteUser(String userId, String role);
+	void deleteUser(String userId);
 
 	void activateUser(String tokenId);
 
 	List<UserDTO> getAllUsers() throws SQLException;
 
-	void resetPasswordRequest(String userName, String email);
+	void resetPasswordRequest(String userName, String email)throws MessagingException;
 
 	void updatePassword(TokenDTO token);
 

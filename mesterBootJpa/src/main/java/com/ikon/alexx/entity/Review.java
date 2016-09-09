@@ -5,12 +5,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue; 
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import org.hibernate.annotations.GenericGenerator;
-
+ 
 @Entity
+@NamedQueries({
+@NamedQuery(query = "SELECT ROUND(AVG(price)) FROM Review WHERE mester_id= :mester_id", name ="price_mester_avg"),
+@NamedQuery(query = "SELECT ROUND(AVG(rating)) FROM Review WHERE mester_id= :mester_id", name ="rating_mester_avg")
+})
 public class Review {
 
+	public static String MESTER_PRICE_AVG = "price_mester_avg";
+	public static String MESTER_RATING_AVG = "rating_mester_avg";
+	
 	@Id
 	@GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy="uuid2")
