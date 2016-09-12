@@ -37,16 +37,9 @@ public class MesterRepositoryImpl implements MesterSpecialQueryRepository {
 	@Override
 	public Page<Mester> searchForMester(MesterSearchCriteria searchCriteria) {
 		Pageable pageable = createPageRequest(searchCriteria);
-		//TypedQuery<Mester> query = em.createQuery(generateSql.createQueryForElements(searchCriteria), Mester.class); //;
 		List<Mester> mesterList = prepareSearchForMester(searchCriteria);
-
-		Long total =  countSearchMester(searchCriteria);
-		//if (null == pageable) {
-		//	return new PageImpl<Mester>(prepareSearchForMester(searchCriteria));
-		//}
-		//TypedQuery<Mester> query =TypedQuery em.Get
-		//return pageable == null ? new PageImpl<Mester>(query.getResultList()) : readPage(query, pageable, spec);
-		return new PageImpl<>(mesterList, pageable, total); 
+		Long total = countSearchMester(searchCriteria);
+		return new PageImpl<>(mesterList, pageable, total);
 	}
 
 	private Pageable createPageRequest(MesterSearchCriteria searchCriteria) {
@@ -54,33 +47,32 @@ public class MesterRepositoryImpl implements MesterSpecialQueryRepository {
 			searchCriteria.setPageSize(10);
 		}
 		if (searchCriteria.getPageNumber() == null) {
-			searchCriteria.setPageNumber(1);
+			searchCriteria.setPageNumber(0);
 		}
 		return new PageRequest(searchCriteria.getPageNumber(), searchCriteria.getPageSize());
 	}
 
-
-	
 	private List<Mester> prepareSearchForMester(MesterSearchCriteria searchCriteria) {
-		int skip= searchCriteria.getPageSize()*(searchCriteria.getPageNumber() );
-		TypedQuery<Mester> query = em.createQuery(generateSql.createQueryForElements(searchCriteria), Mester.class).setFirstResult(skip).setMaxResults(searchCriteria.getPageSize());
-		Map<String, Object> queryParams =generateSql.createQueryParam(searchCriteria);
-		for (String param :queryParams.keySet()) {
-			query.setParameter(param, queryParams.get(param));		
-		};		
+		int skip = searchCriteria.getPageSize() * (searchCriteria.getPageNumber());
+		TypedQuery<Mester> query = em.createQuery(generateSql.createQueryForElements(searchCriteria), Mester.class)
+				.setFirstResult(skip).setMaxResults(searchCriteria.getPageSize());
+		setParams(query, searchCriteria);
 		return query.getResultList();
 	}
 
 	private Long countSearchMester(MesterSearchCriteria searchCriteria) {
 		TypedQuery<Long> query = em.createQuery(generateSql.createQueryForCountElements(searchCriteria), Long.class);
-		Map<String, Object> queryParams =generateSql.createQueryParam(searchCriteria);
-		for (String param :queryParams.keySet()) {
-			query.setParameter(param, queryParams.get(param));		
-		};	
+		setParams(query, searchCriteria);
 		return query.getSingleResult();
 	}
-	
-	
+
+	private <T> void setParams(TypedQuery<T> query, MesterSearchCriteria searchCriteria) {
+		Map<String, Object> queryParams = generateSql.createQueryParam(searchCriteria);
+		for (String param : queryParams.keySet()) {
+			query.setParameter(param, queryParams.get(param));
+		}
+	}
+
 	private String createQueryForAreaSearch(AreaSearchCriteria areaSearchCriteria) {
 		return "SELECT m FROM Mester  m  left outer join  m.location  l  WHERE "
 				+ "( l.latitude BETWEEN ?1 AND ?2 )  AND  ( l.longitude  BETWEEN  ?3  AND ?4 )";

@@ -12,28 +12,18 @@ import com.ikon.alexx.model.MesterSearchCriteria;
 @Component
 public class GenerateSql {
 
-	private String sql;
-	private StringBuilder query;
-
-	public String createQueryForElements(MesterSearchCriteria searchCriteria) {
-		sql = null;
-		query = new StringBuilder("SELECT m ");
-		StringBuilder from = createString(searchCriteria);
-		sql = query.append(from).toString();
-		return sql;
+ 
+	public String createQueryForElements(MesterSearchCriteria searchCriteria) { 
+		return new StringBuilder("SELECT m ").append(createString(searchCriteria)).toString();
 	}
 
-	public String createQueryForCountElements(MesterSearchCriteria searchCriteria) {
-		sql = null;
-		StringBuilder query = new StringBuilder("SELECT ");
-		StringBuilder from = createString(searchCriteria);
-		sql = query.append("COUNT(*) ").append(from).toString();
-		return sql;
+	public String createQueryForCountElements(MesterSearchCriteria searchCriteria) {  
+		return new StringBuilder("SELECT COUNT(*) ").append(createString(searchCriteria)).toString();
 	}
 
 	public Map<String, Object> createQueryParam(MesterSearchCriteria searchCriteria) {
-
 		Map<String, Object> params = new HashMap<>();
+		
 		if (searchCriteria.getFirstName() != null) {
 			params.put("firstName", searchCriteria.getFirstName());
 		}
@@ -53,7 +43,6 @@ public class GenerateSql {
 		if (searchCriteria.getPhoneNumber() != null) {
 			params.put("telNr", searchCriteria.getPhoneNumber());
 		}
-
 		if (searchCriteria.getRating() != null) {
 			params.put("avgRating", searchCriteria.getRating());
 		}
@@ -63,9 +52,7 @@ public class GenerateSql {
 		return params;
 	}
 
-	private StringBuilder createString(MesterSearchCriteria searchCriteria) {
-		String join, where;
-		StringBuilder from = new StringBuilder("FROM Mester m ");
+	private StringBuilder createString(MesterSearchCriteria searchCriteria) {  
 		List<String> joinList = new LinkedList<String>();
 		joinList.add("left outer join m.user u ");
 		List<String> whereList = new LinkedList<String>();
@@ -81,7 +68,6 @@ public class GenerateSql {
 			joinList.add("left outer join m.location  l ");
 			whereList.add(" l.location= :location ");
 		}
-
 		if (searchCriteria.getSpecialityName() != null) {
 			joinList.add("left outer join m.specialities  s ");
 			whereList.add(" s.specialityName= :specialityName ");
@@ -95,7 +81,6 @@ public class GenerateSql {
 				whereList.add(" c.telNr= :phoneNumber ");
 			}
 		}
-
 		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {
 			if (searchCriteria.getRating() != null) {
 				whereList.add(" m.avgRating= :rating ");
@@ -104,12 +89,7 @@ public class GenerateSql {
 				whereList.add(" m.avgPrice= :price ");
 			}
 		}
-
-		where = String.join(" AND ", whereList);
-		join = String.join(" ", joinList);
-
-		return from = from.append(join).append(where);
-
+		return new StringBuilder("FROM Mester m ").append(String.join(" ", joinList)).append(String.join(" AND ", whereList));
 	}
 
 }
