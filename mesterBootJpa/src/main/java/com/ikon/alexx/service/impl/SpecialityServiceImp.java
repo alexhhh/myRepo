@@ -20,12 +20,12 @@ public class SpecialityServiceImp implements SpecialityService {
 
 	@Autowired
 	private SpecialityRepository specRepo;
+	
+	@Autowired
+	private SpecialityConverter specConv;
 
 	@Autowired
 	private MesterRepository mesterRepo;
-
-	@Autowired
-	private SpecialityConverter specConv;
 
 	public void insertSpeciality(SpecialityDTO specialityDTO) {
 		specRepo.save(specConv.toEntity(specialityDTO));

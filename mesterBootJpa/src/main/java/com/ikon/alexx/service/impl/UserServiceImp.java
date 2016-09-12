@@ -8,7 +8,7 @@ import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ikon.alexx.converters.UserConverter;
 import com.ikon.alexx.encryption.Encryption;
@@ -54,6 +54,8 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private ClientService clientService;
 
+	private java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+	
 	@Override
 	public UserDTO getUserById(String id) {
 		return userConv.fromEntity(userRepo.findOne(id));
@@ -62,11 +64,10 @@ public class UserServiceImp implements UserService {
 	@Override
 	public UserDTO getUserByName(String userName) {
 		User user = userRepo.findByUserName(userName);
-		if (user != null) {
-			return userConv.fromEntity(user);
-		} else
-			return null;
-
+		if (user == null) {
+			throw new IllegalArgumentException("User is null");
+		}
+		return userConv.fromEntity(user);
 	}
 
 	@Override
@@ -82,17 +83,14 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void insertUser(UserDTO userDTO) throws MessagingException {
 		userDTO.setPassword(encryption.encrypt(userDTO.getPassword()));
-		User user = userConv.toEntity(userDTO);
-		user.setRole(roleRepo.getOne(userDTO.getRoleId()));
-		user = userRepo.save(user);
+		User user=userRepo.save(createUserAndSetRole(userDTO));
 		userDTO.setId(user.getId());
-		setBlackSpecificUser(userDTO, user) ;		
+		setMesterOrClientForSpecificUser(userDTO, user);
 	}
 
 	@Override
 	public void updateUserDetails(UserDTO user) {
-		user.setPassword(encryption.encrypt(user.getPassword()));
-		userRepo.save(userConv.toEntity(user));
+		 userRepo.save(setPasswordToUser(user.getUserName(), user.getPassword())); 
 	}
 
 	@Override
@@ -128,21 +126,28 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void resetPasswordRequest(String userName, String email) throws MessagingException {
 		UserDTO user = userConv.fromEntity(userRepo.findByUserNameAndEmail(userName, email));
-		if (user.getId() != null) {
-			TokenDTO token = tokenService.insert(user.getUserName());
-			authMailService.resetPasswordMail(user, token);
+		if (user.getId() != null) { 
+			authMailService.resetPasswordMail(user, tokenService.insert(user.getUserName()));
 		}
 	}
 
 	@Override
-	public void updatePassword(TokenDTO token) {
-		User user = userRepo.findByUserName(token.getUserName());
-		user.setPassword(encryption.encrypt(token.getPassword()));
-		userRepo.save(user);
+	public void updatePassword(TokenDTO token) { 
+		 userRepo.save(setPasswordToUser(token.getUserName(), token.getPassword()));
 	}
 
-	private java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-
+	private User setPasswordToUser(String userName , String pass) {
+		 User user = userRepo.findByUserName(userName);
+		 user.setPassword(encryption.encrypt(pass));
+		 return user;
+	}
+	
+	private User createUserAndSetRole (UserDTO userDTO){
+		User user = userConv.toEntity(userDTO);
+		user.setRole(roleRepo.getOne(userDTO.getRoleId()));
+		return user;
+	}
+	
 	private MesterDTO setMester(UserDTO user) {
 		MesterDTO mester = new MesterDTO();
 		mester.setUserId(user.getId());
@@ -155,9 +160,8 @@ public class UserServiceImp implements UserService {
 		return client;
 	}
 
-	private void setBlackSpecificUser(UserDTO userDTO,User user) throws MessagingException {
-		TokenDTO token = tokenService.insert(userDTO.getUserName());
-		authMailService.authMailContent(userDTO, token);
+	private void setMesterOrClientForSpecificUser(UserDTO userDTO, User user) throws MessagingException {
+		authMailService.authMailContent(userDTO, tokenService.insert(userDTO.getUserName()));
 		if (Roles.ROLE_MESTER.toString().equals(user.getRole().getRole())) {
 			mesterService.insertMester(setMester(userDTO));
 		} else if (Roles.ROLE_CLIENT.toString().equals(user.getRole().getRole())) {
@@ -166,5 +170,5 @@ public class UserServiceImp implements UserService {
 			System.out.println("ceva nu ii ok pe aci ");
 		}
 	}
-	
+
 }

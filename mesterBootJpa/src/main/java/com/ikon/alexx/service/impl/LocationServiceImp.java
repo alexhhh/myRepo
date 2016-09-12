@@ -28,16 +28,12 @@ public class LocationServiceImp implements LocationService {
 
 	@Override
 	public void insert(LocationDTO locationDTO) {
-		Location location = locationConverter.toEntity(locationDTO);
-		location.setMester(mesterRepo.getOne(locationDTO.getMesterId()));
-		locationRepo.save(location);
+		locationRepo.save(setMesterToLocation(locationDTO));
 	}
 
 	@Override
 	public void update(LocationDTO locationDTO) {
-		Location location = locationConverter.toEntity(locationDTO);
-		location.setMester(mesterRepo.getOne(locationDTO.getMesterId()));
-		locationRepo.save(location);
+		locationRepo.save(setMesterToLocation(locationDTO));
 	}
 
 	@Override
@@ -57,7 +53,6 @@ public class LocationServiceImp implements LocationService {
 
 	@Override
 	public List<LocationDTO> getLocationsByIds(List<String> ids) {
-
 		List<Location> locations = locationRepo.findAllByMesterIdIn(ids);
 		return locationConverter.fromEntities(locations);
 	}
@@ -67,4 +62,9 @@ public class LocationServiceImp implements LocationService {
 		return locationConverter.fromEntity(locationRepo.findByMesterId(mesterId));
 	}
 
+	private Location setMesterToLocation(LocationDTO locationDTO) {
+		Location location = locationConverter.toEntity(locationDTO);
+		location.setMester(mesterRepo.getOne(locationDTO.getMesterId()));
+		return location;
+	}
 }

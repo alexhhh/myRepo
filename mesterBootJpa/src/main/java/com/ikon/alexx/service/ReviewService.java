@@ -12,9 +12,7 @@ public interface ReviewService {
 
 	void deleteReviewMester(String idReview);
 
-	ReviewDTO getById(String idReview);
-
-	// float getMesterRating(String idMester);
+	ReviewDTO getById(String idReview); 
 
 	MyPage<ReviewDTO> getReviewMasterPage(String idMester, Integer pageSize, Integer pageNumber);
 

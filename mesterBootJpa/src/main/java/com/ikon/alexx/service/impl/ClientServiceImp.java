@@ -30,17 +30,13 @@ public class ClientServiceImp implements ClientService {
 	}
 
 	@Override
-	public void insertClient(ClientDTO clientDTO) {
-		Client client = clientConv.toEntity(clientDTO);
-		client.setUser(userRepo.findOne(clientDTO.getUserId()));
-		clientRepo.save(client);
+	public void insertClient(ClientDTO clientDTO) { 
+		clientRepo.save(setUserForTheClient(clientDTO));
 	}
 
 	@Override
 	public void updateClient(ClientDTO clientDTO) {
-		Client client = clientConv.toEntity(clientDTO);
-		client.setUser(userRepo.findOne(clientDTO.getUserId()));
-		clientRepo.save(client);
+		clientRepo.save(setUserForTheClient(clientDTO));
 	}
 
 	@Override
@@ -53,4 +49,10 @@ public class ClientServiceImp implements ClientService {
 		return clientConv.fromEntity(clientRepo.findByUserId(userId));
 	}
 
+	private Client setUserForTheClient(ClientDTO clientDTO){
+		Client client = clientConv.toEntity(clientDTO);
+		client.setUser(userRepo.findOne(clientDTO.getUserId()));
+		return client;
+	}
+	
 }

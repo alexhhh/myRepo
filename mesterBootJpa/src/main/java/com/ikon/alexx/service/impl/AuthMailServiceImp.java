@@ -24,8 +24,7 @@ public class AuthMailServiceImp implements AuthMailService {
 
 	public void authMailContent(UserDTO user, TokenDTO token) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper msg;
-		msg = new MimeMessageHelper(message, true);
+		MimeMessageHelper msg = new MimeMessageHelper(message, true);
 		msg.setSubject("Authentication");
 		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
@@ -37,8 +36,7 @@ public class AuthMailServiceImp implements AuthMailService {
 
 	public void resetPasswordMail(UserDTO user, TokenDTO token) throws MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper msg;
-		msg = new MimeMessageHelper(message, true);
+		MimeMessageHelper msg= new MimeMessageHelper(message, true);
 		msg.setSubject("Reset password");
 		msg.setTo(user.getEmail());
 		msg.setText("Dear user " + user.getUserName()
@@ -47,4 +45,5 @@ public class AuthMailServiceImp implements AuthMailService {
 		LOGGER.info("--Reset password mail" + msg.toString());
 		mailSender.send(message);
 	}
+ 
 }

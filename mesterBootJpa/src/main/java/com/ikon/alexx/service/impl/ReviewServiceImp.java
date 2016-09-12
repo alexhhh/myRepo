@@ -39,20 +39,14 @@ public class ReviewServiceImp implements ReviewService {
 
 	@Override
 	public void insertReviewMester(ReviewDTO reviewDTO) {
-		Review review = reviewConv.toEntity(reviewDTO);
-		review.setClient(clientRepo.findOne(reviewDTO.getClientId()));
-		review.setMester(mesterRepo.findOne(reviewDTO.getMesterId()));
-		reviewRepo.save(review);
-		updateMesterAvgPriceAndRating(review);
+		reviewRepo.save(setMesterAndClientForReview(reviewDTO));
+		updateMesterAvgPriceAndRating(setMesterAndClientForReview(reviewDTO));
 	}
 
 	@Override
 	public void updateReviewMester(ReviewDTO reviewDTO) {
-		Review review = reviewConv.toEntity(reviewDTO);
-		review.setClient(clientRepo.findOne(reviewDTO.getClientId()));
-		review.setMester(mesterRepo.findOne(reviewDTO.getMesterId()));
-		reviewRepo.save(review);
-		updateMesterAvgPriceAndRating(review);
+		reviewRepo.save(setMesterAndClientForReview(reviewDTO));
+		updateMesterAvgPriceAndRating(setMesterAndClientForReview(reviewDTO));
 	}
 
 	@Override
@@ -96,12 +90,18 @@ public class ReviewServiceImp implements ReviewService {
 		return fullReviewConv.fromEntitiesPage(reviewRepo.findByClientId(idClient, pageReq));
 	}
 
-	private Mester updateMesterAvgPriceAndRating(Review review) {
+	private Review setMesterAndClientForReview(ReviewDTO reviewDTO) {
+		Review review = reviewConv.toEntity(reviewDTO);
+		review.setClient(clientRepo.findOne(reviewDTO.getClientId()));
+		review.setMester(mesterRepo.findOne(reviewDTO.getMesterId()));
+		return review;
+	}
+
+	private void updateMesterAvgPriceAndRating(Review review) {
 		Mester mester = review.getMester();
 		mester.setAvgRating(reviewRepo.getMesterRatingAVGs(mester.getId()));
 		mester.setAvgPrice(reviewRepo.getMesterPriceAVGs(mester.getId()));
 		mesterRepo.save(mester);
-		return mester;
 	}
 
 }

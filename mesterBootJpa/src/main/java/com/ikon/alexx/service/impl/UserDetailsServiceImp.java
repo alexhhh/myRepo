@@ -33,7 +33,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 			throw new UsernameNotFoundException("username " + userName + " not found");
 		}
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getRole().getRole());        //userRepo.getUserRole(user.getRoleId()));
-		log.info("--Service --User Details -- loadUserByUsername -- authorities user by role.");
+		log.info("--Service --User Details -- loadUserByUsername -- authorities user by role "+ user.getRole().getRole() +"  . ");
 		return buildUserForAuthentication(user, authorities);
 	}
 
