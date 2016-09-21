@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class JerseyConfig extends ResourceConfig {
 	
 public JerseyConfig() {
-		final String restEndpointsPackge = "com.ikon.alexx.rest";  //sau rest - care o sa fie mai imed		
+		final String restEndpointsPackge = "com.ikon.alexx.rest"; 	
 		final String jacksonPackage = "org.codehaus.jackson.jaxrs";
 		final String swaggerJaxrsJsonPackage = "com.wordnik.swagger.jaxrs.json";
 		final String swaggerJaxrsListingPackage = "com.wordnik.swagger.jaxrs.listing";

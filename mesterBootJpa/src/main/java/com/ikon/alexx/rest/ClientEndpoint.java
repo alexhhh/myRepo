@@ -41,9 +41,22 @@ public class ClientEndpoint {
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response checkClient(@QueryParam("id") String id) {
 		ClientDTO dbClient = clientService.getClientById(id);
-		//int status = dbClient.getFirstName() == null ? 404 : 200;
 		return Response.ok().entity(dbClient).build();
 	}
+	
+	@GET
+	@Path("/user/query")
+	@ApiOperation(value = "Return OK", notes = "Return OK if client is in the db", response = ClientDTO.class)
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Client found.", response = ClientDTO.class),
+			@ApiResponse(code = 401, message = "Not authorized"),
+			@ApiResponse(code = 404, message = "User not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getClientByUser(@QueryParam("userId") String userId) {
+		ClientDTO dbClient = clientService.getClientByUserId(userId);
+		return Response.ok().entity(dbClient).build();
+	}
+	
 	
 	@POST
 	@ApiOperation(value = "Add client", notes = "Saves a client.")

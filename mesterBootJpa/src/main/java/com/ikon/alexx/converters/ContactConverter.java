@@ -1,8 +1,11 @@
 package com.ikon.alexx.converters;
 
+import org.springframework.stereotype.Component;
+
 import com.ikon.alexx.entity.Contact;
 import com.ikon.alexx.model.ContactDTO;
 
+@Component
 public class ContactConverter extends BaseConverter<ContactDTO, Contact>{
 
 	@Override

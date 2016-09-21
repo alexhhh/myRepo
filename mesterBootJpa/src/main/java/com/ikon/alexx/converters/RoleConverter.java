@@ -1,8 +1,11 @@
 package com.ikon.alexx.converters;
 
+import org.springframework.stereotype.Component;
+
 import com.ikon.alexx.entity.Role;
 import com.ikon.alexx.model.RoleDTO;
 
+@Component
 public class RoleConverter implements Converter<RoleDTO, Role> {
 
 	@Override

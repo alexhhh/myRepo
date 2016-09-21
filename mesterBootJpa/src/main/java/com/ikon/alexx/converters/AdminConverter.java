@@ -1,8 +1,11 @@
 package com.ikon.alexx.converters;
 
+import org.springframework.stereotype.Component;
+
 import com.ikon.alexx.entity.Admin;
 import com.ikon.alexx.model.AdminDTO;
 
+@Component
 public class AdminConverter implements Converter<AdminDTO, Admin> {
 
 	@Override

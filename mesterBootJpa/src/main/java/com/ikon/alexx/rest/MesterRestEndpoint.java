@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ikon.alexx.model.AreaSearchCriteria;
+import com.ikon.alexx.model.FullMester;
 import com.ikon.alexx.model.MesterDTO;
 import com.ikon.alexx.model.MesterSearchCriteria;
 import com.ikon.alexx.model.MyPage;
@@ -43,13 +44,26 @@ public class MesterRestEndpoint {
 
 	@GET
 	@Path("/query")
-	@ApiOperation(value = "Return mester", notes = "Return one mester", response = MesterDTO.class)
+	@ApiOperation(value = "Return mester", notes = "Return one mester", response = FullMester.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = MesterDTO.class),
+			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = FullMester.class),
 			@ApiResponse(code = 404, message = "Mester not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response getById(@QueryParam("idMester") String idMester) throws SQLException {
-		MesterDTO mester = mesterService.getMesterById(idMester);
+		FullMester mester = mesterService.getMesterById(idMester);
+		int status = mester == null ? 404 : 200;
+		return Response.ok(status).entity(mester).build();
+	}
+	
+	@GET
+	@Path("/user/query")
+	@ApiOperation(value = "Return mester", notes = "Return one mester", response = FullMester.class)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Mester was retrieved successfully", response = FullMester.class),
+			@ApiResponse(code = 404, message = "Mester not found"),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response getByUserId(@QueryParam("userId") String userId) throws SQLException {
+		FullMester mester = mesterService.getMesterByUserId(userId);
 		int status = mester == null ? 404 : 200;
 		return Response.ok(status).entity(mester).build();
 	}
@@ -90,7 +104,7 @@ public class MesterRestEndpoint {
 			@ApiResponse(code = 404, message = "The page was not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response search(MesterSearchCriteria searchCriteria) throws SQLException {
-		MyPage<MesterDTO> newMester = mesterService.searchMester(searchCriteria);
+		MyPage<FullMester> newMester = mesterService.searchMester(searchCriteria);
 		return Response.ok(Status.OK).entity(newMester).build();
 	}
 
@@ -102,7 +116,7 @@ public class MesterRestEndpoint {
 			@ApiResponse(code = 404, message = "The page was not found"),
 			@ApiResponse(code = 500, message = "Internal server error") })
 	public Response searchByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
-		List<MesterDTO> mesterList = mesterService.searchMesterByArea(areaSearchCriteria);
+		List<FullMester> mesterList = mesterService.searchMesterByArea(areaSearchCriteria);
 		return Response.ok(Status.OK).entity(mesterList).build();
 	}
 

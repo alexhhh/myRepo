@@ -78,7 +78,7 @@ public class GenerateSql {
 				whereList.add(" c.email= :email ");
 			}
 			if (searchCriteria.getPhoneNumber() != null) {
-				whereList.add(" c.telNr= :phoneNumber ");
+				whereList.add(" c.telNr= :telNr ");
 			}
 		}
 		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {

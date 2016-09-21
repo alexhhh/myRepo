@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ikon.alexx.converters.FullMesterConverter;
 import com.ikon.alexx.converters.MesterConverter;
 import com.ikon.alexx.entity.Contact;
 import com.ikon.alexx.entity.Location;
 import com.ikon.alexx.entity.Mester;
 import com.ikon.alexx.model.AreaSearchCriteria;
+import com.ikon.alexx.model.FullMester;
 import com.ikon.alexx.model.MesterDTO;
 import com.ikon.alexx.model.MesterSearchCriteria;
 import com.ikon.alexx.model.MyPage;
@@ -32,6 +34,9 @@ public class MesterServiceImp implements MesterService {
 	private MesterConverter mesterConv;
 
 	@Autowired
+	private FullMesterConverter fullMesterConv;
+
+	@Autowired
 	private ContactRepository contactRepo;
 
 	@Autowired
@@ -47,7 +52,7 @@ public class MesterServiceImp implements MesterService {
 
 	@Override
 	public void updateMester(MesterDTO mesterDTO) {
-		mesterRepo.save(setUserToMester(mesterDTO));
+		saveEverytingForMester(setUserToMester(mesterDTO));
 	}
 
 	@Override
@@ -62,25 +67,24 @@ public class MesterServiceImp implements MesterService {
 	}
 
 	@Override
-	public MesterDTO getMesterById(String id) {
-		return mesterConv.fromEntity(mesterRepo.findOne(id));
+	public FullMester getMesterById(String id) {
+		return fullMesterConv.fromEntity(mesterRepo.findOne(id));
 	}
 
 	@Override
-	public MesterDTO getMesterByUserId(String userId) {
-		return mesterConv.fromEntity(mesterRepo.findByUserId(userId));
+	public FullMester getMesterByUserId(String userId) {
+		return fullMesterConv.fromEntity(mesterRepo.findByUserId(userId));
 	}
 
 	@Override
-	public MyPage<MesterDTO> searchMester(MesterSearchCriteria searchCriteria) throws SQLException {
-		return mesterConv.fromEntitiesPage(mesterRepo.searchForMester(searchCriteria));
+	public MyPage<FullMester> searchMester(MesterSearchCriteria searchCriteria) throws SQLException {
+		return fullMesterConv.fromEntitiesPage(mesterRepo.searchForMester(searchCriteria));
 	}
 
 	@Override
-	public List<MesterDTO> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
-		List<Mester> listMesteri = mesterRepo.searchMesterByArea(areaSearchCriteria);
-		// // de ce setContact? Locatie si mail cred
-		return mesterConv.fromEntities(listMesteri);
+	public List<FullMester> searchMesterByArea(AreaSearchCriteria areaSearchCriteria) throws SQLException {
+		List<Mester> listMesteri = mesterRepo.searchMesterByArea(areaSearchCriteria); 
+		return fullMesterConv.fromEntities(listMesteri);
 	}
 
 	private void saveEverytingForMester(Mester mester) {
@@ -89,15 +93,17 @@ public class MesterServiceImp implements MesterService {
 		locationRepo.save(setlocationForMester(mester));
 	}
 
-	private Contact setContactForMester(Mester mester) {
-		Contact contact = new Contact();
+	private Contact setContactForMester(Mester mester) {		 
+		Contact contact = contactRepo.findByMesterId(mester.getId());		
+		if ( contact.getId()== null){contact = new Contact();}
 		contact.setMester(mester);
 		mester.setContact(contact);
 		return contact;
 	}
 
 	private Location setlocationForMester(Mester mester) {
-		Location location = new Location();
+		Location  location  = locationRepo.findByMesterId(mester.getId());		
+		if ( location.getId()== null){location = new Location();} 
 		location.setMester(mester);
 		mester.setLocation(location);
 		return location;

@@ -1,6 +1,8 @@
 package com.ikon.alexx.model;
 
-public class MesterDTO {
+import java.util.List;
+
+public class FullMester {
 
 	private String id;
 	private String userId;
@@ -9,8 +11,11 @@ public class MesterDTO {
 	private String description;
 	private Integer avgPrice;
 	private Integer avgRating;
- 
-	public MesterDTO() {
+	private ContactDTO contact;
+	private LocationDTO location;
+	private List<SpecialityDTO> speciality;
+
+	public FullMester() {
 	}
 
 	public String getId() {
@@ -69,10 +74,28 @@ public class MesterDTO {
 		this.avgRating = avgRating;
 	}
 
-	@Override
-	public String toString() {
-		return "Mester [id=" + id + ", userId=" + userId + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", description=" + description + ", avgPrice=" + avgPrice + ", avgRating=" + avgRating
-				+ " ]";
+	public ContactDTO getContact() {
+		return contact;
 	}
+
+	public void setContact(ContactDTO contact) {
+		this.contact = contact;
+	}
+
+	public LocationDTO getLocation() {
+		return location;
+	}
+
+	public void setLocation(LocationDTO location) {
+		this.location = location;
+	}
+
+	public List<SpecialityDTO> getSpeciality() {
+		return speciality;
+	}
+
+	public void setSpeciality(List<SpecialityDTO> speciality) {
+		this.speciality = speciality;
+	}
+
 }

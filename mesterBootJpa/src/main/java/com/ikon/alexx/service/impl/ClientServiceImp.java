@@ -54,5 +54,6 @@ public class ClientServiceImp implements ClientService {
 		client.setUser(userRepo.findOne(clientDTO.getUserId()));
 		return client;
 	}
+ 
 	
 }
