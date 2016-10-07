@@ -16,8 +16,6 @@ public interface MesterService {
 	
 	void insertMester( Mester mester);
 
-	void updateMester(MesterDTO mester);
-
 	void updateMester(FullMester mester);
 	
 	void deleteMester(String mesterId);
