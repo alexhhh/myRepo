@@ -1,6 +1,7 @@
 package com.ikon.alexx.service.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class SpecialityServiceImp implements SpecialityService {
 
 	public List<SpecialityDTO> getAllMesterSpeciality(String mesterId) throws SQLException {
 		Mester m = mesterRepo.findOne(mesterId);
-		return specConv.fromEntities(m.getSpecialities());
+		return specConv.fromEntities(new ArrayList<>(m.getSpecialities()));
 	}
 
 	public List<SpecialityDTO> getAllSpeciality() throws SQLException {

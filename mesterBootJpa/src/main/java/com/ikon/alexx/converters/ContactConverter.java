@@ -14,7 +14,8 @@ public class ContactConverter extends BaseConverter<ContactDTO, Contact>{
 		entity.setId(pojo.getId());
 		entity.setTelNr(pojo.getTelNr());
 		entity.setEmail(pojo.getEmail());
-		entity.setSite(pojo.getSite());		 
+		entity.setSite(pojo.getSite());
+		//entity.setMester(pojo.getMesterId());
 		return entity;
 	}
 

@@ -93,7 +93,7 @@ public class LocationEndpoint {
 			@ApiResponse(code = 200, message = "Mester location was successfully retrived.", response = LocationDTO.class),
 			@ApiResponse(code = 404, message = "Mester location not found."),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response getMesterSpecialities(@QueryParam("mesterId") String mesterId) throws SQLException {
+	public Response getMesterSpecialities(@QueryParam("idMester") String mesterId) throws SQLException {
 		LocationDTO location = locationService.findByMesterId(mesterId);
 		return Response.ok(Status.OK).entity(location).build();
 	}

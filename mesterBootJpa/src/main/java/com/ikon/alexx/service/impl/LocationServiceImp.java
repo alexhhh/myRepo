@@ -58,8 +58,9 @@ public class LocationServiceImp implements LocationService {
 	}
 
 	@Override
-	public LocationDTO findByMesterId(String mesterId) {
-		return locationConverter.fromEntity(locationRepo.findByMesterId(mesterId));
+	public LocationDTO findByMesterId(String mesterId) {		
+		Location location =locationRepo.findByMesterId(mesterId);
+		return locationConverter.fromEntity(location);
 	}
 
 	private Location setMesterToLocation(LocationDTO locationDTO) {

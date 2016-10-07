@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ikon.alexx.converters.UserConverter;
 import com.ikon.alexx.encryption.Encryption;
+import com.ikon.alexx.entity.Mester;
 import com.ikon.alexx.entity.Roles;
 import com.ikon.alexx.entity.User;
 import com.ikon.alexx.model.ClientDTO;
-import com.ikon.alexx.model.MesterDTO;
 import com.ikon.alexx.model.TokenDTO;
 import com.ikon.alexx.model.UserDTO;
 import com.ikon.alexx.repository.RoleRepository;
@@ -55,7 +55,7 @@ public class UserServiceImp implements UserService {
 	private ClientService clientService;
 
 	private java.sql.Date currentDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-	
+
 	@Override
 	public UserDTO getUserById(String id) {
 		return userConv.fromEntity(userRepo.findOne(id));
@@ -83,14 +83,14 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void insertUser(UserDTO userDTO) throws MessagingException {
 		userDTO.setPassword(encryption.encrypt(userDTO.getPassword()));
-		User user=userRepo.save(createUserAndSetRole(userDTO));
+		User user = userRepo.save(createUserAndSetRole(userDTO));
 		userDTO.setId(user.getId());
 		setMesterOrClientForSpecificUser(userDTO, user);
 	}
 
 	@Override
 	public void updateUserDetails(UserDTO user) {
-		 userRepo.save(setPasswordToUser(user.getUserName(), user.getPassword())); 
+		userRepo.save(setPasswordToUser(user.getUserName(), user.getPassword()));
 	}
 
 	@Override
@@ -126,31 +126,31 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void resetPasswordRequest(String userName, String email) throws MessagingException {
 		UserDTO user = userConv.fromEntity(userRepo.findByUserNameAndEmail(userName, email));
-		if (user.getId() != null) { 
+		if (user.getId() != null) {
 			authMailService.resetPasswordMail(user, tokenService.insert(user.getUserName()));
 		}
 	}
 
 	@Override
-	public void updatePassword(TokenDTO token) { 
-		 userRepo.save(setPasswordToUser(token.getUserName(), token.getPassword()));
+	public void updatePassword(TokenDTO token) {
+		userRepo.save(setPasswordToUser(token.getUserName(), token.getPassword()));
 	}
 
-	private User setPasswordToUser(String userName , String pass) {
-		 User user = userRepo.findByUserName(userName);
-		 user.setPassword(encryption.encrypt(pass));
-		 return user;
+	private User setPasswordToUser(String userName, String pass) {
+		User user = userRepo.findByUserName(userName);
+		user.setPassword(encryption.encrypt(pass));
+		return user;
 	}
-	
-	private User createUserAndSetRole (UserDTO userDTO){
+
+	private User createUserAndSetRole(UserDTO userDTO) {
 		User user = userConv.toEntity(userDTO);
 		user.setRole(roleRepo.getOne(userDTO.getRoleId()));
 		return user;
 	}
-	
-	private MesterDTO setMester(UserDTO user) {
-		MesterDTO mester = new MesterDTO();
-		mester.setUserId(user.getId());
+
+	private Mester setMester(User user) {
+		Mester mester = new Mester();
+		mester.setUser(user); 
 		return mester;
 	}
 
@@ -162,8 +162,8 @@ public class UserServiceImp implements UserService {
 
 	private void setMesterOrClientForSpecificUser(UserDTO userDTO, User user) throws MessagingException {
 		authMailService.authMailContent(userDTO, tokenService.insert(userDTO.getUserName()));
-		if (Roles.ROLE_MESTER.toString().equals(user.getRole().getRole())) {
-			mesterService.insertMester(setMester(userDTO));
+		if (Roles.ROLE_MESTER.toString().equals(user.getRole().getRole())) {			 
+			mesterService.insertMester(setMester(user));
 		} else if (Roles.ROLE_CLIENT.toString().equals(user.getRole().getRole())) {
 			clientService.insertClient(setClient(userDTO));
 		} else {

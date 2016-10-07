@@ -78,11 +78,11 @@ public class MesterRestEndpoint {
 	}
 
 	@PUT
-	@ApiOperation(value = "Update mester", notes = "Update a full mester", response = MesterDTO.class)
+	@ApiOperation(value = "Update mester", notes = "Update a full mester", response = FullMester.class)
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "Update mester was successful", response = MesterDTO.class),
+			@ApiResponse(code = 200, message = "Update mester was successful", response = FullMester.class),
 			@ApiResponse(code = 500, message = "Internal server error") })
-	public Response update(MesterDTO mester) {
+	public Response update(FullMester mester) {
 		mesterService.updateMester(mester);
 		return Response.ok(Status.OK).entity(mester).build();
 	}
