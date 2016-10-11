@@ -147,6 +147,18 @@ public class AuthenticationEndpoint {
 	}
 	
 	@PUT
+	@Path("/editmail")
+	@ApiOperation(value = "Edit user mail", notes = "Edit a user.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 201, message = "User was successfuly edited "),
+			@ApiResponse(code = 500, message = "Internal server error") })
+	public Response editUserMail(UserDTO user) {
+		userService.updateUserEmail(user);
+		return Response.ok().entity(user).build();
+	}
+	
+	
+	@PUT
 	@Path("/reset")
 	@ApiOperation(value = "Edit user password", notes = "Edit a user password.")
 	@ApiResponses(value = { 

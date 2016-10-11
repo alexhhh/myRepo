@@ -43,11 +43,11 @@ public class GenerateSql {
 		if (searchCriteria.getPhoneNumber() != null) {
 			params.put("telNr", searchCriteria.getPhoneNumber());
 		}
-		if (searchCriteria.getRating() != null) {
-			params.put("avgRating", searchCriteria.getRating());
+		if (searchCriteria.getAvgRating() != null) {
+			params.put("avgRating", searchCriteria.getAvgRating());
 		}
-		if (searchCriteria.getPrice() != null) {
-			params.put("avgPrice", searchCriteria.getPrice());
+		if (searchCriteria.getAvgPrice() != null) {
+			params.put("avgPrice", searchCriteria.getAvgPrice());
 		}
 		return params;
 	}
@@ -81,12 +81,12 @@ public class GenerateSql {
 				whereList.add(" c.telNr= :telNr ");
 			}
 		}
-		if ((searchCriteria.getRating() != null) || (searchCriteria.getPrice() != null)) {
-			if (searchCriteria.getRating() != null) {
-				whereList.add(" m.avgRating= :rating ");
+		if ((searchCriteria.getAvgRating() != null) || (searchCriteria.getAvgPrice() != null)) {
+			if (searchCriteria.getAvgRating() != null) {
+				whereList.add(" m.avgRating= :avgRating ");
 			}
-			if (searchCriteria.getPrice() != null) {
-				whereList.add(" m.avgPrice= :price ");
+			if (searchCriteria.getAvgPrice() != null) {
+				whereList.add(" m.avgPrice= :avgPrice ");
 			}
 		}
 		return new StringBuilder("FROM Mester m ").append(String.join(" ", joinList)).append(String.join(" AND ", whereList));

@@ -1,8 +1,5 @@
 package com.ikon.alexx.model;
 
- 
- 
- 
 public class MesterSearchCriteria {
 
 	private String firstName;
@@ -11,8 +8,8 @@ public class MesterSearchCriteria {
 	private String specialityName;
 	private String email;
 	private String phoneNumber;
-	private Integer rating;
-	private Integer price;
+	private Integer avgRating;
+	private Integer avgPrice;
 	private Integer pageSize;
 	private Integer pageNumber;
 
@@ -106,34 +103,20 @@ public class MesterSearchCriteria {
 		this.phoneNumber = phoneNumber;
 	}
 
-	/**
-	 * @return the rating
-	 */
-	public Integer getRating() {
-		return rating;
+	public Integer getAvgRating() {
+		return avgRating;
 	}
 
-	/**
-	 * @param rating
-	 *            the rating to set
-	 */
-	public void setRating(Integer rating) {
-		this.rating = rating;
+	public void setAvgRating(Integer avgRating) {
+		this.avgRating = avgRating;
 	}
 
-	/**
-	 * @return the price
-	 */
-	public Integer getPrice() {
-		return price;
+	public Integer getAvgPrice() {
+		return avgPrice;
 	}
 
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(Integer price) {
-		this.price = price;
+	public void setAvgPrice(Integer avgPrice) {
+		this.avgPrice = avgPrice;
 	}
 
 	public Integer getPageSize() {
